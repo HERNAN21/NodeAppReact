@@ -7,8 +7,11 @@ import Requerimientos from "views/pages/tables/Requerimientos.jsx";
 import CerrarSolicitud from "views/pages/tables/CerrarSolicitud.jsx";
 
 // Importart Nuevos Formularios
-import Solicitud from "views/pages/examples/Solicitud.jsx";
-import Aprobaciones from "views/pages/examples/Aprobaciones.jsx"
+import Solicitud from "views/pages/ProcAlta/Solicitud.jsx";
+import Aprobaciones from "views/pages/ProcAlta/Aprobaciones.jsx"
+import Aprobacionesgestor from "views/pages/ProcAlta/Aprobacionesgestor.jsx";
+import Requerimiento from "views/pages/ProcAlta/Requerimiento.jsx";
+
 
 // import CierresPendienes from "views/pages/tables/CierresPendienes.jsx";
 // import Personal from "views/pages/examples/Personal.jsx";
@@ -37,6 +40,20 @@ const routes = [
         icon: "ni ni-archive-2 text-green",
         component: Aprobaciones,
         layout: "/admin"
+      },
+      {
+        path:"/Aprobacionesgestor",
+        name: "Aprobaciones Pendientes Gestor",
+        icon: "ni ni-archive-2 text-green",
+        component: Aprobacionesgestor,
+        layout:"/admin"
+      },
+      {
+        path:"/Requerimiento",
+        name: "Requerimiento",
+        icon: "ni ni-archive-2 text-green",
+        component: Requerimiento,
+        layout:"/admin"
       },
       {
         path: "/Aprobaciones",
@@ -101,6 +118,12 @@ const routes = [
         component: Solicitud,
         layout: "/admin"
       },
+
+      
+
+      // Old Examples
+
+
       {
         path: "/Aprobaciones",
         name: "Aprobaciones Pendientes",
