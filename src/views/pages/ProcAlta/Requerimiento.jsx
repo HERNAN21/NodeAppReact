@@ -1,8 +1,25 @@
 import React from "react";
-import { Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText } from "reactstrap";
+import { Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText,Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 class Requerimiento extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            modal: false
+        };
+        this.ModalCentroCosto = this.ModalCentroCosto.bind(this);
+    }
+
+    ModalCentroCosto() {
+        this.setState(prevState => ({
+            modal: !prevState.modal
+        }));
+    }
+
+
   render() {
     return (
       <>
@@ -138,85 +155,235 @@ class Requerimiento extends React.Component {
                     <br/>
                     {/* Section Enabled */}
                     <Row>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Glosa</Label>
-                        <Col md="7">
-                            <FormGroup>
-                                <Input type="textarea" name="text" id="exampleText" className="form-control-sm"/>
-                            </FormGroup>
+                        <Col md="3">
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="3" style={{marginRight:"-25px", marginTop:"-5px"}}>Glosa</Label>
+                                <Col md="9">
+                                    <FormGroup>
+                                        <Input type="textarea" name="text" id="exampleText" className="form-control-sm" rows="4" cols="50"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
                         </Col>
+                        <Col md="6" style={{marginLeft:"-23px"}}>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Sociedad</Label>
+                                <Col md="4">
+                                    <FormGroup>
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                    </FormGroup>
+                                </Col>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Líder de UO</Label>
+                                <Col md="4">
+                                    <FormGroup>
+                                        <Input type="select" name="text" id="exampleText" className="form-control-sm">
+                                            <option>Dir 1</option>
+                                            <option>Dir 2</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Código UO</Label>
+                                <Col md="4">
+                                    <FormGroup>
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                    </FormGroup>
+                                </Col>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Descripción UO</Label>
+                                <Col md="4">
+                                    <FormGroup>
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        
+                        </Col>
+
                     </Row>
+                    
                     <Row>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-65px", marginTop:"-5px"}}>Sociedad</Label>
-                        <Col md="2">
-                            <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm" />
-                            </FormGroup>
-                        </Col>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{ marginTop:"-5px"}}>Líder de UO</Label>
-                        <Col md="2">
-                            <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm" />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-71px", marginTop:"-5px"}}>Codigo UO</Label>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Cod. Divición</Label>
                         <Col md="2">
                             <FormGroup>
                                 <Input type="text" name="text" id="exampleText" className="form-control-sm"/>
                             </FormGroup>
                         </Col>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-65px", marginTop:"-5px"}}>Descripcion UO</Label>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Cod. Sub Divición</Label>
                         <Col md="2">
                             <FormGroup>
                                 <Input type="text" name="text" id="exampleText" className="form-control-sm" />
                             </FormGroup>
                         </Col>
-                       
-                    </Row>
-                    <Row>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-71px", marginTop:"-5px"}}>Cod. Divición</Label>
-                        <Col md="2">
-                            <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm"/>
-                            </FormGroup>
-                        </Col>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-65px", marginTop:"-5px"}}>Cod. Sub Divición</Label>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>SCTR</Label>
                         <Col md="2">
                             <FormGroup>
                                 <Input type="text" name="text" id="exampleText" className="form-control-sm" />
                             </FormGroup>
-                        </Col>
-                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{ marginTop:"-5px"}}>SCTR</Label>
-                        <Col md="2">
-                            <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm" />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Label>Área de Personal</Label>
-                        <Col md="2">
-                            <Input className="form-control-sm"></Input>
                         </Col>
                     </Row>
 
-                    <br/>
                     <Row>
-                        <Col md="7">
-                            <div style={{width:"100%"}}>
-                                <div style={{float:"right", marginRight: "-55px"}}>
-                                    <Button color="warning" className="btn btn-sm">Limpiar</Button>
-                                    <Button color="success" className="btn btn-sm">Guardar</Button>
-                                </div>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Área de Personal</Label>
+                        <Col md="2">
+                            <InputGroup>
+                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <InputGroupAddon addonType="append">
+                                <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
+                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                </InputGroupText>
+                                </InputGroupAddon>
+                            </InputGroup>
+                            {/* <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm"/>
+                            </FormGroup> */}
+                        </Col>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Cod. Área Personal</Label>
+                        <Col md="2">
+                            <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" disabled/>
+                            </FormGroup>
+                        </Col>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Área Nomina</Label>
+                        <Col md="2">
+                            <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" disabled/>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Relación Laboral</Label>
+                        <Col md="2">
+                            <InputGroup>
+                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <InputGroupAddon addonType="append">
+                                <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
+                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                </InputGroupText>
+                                </InputGroupAddon>
+                            </InputGroup>
+                            {/* <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm"/>
+                            </FormGroup> */}
+                        </Col>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Cod. Laboral</Label>
+                        <Col md="2">
+                            <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" disabled/>
+                            </FormGroup>
+                        </Col>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Adjuntar archivo DP</Label>
+                        <Col md="2">
+                            <InputGroup>
+                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <InputGroupAddon addonType="append">
+                                <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
+                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                </InputGroupText>
+                                </InputGroupAddon>
+                            </InputGroup>
+                            {/* <FormGroup>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" disabled/>
+                            </FormGroup> */}
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-120px", marginTop:"-5px"}}>Relación Laboral</Label>
+                        <Col md="2">
+                            {/* <Button color="primary" className="fas fa-plus btn btn-sm" style={{width:"30%"}}></Button> */}
+                            <Button color="primary" className="fas fa-plus btn btn-sm" style={{width:"30%"}} onClick={this.ModalCentroCosto}>{this.props.buttonLabel}</Button>
+                        </Col>
+                        <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginLeft:"-65px", marginTop:"-5px"}}>Ubicación</Label>
+                        <Col md="2">
+                            <FormGroup>
+                                <Input type="select" name="text" id="exampleText" className="form-control-sm">
+                                <option>Dir 1</option>
+                                <option>Dir 2</option>
+                                </Input>
+                            </FormGroup>
+                        </Col>
+                        <Col md="2">
+                            <div style={{width:"100%",marginLeft:"10px"}}>
+                                <Button color="warning" className="btn btn-sm" style={{width:"45%"}}>Limpiar</Button>
+                                <Button color="success" className="btn btn-sm" style={{width:"45%"}}>Guardar</Button>
                             </div>
                         </Col>
                     </Row>
-                    <br/>
+
                 </FormGroup>
             </CardBody>
           </Card>
         </Container>
+        {/* Modal Centro de Costos */}
+        <Modal isOpen={this.state.modal} ModalCentroCosto={this.ModalCentroCosto} className={this.props.className} style={{marginTop:"150px"}}>
+            {/* <ModalHeader ModalCentroCosto={this.ModalCentroCosto}>Centro de Costos</ModalHeader> */}
+            <ModalBody>
+                <Card>
+                    <CardHeader style={{textAlign:"center"}}><b>Centro de Costos</b></CardHeader>
+                    <CardBody>
+                        <Row>
+                            <Col md="5" style={{textAlign:"center"}}>
+                                CECO
+                            </Col>
+                            <Col md="5" style={{textAlign:"center"}}>
+                                DESC CECO
+                            </Col>
+                            <Col md="2" style={{textAlign:"center"}}>
+                                %
+                            </Col>
+                        </Row>
+                        <br/>
+                        <Row>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="12">
+                                <div style={{float:"right"}}>
+                                    <Button color="danger" className="btn btn-sm" onClick={this.ModalCentroCosto}>Cerrar</Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
+            </ModalBody>
+            {/* <ModalFooter>
+                <Button color="primary" onClick={this.ModalCentroCosto}>Do Something</Button>
+                <Button color="danger" className="btn btn-sm" onClick={this.ModalCentroCosto}>Cerrar</Button>
+            </ModalFooter> */}
+        </Modal>
       </>
     );
   }

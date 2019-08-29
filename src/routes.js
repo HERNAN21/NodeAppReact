@@ -11,6 +11,9 @@ import Solicitud from "views/pages/ProcAlta/Solicitud.jsx";
 import Aprobaciones from "views/pages/ProcAlta/Aprobaciones.jsx"
 import Aprobacionesgestor from "views/pages/ProcAlta/Aprobacionesgestor.jsx";
 import Requerimiento from "views/pages/ProcAlta/Requerimiento.jsx";
+import Registrocandidatos from "views/pages/ProcAlta/Registrocandidatos.jsx";
+import Siguimientosolicitud from "views/pages/ProcAlta/Siguimientosolicitud.jsx";
+import Registronuevopersonal from "views/pages/ProcAlta/Registronuevopersonal.jsx";
 
 
 // import CierresPendienes from "views/pages/tables/CierresPendienes.jsx";
@@ -56,24 +59,25 @@ const routes = [
         layout:"/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Registrocandidatos",
         name: "Registro de Candidatos",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Registrocandidatos,
         layout: "/admin"
       },
+
       {
-        path: "/Aprobaciones",
+        path: "/Siguimientosolicitud",
         name: "Seguimiento de Solicitud de Alta",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Siguimientosolicitud,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Registronuevopersonal",
         name: "Registro de Nuevo Personal",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Registronuevopersonal,
         layout: "/admin"
       },
       {
