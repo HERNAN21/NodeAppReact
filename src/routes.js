@@ -14,6 +14,7 @@ import Requerimiento from "views/pages/ProcAlta/Requerimiento.jsx";
 import Registrocandidatos from "views/pages/ProcAlta/Registrocandidatos.jsx";
 import Siguimientosolicitud from "views/pages/ProcAlta/Siguimientosolicitud.jsx";
 import Registronuevopersonal from "views/pages/ProcAlta/Registronuevopersonal.jsx";
+import Validarenvioalta from "views/pages/ProcAlta/Validarenvioalta.jsx";
 
 
 // import CierresPendienes from "views/pages/tables/CierresPendienes.jsx";
@@ -81,10 +82,10 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Validarenvioalta",
         name: "Validación y Envio de Alta",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Validarenvioalta,
         layout: "/admin"
       },
       {

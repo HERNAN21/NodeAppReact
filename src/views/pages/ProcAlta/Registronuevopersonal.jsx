@@ -15,10 +15,10 @@ class Registronuevopersonal extends React.Component {
         this.state = {
             modal: false
         };
-        this.ModalRemoneracion = this.ModalRemoneracion.bind(this);
+        this.ModalNuevo = this.ModalNuevo.bind(this);
     }
 
-    ModalRemoneracion() {
+    ModalNuevo() {
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
@@ -121,7 +121,7 @@ class Registronuevopersonal extends React.Component {
             </Container>
             {/* Modal Nuevo Registro */}
              {/* Modal Centro de Costos */}
-            <Modal isOpen={this.state.modal} ModalRemoneracion={this.ModalRemoneracion} className={this.props.className} style={{marginTop:"150px"}}>
+            <Modal isOpen={this.state.modal} ModalNuevo={this.ModalNuevo} className={this.props.className} style={{marginTop:"150px"}}>
                 {/* <ModalHeader ModalCentroCosto={this.ModalCentroCosto}>Centro de Costos</ModalHeader> */}
                 <ModalBody>
                     <Card>
@@ -164,8 +164,8 @@ class Registronuevopersonal extends React.Component {
                             <Row>
                                 <Col md="12">
                                     <div style={{float:"right"}}>
-                                        <Button color="success" className="btn btn-sm" onClick={this.ModalRemoneracion}>Guardar</Button>
-                                        <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
+                                        <Button color="success" className="btn btn-sm" onClick={this.ModalNuevo}>Asignar Cargo</Button>
+                                        <Button color="danger" className="btn btn-sm" onClick={this.ModalNuevo}>Cerrar</Button>
                                     </div>
                                 </Col>
                             </Row>
