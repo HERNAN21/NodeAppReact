@@ -7,7 +7,7 @@ class Siguimientosolicitud extends React.Component {
   render() {
     return (
       <>
-        <SimpleHeader name="Registro de Candidatos" parentName="Tables" />
+        <SimpleHeader name="Seguimiento de Solicitud de Alta" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>

@@ -34,7 +34,7 @@ class Registronuevopersonal extends React.Component {
     render() {
         return (
             <>
-             <SimpleHeader name="Aprovaciones Pendientes" parentName="Tables" />
+             <SimpleHeader name="Registro de Nuevo Personal" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>

@@ -30,7 +30,7 @@ class Validarenvioalta extends React.Component {
     render() {
         return (
             <>
-             <SimpleHeader name="Aprovaciones Pendientes" parentName="Tables" />
+             <SimpleHeader name="Validación y Envió de Alta" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>
@@ -71,6 +71,7 @@ class Validarenvioalta extends React.Component {
                                         <th>Descripcion de Puesto</th>
                                         <th>Cantidad de Recursos</th>
                                         <th>Datos de Ingreso</th>
+                                        <th>Ficha de Ingreso</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -96,12 +97,28 @@ class Validarenvioalta extends React.Component {
                                         <td>
                                             <Button className="btn btn-sm" color="warning" onClick={this.ModalValidacion}>Validar</Button>
                                         </td>
+                                        <td>
+                                            <Button className="btn btn-sm" color="primary">
+                                                <i class="fa fa-download" aria-hidden="true">  Descargar</i>
+                                            </Button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </Table>
                         </CardBody>
-                    {/* <CardFooter>
-                    </CardFooter> */}
+                    <CardFooter>
+                        <Row>
+                            <Col md="11">
+                            </Col>
+                            <Col md="1">
+                                <InputGroup>
+                                    <Button className="btn btn-sm" color="success">
+                                        Enviar a Excellia
+                                    </Button>
+                                </InputGroup>
+                            </Col>
+                        </Row>
+                    </CardFooter>
                 </Card>
             </Container>
             {/* Modal Nuevo Registro */}
@@ -190,10 +207,26 @@ class Validarenvioalta extends React.Component {
                                                 </td>
                                                 <td>
                                                     <Row>
-                                                        <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"25px", marginTop:"-5px"}}>Fecha Inicio:</Label>
+                                                        <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"28px", marginTop:"-5px"}}>Fecha Inicio:</Label>
                                                         <Col md="9">
                                                             <InputGroup>
                                                                 <Input className="form-control-sm" placeholder="" type="date" name="startdate" id="startdate" />
+                                                            </InputGroup>
+                                                        </Col>
+                                                    </Row>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <Row>
+                                                        <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginTop:"-5px"}}>Ficha de Ingreso:</Label>
+                                                    </Row>
+                                                </td>
+                                                <td>
+                                                    <Row>
+                                                        <Col md="9">
+                                                            <InputGroup>
+                                                                <Input className="form-control-sm" placeholder="" type="file" name="startdate" id="startdate" />
                                                             </InputGroup>
                                                         </Col>
                                                     </Row>
