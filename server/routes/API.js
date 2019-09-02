@@ -7,6 +7,25 @@ api.use(cors())
 process.env.SECRET_KEY = 'secret'
 const api_name = "/pdr_api/v1";
 
+api.get(api_name + '/hello', (req,res)=>{
+    db.sequelize
+        .query("select * from centro",{type:db.sequelize.QueryTypes.SELECT})
+        .then((result)=>{
+            // console.log(res.json(result))
+            res.json(result)
+        });
+});
+
+api.get(api_name + '/puesto', (req,res)=>{
+    db.sequelize
+        .query("select * from puesto",{type:db.sequelize.QueryTypes.SELECT})
+        .then((result)=>{
+            res.json(result);
+        });
+});
+
+
+
 api.get(api_name + '/equipos_o/:id_usuario', (req, res) => {
     db.sequelize.query("select * from cons_mis_equipos(" + req.params.id_usuario + ");",
         { type: db.sequelize.QueryTypes.SELECT }).then((result) => res.json(result))
