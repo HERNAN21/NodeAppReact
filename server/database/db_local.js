@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize")
 const db_local = {}
-const sequelize = new Sequelize("pool_recursos_qa", "pool_recursos_qa", "pool_recursos_qa#.", {
+// const sequelize = new Sequelize("database", "user", "password", {
+const sequelize = new Sequelize("db_playground", "pool_recursos_qa", "pool_recursos_qa#.", {
     host: 'localhost',
     port: 5432,
     dialect: 'postgres',

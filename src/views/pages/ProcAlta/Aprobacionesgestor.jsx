@@ -34,7 +34,7 @@ class Aprobacionesgestor extends React.Component {
     render() {
         return (
             <>
-             <SimpleHeader name="Aprovaciones Pendientes" parentName="Tables" />
+             <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>

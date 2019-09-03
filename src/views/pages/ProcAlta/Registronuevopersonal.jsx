@@ -83,7 +83,7 @@ class Registronuevopersonal extends React.Component {
                                 <tbody>
                                     <tr>
                                         <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalRemoneracion}>100{this.props.buttonLabel}</a>
+                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalNuevo}>100{this.props.buttonLabel}</a>
                                             {/* onClick={this.ModalRemoneracion} */}
                                             {/* {this.props.buttonLabel} */}
                                         </td>

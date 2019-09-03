@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText } from "reactstrap";
+import {Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText } from "reactstrap";
+
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
@@ -9,41 +10,96 @@ import Select from 'react-select';
 
 // Import api node js
 import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
-console.log(api_name);
+import 'react-block-ui/style.css';
+// console.log(api_name);
 
 //  /puesto
-
 
 class Solicitud extends React.Component {
 
     constructor(props){
-        super();
+        super(props);
 
-        this.solicitud={
+        this.state={
             server:server,
+            puesto:[],
             modalidad:[],
-        }
+            equipo:[],
+            accesos:[],
+            comment: ''
 
+        }
+        
+        this.setState({comment: 'Hello'});
+        
+        console.log(this.state.comment);
+        
         this.recursoSession = JSON.parse(sessionStorage.recursoSession);
         // console.log(this.recursoSession);
-        fetch(this.solicitud.server + api_name + '/puesto')
+        fetch(this.state.server + api_name + '/service_grupo/PUESTO')
+        .then(response=>response.json())
+        .then(
+            (puesto)=>this.setState({puesto})
+            // puesto=>{
+            //     this.setState(puesto);
+            //     for (let i = 0; i < puesto.length; i++) {
+            //         const element = puesto[i];
+            //         // console.log(element.id)
+            //     }
+            //     // console.log(modalidad);
+            // }
+        );
+
+        console.log(this.state.puesto);
+
+        fetch(this.state.server + api_name + '/service_grupo/MODALIDAD')
         .then(response=>response.json())
         .then(
             modalidad=>{
-                this.setState({modalidad})
-                console.log(modalidad);
+                this.setState(modalidad);
+                for (let i = 0; i < modalidad.length; i++) {
+                    const element = modalidad[i];
+                    // console.log(element.id)
+                    
+                }
+                // console.log(modalidad);
             }
-            // modalidad=>this.setState({modalidad})
+        );
 
-            // res=>this.setState({
-            //     res
-            // })
+
+        fetch(this.state.server + api_name + '/service_grupo/EQUIPO')
+        .then(response=>response.json())
+        .then(
+            equipo=>{
+                this.setState(equipo);
+                for (let i = 0; i < equipo.length; i++) {
+                    const element = equipo[i];
+                    // console.log(element.id)
+                    
+                }
+                // console.log(modalidad);
+            }
+        );
+
+        fetch(this.state.server + api_name + '/service_grupo/ACCESOS')
+        .then(response=>response.json())
+        .then(
+            accesos=>{
+                this.setState(accesos);
+                for (let i = 0; i < accesos.length; i++) {
+                    const element = accesos[i];
+                    // console.log(element.id)
+                    
+                }
+                // console.log(modalidad);
+            }
         );
         
-        console.log(this.solicitud.modalidad);
+        console.log(this.state.modalidad);
         
-        // console.log(this.solicitud.server + api_name + '/puesto');
     }
+
+    
 
     render() {
         return (
@@ -102,27 +158,30 @@ class Solicitud extends React.Component {
                         <Row>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Descripción de Puesto</Label>
                             <Col md="2">
-                            <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
+                                {/* <Select options={this.solicitud.modalidad} isClearable isSearchable placeholder="Puesto"/> */}
+                            {/* <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
                                 <option>Text 1</option>
                                 <option>Text 2</option>
-                            </Input>
+                            </Input> */}
                             </Col>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Cantidad de Recurso</Label>
                             <Col md="3">
-                            <Input type="select" name="select" id="exampleSelect" className="form-control-sm" style={{width: "90%"}}>
-                                <option>Text 1</option>
-                                <option>Text 2</option>
-                            </Input>
+                                <Input type="text" name="cantidad" id="exampleSelect" className="form-control-sm" style={{width: "90%"}} />
                             </Col>
                         </Row>
                         <br/>
                         <Row>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Modalidad</Label>
                             <Col md="2">
-                            <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
+                            {/* <Select options={this.solicitud.modalidad} isClearable isSearchable placeholder="Modalidad"/> */}
+                            {/* changeModalidad */}
+
+                            {/* <Select options={this.state.listUnidadTiempo} placeholder="" onChange={e=>this.changeUnidad(e,i)} /> */}
+
+                            {/* <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
                                 <option>Text 1</option>
                                 <option>Text 2</option>
-                            </Input>
+                            </Input> */}
                             </Col>
                             <Col md="4">
                                 <FormGroup>

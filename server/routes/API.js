@@ -7,10 +7,37 @@ api.use(cors())
 process.env.SECRET_KEY = 'secret'
 const api_name = "/pdr_api/v1";
 
+
+
+// Start api solicitud
+
+api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
+    db.sequelize
+        .query('select * from grupo WHERE grupo = :grupo ',
+            { replacements: { grupo: req.params.grupo }, type: db.sequelize.QueryTypes.SELECT }
+        )
+        .then((result) => {
+            res.json(result);
+            // console.log(result);
+        });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 api.get(api_name + '/hello', (req,res)=>{
     db.sequelize
         .query("select * from centro",{type:db.sequelize.QueryTypes.SELECT})
-        .then((result)=>{
+        .then(result=>{
             // console.log(res.json(result))
             res.json(result)
         });
