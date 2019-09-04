@@ -16,58 +16,65 @@ import 'react-block-ui/style.css';
 //  /puesto
 
 class Solicitud extends React.Component {
-
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state={
+        this.state = {
             server:server,
             puesto:[],
             modalidad:[],
             equipo:[],
             accesos:[],
-            comment: ''
+            plazo:[],
+            descripcion_modalidad: ''
+        };
+        // fetch(this.state.server + api_name + '/service_grupo/PUESTO')
+        // .then(response=>response.json())
+        // .then((puesto)=>this.setState({puesto:puesto}));
 
-        }
+        // fetch(this.state.server + api_name + '/service_grupo/MODALIDAD')
+        // .then(response=>response.json())
+        // .then((modalidad)=>this.setState({modalidad:modalidad}));
+
+        // fetch(this.state.server + api_name + '/service_grupo/EQUIPO')
+        // .then(response=>response.json())
+        // .then((equipo)=>this.setState({equipo:equipo}));
+
+        // fetch(this.state.server + api_name + '/service_grupo/ACCESOS')
+        // .then(response=>response.json())
+        // .then((accesos)=>this.setState({accesos:accesos}));
         
-        this.setState({comment: 'Hello'});
-        
-        console.log(this.state.comment);
-        
-        this.recursoSession = JSON.parse(sessionStorage.recursoSession);
-        // console.log(this.recursoSession);
-        fetch(this.state.server + api_name + '/service_grupo/PUESTO')
+        // General
+        fetch(this.state.server + api_name + '/service_grupo')
         .then(response=>response.json())
-        .then(
-            (puesto)=>this.setState({puesto})
-            // puesto=>{
-            //     this.setState(puesto);
-            //     for (let i = 0; i < puesto.length; i++) {
-            //         const element = puesto[i];
-            //         // console.log(element.id)
-            //     }
-            //     // console.log(modalidad);
-            // }
-        );
-
-        console.log(this.state.puesto);
-
-        fetch(this.state.server + api_name + '/service_grupo/MODALIDAD')
-        .then(response=>response.json())
-        .then(
-            modalidad=>{
-                this.setState(modalidad);
-                for (let i = 0; i < modalidad.length; i++) {
-                    const element = modalidad[i];
-                    // console.log(element.id)
-                    
+        .then(function(data){
+            var puesto=[];
+            var modalidad=[];
+            var equipos=[];
+            var accesos=[];
+            var plazo=[];
+            for (let i = 0; i < data.length; i++) {
+                const datos = data[i];
+                if(datos.grupo=='PUESTO'){
+                    puesto.push(datos);
+                }else if(datos.grupo=='MODALIDAD'){
+                    modalidad.push(datos);
+                }else if(datos.grupo=='EQUIPO'){
+                    equipos.push(datos);
+                }else if(datos.grupo=='ACCESOS'){
+                    accesos.push(datos);
+                }else if(datos.grupo=='PLAZO'){
+                    plazo.push(datos);
                 }
-                // console.log(modalidad);
             }
-        );
+            this.setState({puesto:puesto});
+            this.setState({modalidad:modalidad});
+            this.setState({equipo:equipos});
+            this.setState({accesos:accesos});
+            this.setState({plazo:plazo});
+        }.bind(this));
         
-        // console.log(this.state.modalidad);
-        
+
         var datasolicitud={
             id_aprobador:'2',
             id_jefe_directo:'2',
@@ -103,13 +110,23 @@ class Solicitud extends React.Component {
         // });
 
 
-
-
     }
 
+    modalidadDes=(e)=>{
+
+        this.setState({descripcion_modalidad: 'true'});
+
+        const motivo = <>
+        
+            </>;
+        
+    }
     
 
     render() {
+        const misEquipos=this.state.equipo;
+        const misAccesos = this.state.accesos;
+        const misPlazos=this.state.plazo;
         return (
         <>
             <SimpleHeader name="Creación de Solicitud de alta" parentName="Forms" />
@@ -125,7 +142,7 @@ class Solicitud extends React.Component {
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Codigo Aprobador</Label>
                             <Col md="2">
                                 <InputGroup>
-                                    <Input className="form-control-sm" placeholder="" type="text"/>
+                                    <Input className="form-control-sm" placeholder="" type="text" onChange={this.puestoCargar}/>
                                     <InputGroupAddon addonType="append">
                                     <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                         <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -166,11 +183,17 @@ class Solicitud extends React.Component {
                         <Row>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Descripción de Puesto</Label>
                             <Col md="2">
-                                {/* <Select options={this.solicitud.modalidad} isClearable isSearchable placeholder="Puesto"/> */}
-                            {/* <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
-                                <option>Text 1</option>
-                                <option>Text 2</option>
-                            </Input> */}
+                                {/* <Select options={this.state.puesto} className="form-control-sm" isClearable isSearchable placeholder="Perfil"/> */}
+                                <Input type="select" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}}>
+                                    <option value="">[seleccione]</option>
+                                    {
+                                        this.state.puesto.map((v, i)=>{
+                                            return(<>
+                                                <option value={v.id}>{v.descripcion}</option>
+                                            </>);
+                                        })
+                                    }
+                                </Input>
                             </Col>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Cantidad de Recurso</Label>
                             <Col md="3">
@@ -181,19 +204,22 @@ class Solicitud extends React.Component {
                         <Row>
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Modalidad</Label>
                             <Col md="2">
-                            {/* <Select options={this.solicitud.modalidad} isClearable isSearchable placeholder="Modalidad"/> */}
-                            {/* changeModalidad */}
+                                {/* <Select options={this.state.modalidad} className="form-control-sm" isClearable isSearchable placeholder="Modalidad" onChange={this.modalidadDes}/> */}
 
-                            {/* <Select options={this.state.listUnidadTiempo} placeholder="" onChange={e=>this.changeUnidad(e,i)} /> */}
-
-                            {/* <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
-                                <option>Text 1</option>
-                                <option>Text 2</option>
-                            </Input> */}
+                                <Input type="select" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}} onChange={this.modalidadDes}>
+                                    <option value="">[seleccione]</option>
+                                    {
+                                        this.state.modalidad.map((v, i)=>{
+                                            return(<>
+                                                <option value={v.id}>{v.descripcion}</option>
+                                            </>);
+                                        })
+                                    }
+                                </Input>
                             </Col>
                             <Col md="4">
                                 <FormGroup>
-                                    <Input type="text" name="" id="" className="form-control-sm" placeholder="Descripción de la modalidad" disabled/>
+                                    <Input type="text" value={this.state.descripcion_modalidad} name="" id="" className="form-control-sm" placeholder="Descripción de la modalidad" disabled/>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -205,9 +231,17 @@ class Solicitud extends React.Component {
                             </Col>
                             <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"29px", marginTop:"-5px"}}>Plazo</Label>
                             <Col md="3">
+                                {/* <Select options={this.state.plazo} className="form-control-sm" isClearable isSearchable placeholder="Plazo"/> */}
+
                                 <Input type="select" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}}>
-                                    <option>Text 1</option>
-                                    <option>Text 2</option>
+                                    <option value="">[seleccione]</option>
+                                    {
+                                        misPlazos.map((v, i)=>{
+                                            return(<>
+                                                <option value={v.id}>{v.descripcion}</option>
+                                            </>);
+                                        })
+                                    }
                                 </Input>
                             </Col>
                         </Row>
@@ -216,35 +250,35 @@ class Solicitud extends React.Component {
                             <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Equipo</Label>
                             <Col md="2">
                                 <Card body style={{padding:"5px", margin:"5px"}}>
-                                    <FormGroup check style={{width:"90%"}}>
-                                    <Label check>
-                                        <Input type="checkbox" id="checkbox2" />{' '}
-                                        Check me out
-                                    </Label>
-                                    </FormGroup>
-                                    <FormGroup check>
-                                    <Label check>
-                                        <Input type="checkbox" id="checkbox2" />{' '}
-                                        Check me out
-                                    </Label>
-                                    </FormGroup>
+                                    {
+                                        misEquipos.map((v, i) => {
+                                            return(<>
+                                                <FormGroup check style={{width:"90%"}}>
+                                                    <Label check>
+                                                        <Input type="checkbox" value={v.id} id="checkbox2" />{' '}
+                                                        {v.descripcion}
+                                                    </Label>
+                                                </FormGroup>
+                                            </>);
+                                        })
+                                    }
                                 </Card>
                             </Col>
                             <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"10px", marginTop:"-5px"}}>Acceso</Label>
                             <Col md="3">
                                 <Card body style={{padding:"5px", margin:"5px"}}>
-                                    <FormGroup check style={{width:"90%"}}>
-                                    <Label check>
-                                        <Input type="checkbox" id="checkbox2" />{' '}
-                                        Check me out
-                                    </Label>
-                                    </FormGroup>
-                                    <FormGroup check>
-                                    <Label check>
-                                        <Input type="checkbox" id="checkbox2" />{' '}
-                                        Check me out
-                                    </Label>
-                                    </FormGroup>
+                                    {
+                                        misAccesos.map((v, i) => {
+                                            return(<>
+                                                <FormGroup check style={{width:"90%"}}>
+                                                    <Label check>
+                                                        <Input type="checkbox" id="checkbox2" />{' '}
+                                                        {v.descripcion}
+                                                    </Label>
+                                                </FormGroup>
+                                            </>);
+                                        })
+                                    }
                                 </Card>
                             </Col>
                         </Row>

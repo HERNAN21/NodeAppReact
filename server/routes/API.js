@@ -13,7 +13,8 @@ const api_name = "/pdr_api/v1";
 // Parameters
 api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
     db.sequelize
-        .query('select * from grupo WHERE grupo = :grupo ',
+        // .query('select * from grupo WHERE grupo = :grupo ',
+            .query('select id as value, descripcion as label,* from grupo where grupo = :grupo',
             { replacements: { grupo: req.params.grupo }, type: db.sequelize.QueryTypes.SELECT }
         )
         .then((result) => {
@@ -23,9 +24,53 @@ api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
 
 api.get(api_name + '/service_grupo', (req,res)=>{
     db.sequelize
-        .query('select * from grupo ',{type: db.sequelize.QueryTypes.SELECT })
+        .query('select id as value, descripcion as label,* from grupo ',{type: db.sequelize.QueryTypes.SELECT })
         .then((result) => {
             res.json(result);
+        });
+});
+
+
+// buscar usuario
+
+api.get(api_name + '/aprobador/:codigo',(req,res)=>{
+    db.sequelize
+        .query('select * from users where codigo= :codigo ', {replacements:{codigo: req.params.codigo},type: db.sequelize.QueryTypes.SELECT})
+        .then((result)=>{
+            res.json(result);
+        })
+});
+
+
+
+api.get(api_name + '/service_grupo1', (req,res)=>{    
+    db.sequelize
+        .query('select id as value, descripcion as label,* from grupo ',{type: db.sequelize.QueryTypes.SELECT })
+        .then((result) => {
+            var grupo=[];
+            
+            for (let i = 0; i < result.length; i++) {
+                const element = result[i];
+                if (element.grupo=='PUESTO') {
+                    const puesto=[{'puesto':element}];
+                    grupo.push(puesto);
+                }else if(element.grupo=='MODALIDAD'){
+                    const modalidad=[{'modalidad':element}];
+                    grupo.push(modalidad);
+                }else if(element.grupo=='EQUIPO'){
+                    const equipo=[{'equipo':element}];
+                    grupo.push(equipo);
+                }else if(element.grupo=='ACCESOS'){
+                    const accesos=[{'accesos':element}];
+                    grupo.push(accesos);
+                }else if(element.grupo=='PLAZO'){
+                    const plazo=[{'plazo':element}];
+                    grupo.push(plazo);
+                }
+            }
+            console.log(grupo);
+            res.json(grupo);
+            // res.json(result);
         });
 });
 
