@@ -95,8 +95,42 @@ class Solicitud extends React.Component {
             }
         );
         
-        console.log(this.state.modalidad);
+        // console.log(this.state.modalidad);
         
+        var datasolicitud={
+            id_aprobador:'2',
+            id_jefe_directo:'2',
+            id_puesto:'2',
+            id_puesto_tipo:'PUESTO',
+            cantidad: 10,
+            id_modalidad:'12',
+            id_modalidad_tipo:'MODALIDAD',
+            fecha_estimada_inicio:'2019-09-20',
+            id_plazo:'17',
+            id_plazo_tipo:'PLAZO', 
+            nombre_cliente:'Herna Rojas Utani',
+            descripcion_servicio:"a",
+            volumen_motivo:"a",
+            inicio_estimado_tiempo:'2019-10-01',
+            estimacion_duracion_tiempo:'3 meses',
+            observaciones:'Ninguno', 
+            descripcion:'Descripcion detalls',
+            remoneracion:'5000.00',
+            usuario_registro:'HROJAS',
+            estado:'0'
+        }
+
+        fetch(this.state.server + api_name + '/solicitudes',{
+            method: 'POST', 
+            body:  JSON.stringify(datasolicitud),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res=>res.json())
+        .then(function (data){
+            data = JSON.parse(data);
+            console.log(data);
+        });
+
     }
 
     

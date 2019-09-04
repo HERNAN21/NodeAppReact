@@ -10,7 +10,7 @@ const api_name = "/pdr_api/v1";
 
 
 // Start api solicitud
-
+// Parameters
 api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
     db.sequelize
         .query('select * from grupo WHERE grupo = :grupo ',
@@ -18,10 +18,41 @@ api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
         )
         .then((result) => {
             res.json(result);
-            // console.log(result);
         });
 });
 
+api.get(api_name + '/service_grupo', (req,res)=>{
+    db.sequelize
+        .query('select * from grupo ',{type: db.sequelize.QueryTypes.SELECT })
+        .then((result) => {
+            res.json(result);
+        });
+});
+
+
+
+// Create Solicitud
+
+api.post(api_name + '/solicitudes',(req,res)=>{
+    var query = " insert into solicitud(id_aprobador,id_jefe_directo,id_puesto,id_puesto_tipo,cantidad,id_modalidad,id_modalidad_tipo,fecha_estimada_inicio, " +
+                " id_plazo,id_plazo_tipo,nombre_cliente,descripcion_servicio,volumen_motivo,inicio_estimado_tiempo,estimacion_duracion_tiempo, "+
+                " observaciones, descripcion,remoneracion,fecha_registro,usuario_registro,estado )";
+    var data =" values("+req.body.id_aprobador+","+req.body.id_jefe_directo+","+req.body.id_puesto+",'"+req.body.id_puesto_tipo+"','"+req.body.cantidad+"',"+req.body.id_modalidad+",'"+req.body.id_modalidad_tipo+
+                "','"+req.body.fecha_estimada_inicio+"',"+req.body.id_plazo+",'"+req.body.id_plazo_tipo+"','"+req.body.nombre_cliente+"','"+req.body.descripcion_servicio+
+                "','"+req.body.volumen_motivo+"','"+req.body.inicio_estimado_tiempo+"','"+req.body.estimacion_duracion_tiempo+"','"+req.body.observaciones+
+                "','"+req.body.descripcion+"','"+req.body.remoneracion+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
+
+    db.sequelize.query(query + data, {type: db.sequelize.QueryTypes.INSERT} )
+        .then(result=>{
+            res.json(result);
+            console.log(result);
+    })
+    console.log(req.body);
+})
+
+api.post(api_name+'/solicitudestest',(req,res)=>{
+    console.log(req.body.id_aprobador);
+});
 
 
 
