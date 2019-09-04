@@ -65,35 +65,6 @@ class Solicitud extends React.Component {
                 // console.log(modalidad);
             }
         );
-
-
-        fetch(this.state.server + api_name + '/service_grupo/EQUIPO')
-        .then(response=>response.json())
-        .then(
-            equipo=>{
-                this.setState(equipo);
-                for (let i = 0; i < equipo.length; i++) {
-                    const element = equipo[i];
-                    // console.log(element.id)
-                    
-                }
-                // console.log(modalidad);
-            }
-        );
-
-        fetch(this.state.server + api_name + '/service_grupo/ACCESOS')
-        .then(response=>response.json())
-        .then(
-            accesos=>{
-                this.setState(accesos);
-                for (let i = 0; i < accesos.length; i++) {
-                    const element = accesos[i];
-                    // console.log(element.id)
-                    
-                }
-                // console.log(modalidad);
-            }
-        );
         
         // console.log(this.state.modalidad);
         
@@ -120,16 +91,19 @@ class Solicitud extends React.Component {
             estado:'0'
         }
 
-        fetch(this.state.server + api_name + '/solicitudes',{
-            method: 'POST', 
-            body:  JSON.stringify(datasolicitud),
-            headers: { 'Content-Type': 'application/json' }
-        })
-        .then(res=>res.json())
-        .then(function (data){
-            data = JSON.parse(data);
-            console.log(data);
-        });
+        // fetch(this.state.server + api_name + '/solicitudes',{
+        //     method: 'POST', 
+        //     body:  JSON.stringify(datasolicitud),
+        //     headers: { 'Content-Type': 'application/json' }
+        // })
+        // .then(res=>res.json())
+        // .then(function (data){
+        //     data = JSON.parse(data);
+        //     console.log(data);
+        // });
+
+
+
 
     }
 

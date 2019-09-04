@@ -30,7 +30,6 @@ api.get(api_name + '/service_grupo', (req,res)=>{
 });
 
 
-
 // Create Solicitud
 
 api.post(api_name + '/solicitudes',(req,res)=>{
@@ -49,6 +48,7 @@ api.post(api_name + '/solicitudes',(req,res)=>{
     })
     console.log(req.body);
 })
+
 
 api.post(api_name+'/solicitudestest',(req,res)=>{
     console.log(req.body.id_aprobador);
