@@ -6,11 +6,24 @@ import Solicitar from "views/pages/tables/Solicitar.jsx";
 import Requerimientos from "views/pages/tables/Requerimientos.jsx";
 import CerrarSolicitud from "views/pages/tables/CerrarSolicitud.jsx";
 
-// Importart Nuevos Formularios
+// Alta
 import Solicitud from "views/pages/ProcAlta/Solicitud.jsx";
 import Aprobaciones from "views/pages/ProcAlta/Aprobaciones.jsx"
 import Aprobacionesgestor from "views/pages/ProcAlta/Aprobacionesgestor.jsx";
 import Requerimiento from "views/pages/ProcAlta/Requerimiento.jsx";
+import Registrocandidatos from "views/pages/ProcAlta/Registrocandidatos.jsx";
+import Siguimientosolicitud from "views/pages/ProcAlta/Siguimientosolicitud.jsx";
+import Registronuevopersonal from "views/pages/ProcAlta/Registronuevopersonal.jsx";
+import Validarenvioalta from "views/pages/ProcAlta/Validarenvioalta.jsx";
+import Registrodatosalta from "views/pages/ProcAlta/Registrodatosalta.jsx";
+import Seguimientonuevopersonal from "views/pages/ProcAlta/Seguimientonuevopersonal.jsx";
+// Baja
+import Creacionsolicitudbaja from "views/pages/ProcBaja/Creacionsolicitudbaja.jsx";
+import Seguimientosolicitudbaja from "views/pages/ProcBaja/Seguimientosolicitudbaja.jsx";
+import Seguimientosolicitudbajaadmin from "views/pages/ProcBaja/Seguimientosolicitudbajaadmin.jsx";
+
+// Renovaciones
+import Seguimientorenovacion from "views/pages/ProcRenovacion/Seguimientorenovacion.jsx";
 
 
 // import CierresPendienes from "views/pages/tables/CierresPendienes.jsx";
@@ -37,14 +50,14 @@ const routes = [
       {
         path: "/Aprobaciones",
         name: "Aprobaciones Pendientes",
-        icon: "ni ni-archive-2 text-green",
+        icon: "fa fa-check text-green",
         component: Aprobaciones,
         layout: "/admin"
       },
       {
         path:"/Aprobacionesgestor",
         name: "Aprobaciones Pendientes Gestor",
-        icon: "ni ni-archive-2 text-green",
+        icon: "fa fa-list text-green",
         component: Aprobacionesgestor,
         layout:"/admin"
       },
@@ -56,71 +69,78 @@ const routes = [
         layout:"/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Registrocandidatos",
         name: "Registro de Candidatos",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Registrocandidatos,
         layout: "/admin"
       },
+
       {
-        path: "/Aprobaciones",
+        path: "/Siguimientosolicitud",
         name: "Seguimiento de Solicitud de Alta",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Siguimientosolicitud,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Registronuevopersonal",
         name: "Registro de Nuevo Personal",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Registronuevopersonal,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Validarenvioalta",
         name: "Validación y Envio de Alta",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Validarenvioalta,
         layout: "/admin"
       },
+      // Lunes
       {
-        path: "/Aprobaciones",
+        path: "/Registrodatosalta",
         name: "Registro de datos de Alta",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Registrodatosalta,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Seguimientonuevopersonal",
         name: "Seguimiento de Nuevo Personal",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Seguimientonuevopersonal,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Creacionsolicitudbaja",
         name: "Creacion de Solicitud de Baja",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Creacionsolicitudbaja,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
+        path: "/Seguimientosolicitudbaja",
         name: "Seguimeinto de Solicitud de Baja",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Seguimientosolicitudbaja,
         layout: "/admin"
       },
       {
-        path: "/Aprobaciones",
-        name: "Seguimiento de Renovaciones",
+        path: "/Seguimientosolicitudbajaadmin",
+        name: "Seguimeinto de Solicitud de Baja Admin",
         icon: "ni ni-archive-2 text-green",
-        component: Solicitud,
+        component: Seguimientosolicitudbajaadmin,
         layout: "/admin"
       },
-
+      {
+        path: "/Seguimientorenovacion",
+        name: "Seguimiento de Renovaciones",
+        icon: "ni ni-archive-2 text-green",
+        component: Seguimientorenovacion,
+        layout: "/admin"
+      },
       
-
       // Old Examples
 
 

@@ -10,7 +10,7 @@ class Aprobaciones extends React.Component {
     render() {
         return (
             <>
-             <SimpleHeader name="Aprovaciones Pendientes" parentName="Tables" />
+             <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>
@@ -48,7 +48,7 @@ class Aprobaciones extends React.Component {
                                     <th>Creador de Solicitud</th>
                                     <th>Cantidad de Recursos</th>
                                     <th>Descripcion de Puesto</th>
-                                    <th>Remoneracion</th>
+                                    <th>Remoneración</th>
                                     <th>¿Aprobar?</th>
                                     <th />
                                     </tr>

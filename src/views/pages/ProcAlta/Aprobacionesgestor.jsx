@@ -1,16 +1,40 @@
 import React from "react";
 
 // reactstrap components
-import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col,FormGroup,Label,InputGroup,Input,InputGroupAddon,InputGroupText
+import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col,FormGroup,Label,InputGroup,Input,InputGroupAddon,InputGroupText,
+    Modal, ModalHeader, ModalBody, ModalFooter
 } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
 class Aprobacionesgestor extends React.Component {
+    
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            modal: false
+        };
+        this.ModalRemoneracion = this.ModalRemoneracion.bind(this);
+    }
+
+    ModalRemoneracion() {
+        this.setState(prevState => ({
+            modal: !prevState.modal
+        }));
+    }
+
+    AprobacionVicepresidencia(){
+        // aprobacionvic
+
+    }
+
+
+
     render() {
         return (
             <>
-             <SimpleHeader name="Aprovaciones Pendientes" parentName="Tables" />
+             <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
                 <Container className="mt--6" fluid>
                     <Card>
                         <CardHeader className="border-0" style={{marginBottom:"-50px"}}>
@@ -76,13 +100,13 @@ class Aprobacionesgestor extends React.Component {
                                         </td>
                                         <td>
                                             <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
+                                                <input defaultChecked type="checkbox" name="aprobacionvic" onClick={this.AprobacionVicepresidencia}/>
                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                             </label>
                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
                                         </td>
                                         <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}}>Ingresar</Button>
+                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
                                         </td>
                                         <td>
                                             <label className="custom-toggle">
@@ -118,7 +142,7 @@ class Aprobacionesgestor extends React.Component {
                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>
                                         </td>
                                         <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}}>Ingresar</Button>
+                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
                                         </td>
                                         <td>
                                             <label className="custom-toggle">
@@ -154,7 +178,7 @@ class Aprobacionesgestor extends React.Component {
                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
                                         </td>
                                         <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}}>Ingresar</Button>
+                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
                                         </td>
                                         <td>
                                             <label className="custom-toggle">
@@ -175,6 +199,75 @@ class Aprobacionesgestor extends React.Component {
                     </CardFooter>
                 </Card>
             </Container>
+            {/* Modal Remoneracion */}
+             {/* Modal Centro de Costos */}
+            <Modal isOpen={this.state.modal} ModalRemoneracion={this.ModalRemoneracion} className={this.props.className} style={{marginTop:"150px"}}>
+                {/* <ModalHeader ModalCentroCosto={this.ModalCentroCosto}>Centro de Costos</ModalHeader> */}
+                <ModalBody>
+                    <Card>
+                        <CardHeader style={{textAlign:"center"}}><b>Registrar</b></CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Moneda</Label>
+                                <Col md="8">
+                                    <FormGroup>
+                                        <Input  type="select" className="form-control-sm">
+                                            <option >Option 1</option>
+                                            <option >Option 2</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Remoneración Básica</Label>
+                                <Col md="8">
+                                    <FormGroup>
+                                        <Input  type="text" className="form-control-sm"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Vales</Label>
+                                <Col md="8">
+                                    <FormGroup>
+                                        <Input  type="text" className="form-control-sm"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Asignacion por Movilidad</Label>
+                                <Col md="8">
+                                    <FormGroup>
+                                        <Input  type="text" className="form-control-sm"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Asignación Otros</Label>
+                                <Col md="8">
+                                    <FormGroup>
+                                        <Input  type="text" className="form-control-sm"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="12">
+                                    <div style={{float:"right"}}>
+                                        <Button color="success" className="btn btn-sm" onClick={this.ModalRemoneracion}>Guardar</Button>
+                                        <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
+                                    </div>
+                                </Col>
+                            </Row>
+
+                        </CardBody>
+                    </Card>
+                </ModalBody>
+                {/* <ModalFooter>
+                    <Button color="success" className="btn btn-sm" onClick={this.ModalRemoneracion}>Guardar</Button>
+                    <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
+                </ModalFooter> */}
+            </Modal>
+
         </>
     );
   }
