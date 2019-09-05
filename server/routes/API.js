@@ -70,7 +70,7 @@ api.post(api_name + '/solicitudes',(req,res)=>{
         var query_detalls="insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)";
         for (let i = 0; i < req.body.detalle_solicitud.length; i++) {
             const element = req.body.detalle_solicitud[i];
-            var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+element.usuario_registro+"',"+element.estado+") ";
+            var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',0) ";
             db.sequelize.query(query_detalls + data_detalls, {type: db.sequelize.QueryTypes.INSERT} )
             .then(function(){
                 res.json({

@@ -50,14 +50,10 @@ class Solicitud extends React.Component {
                 fecha_estimada_inicio:'',
                 id_plazo:'',
                 id_plazo_tipo:'',
-
                 detalle_solicitud:[
                     {
                         id_grupo:8,
                         id_grupo_tipo:"EQUIPO",
-                        descripcion: "",
-                        usuario_registro:"HROJAS",
-                        estado:"0"
                     }
                 ],
                 nombre_cliente:'',
@@ -412,7 +408,6 @@ class Solicitud extends React.Component {
     }
 
     dataPlazo =(e)=>{
-        alert(e.target.value);
         const data = this.state.plazo;
         this.state.datasolicitud.id_plazo='';
         this.state.datasolicitud.id_plazo_tipo='';
@@ -427,6 +422,25 @@ class Solicitud extends React.Component {
     }
 
     // Equipo y acceso
+
+    dataEquipo =(e)=>{
+        var data = this.state.equipo;
+        var dataArra=[];
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.id==e.target.value) {
+                
+            }
+        }
+        console.log(e.target.value);
+        console.log(e.target.checked);
+    }
+
+    /*test={
+        id_grupo:8,
+        id_grupo_tipo:"EQUIPO",
+        descripcion: "",
+    }*/
 
 
     // Sustentacion
@@ -616,7 +630,7 @@ class Solicitud extends React.Component {
                                             return(<>
                                                 <FormGroup check style={{width:"90%"}}>
                                                     <Label check>
-                                                        <Input type="checkbox" value={v.id} id="checkbox2" />{' '}
+                                                        <Input type="checkbox" value={v.id} id="checkbox2" onClick={this.dataEquipo} />{' '}
                                                         {v.descripcion}
                                                     </Label>
                                                 </FormGroup>
