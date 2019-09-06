@@ -9,6 +9,7 @@ import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
 
 
+
 class Aprobaciones extends React.Component {
     constructor (props){
         super(props)
@@ -22,7 +23,8 @@ class Aprobaciones extends React.Component {
             },
 
         }
-        this.cargarData=this.cargarData(this);
+        this.cargarData=this.cargarData.bind(this);
+        // this.cargarData=this.cargarData(this);
     }
 
     cargarData=(e)=>{
@@ -44,9 +46,20 @@ class Aprobaciones extends React.Component {
     buscarNumeroSolicitud=(e)=>{
         var values=e.target.value;
         this.state.data_buscar.num_solicitud=values;
+        this.cargarData();
         this.forceUpdate();
     }
 
+    bucarEstado=(e)=>{
+        var values=e.target.value;
+        this.state.data_buscar.estado=values;
+        this.cargarData();
+        this.forceUpdate();
+    }
+
+    updateEstado=(e)=>{
+
+    }
 
 
 
@@ -69,7 +82,7 @@ class Aprobaciones extends React.Component {
                                             <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.buscarNumeroSolicitud}/>
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.buscarNumeroSolicitud}/>
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -77,10 +90,9 @@ class Aprobaciones extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Estado</Label>
                                     <Col md="2">
                                         <FormGroup>
-                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
-                                            <option>State 1</option>
-                                            <option>State 2</option>
-                                            <option>State 3</option>
+                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.bucarEstado} >
+                                            <option value="0">activo</option>
+                                            <option value="1">Incativo</option>
                                         </Input>
                                         </FormGroup>
                                     </Col>
