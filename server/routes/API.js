@@ -1,4 +1,5 @@
 const express = require("express")
+const app =express();
 const api = express.Router()
 const cors = require('cors')
 const mailer = require('express-mailer')
@@ -7,6 +8,18 @@ var https = require('https')
 api.use(cors())
 process.env.SECRET_KEY = 'secret'
 const api_name = "/pdr_api/v1";
+
+mailer.extend(app, {
+    from: 'ransadev@gamil.com',
+    host: 'smtp.gmail.com', // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+    auth: {
+        user: 'ransadev@gamil.com',
+        pass: 'ransadev*2020'
+    }
+});
 
 // Start api solicitud
 // Parameters
@@ -140,6 +153,35 @@ api.put(api_name+'/updatestatus',(req,res)=>{
 });
 
 
+api.get(api_name+'/send_mail',(req,res)=>{
+    console.log(app.mailer)
+    app.mailer.send(
+        'email',{
+            to: 'hernanrojasutani@gmail.com',
+            subject: 'test email',
+            otherProperty: 'Other Property',
+        },function(e){
+            if (e) {
+                res.json('error');
+                return;
+            }
+            res.json(e)
+        }
+    )
+    // app.mailer.send('email', {
+    //     to: 'hernanrojasutani@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+    //     subject: 'Test Email', // REQUIRED.
+    //     otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+    // }, function (err) {
+    // if (err) {
+    //     // handle error
+    //     console.log(err);
+    //     res.send('There was an error sending the email');
+    //     return;
+    // }
+    // res.send('Email Sent');
+    // });
+});
 
 
 
