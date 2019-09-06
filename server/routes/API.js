@@ -102,6 +102,9 @@ api.post(api_name+'/solicitudestest',(req,res)=>{
 });
 
 
+api.get(api_name+'/aprobacionespendientes',(req,res)=>{
+    
+})
 
 
 
