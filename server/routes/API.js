@@ -7,20 +7,103 @@ api.use(cors())
 process.env.SECRET_KEY = 'secret'
 const api_name = "/pdr_api/v1";
 
-
-
 // Start api solicitud
-
+// Parameters
 api.get(api_name + '/service_grupo/:grupo', (req,res)=>{
     db.sequelize
-        .query('select * from grupo WHERE grupo = :grupo ',
+        // .query('select * from grupo WHERE grupo = :grupo ',
+            .query('select id as value, descripcion as label,* from grupo where grupo = :grupo',
             { replacements: { grupo: req.params.grupo }, type: db.sequelize.QueryTypes.SELECT }
         )
         .then((result) => {
             res.json(result);
-            // console.log(result);
         });
 });
+
+api.get(api_name + '/service_grupo', (req,res)=>{
+    db.sequelize
+        .query('select id as value, descripcion as label,* from grupo ',{type: db.sequelize.QueryTypes.SELECT })
+        .then((result) => {
+            res.json(result);
+        });
+});
+
+// buscar usuario
+
+api.get(api_name + '/aprobador/:codigo',(req,res)=>{
+    db.sequelize
+        .query('select * from users where codigo= :codigo ', {replacements:{codigo: req.params.codigo},type: db.sequelize.QueryTypes.SELECT})
+        .then((result)=>{
+            res.json(result);
+        })
+});
+
+api.get(api_name + '/aprobador',(req,res)=>{
+    var query = " select id,ltrim(codigo)as codigo,ltrim(sociedad)as sociedad,ltrim(codigo_division)as codigo_division, "+
+                " ltrim(nombre_division_personal)as nombre_division_personal,ltrim(codigo_sub_division)as codigo_sub_division,"+
+                " ltrim(nombres_sub_division)as nombres_sub_division,ltrim(dni)as dni,ltrim(nombres)as nombres,ltrim(apellido_paterno)as apellido_paterno,"+
+                " ltrim(apellido_materno)as apellido_materno,ltrim(email_corp)as email_corp,ltrim(email_personal)as email_personal,"+
+                " ltrim(codigo_posicion)as codigo_posicion,ltrim(descripcion_posicion)as descripcion_posicion,ltrim(codigo_centro_coste)as codigo_centro_coste,"+
+                " ltrim(centro_coste)as centro_coste,ltrim(codigo_funcion)as codigo_funcion,ltrim(funcion)as funcion,ltrim(codigo_ocupacion)as codigo_ocupacion,"+
+                " ltrim(ocupacion)as ocupacion,ltrim(codigo_unidad_org)as codigo_unidad_org,ltrim(unidad_organizativa)as unidad_organizativa,"+
+                " fecha_nac,inicio_contrata,fin_contrata,ltrim(cod_jefe)as cod_jefe,"+
+                " ltrim(saldo_dias_vacaion)as saldo_dias_vacaion,ltrim(saldo_dias_descanso)as saldo_dias_descanso,ltrim(categoria) as categoria "+
+                " from users";
+    db.sequelize
+        .query(query, {type: db.sequelize.QueryTypes.SELECT})
+        .then((result)=>{
+            res.json(result);
+        })
+});
+
+// Create Solicitud
+api.post(api_name + '/solicitudes',(req,res)=>{
+    var query = " insert into solicitud(id_aprobador,id_jefe_directo,id_puesto,id_puesto_tipo,cantidad,id_modalidad,id_modalidad_tipo,fecha_estimada_inicio, " +
+                " id_plazo,id_plazo_tipo,nombre_cliente,descripcion_servicio,volumen_motivo,inicio_estimado_tiempo,estimacion_duracion_tiempo, "+
+                " observaciones, descripcion,remoneracion,fecha_registro,usuario_registro,estado )";
+    var data =" values("+req.body.id_aprobador+","+req.body.id_jefe_directo+","+req.body.id_puesto+",'"+req.body.id_puesto_tipo+"','"+req.body.cantidad+"',"+req.body.id_modalidad+",'"+req.body.id_modalidad_tipo+
+                "','"+req.body.fecha_estimada_inicio+"',"+req.body.id_plazo+",'"+req.body.id_plazo_tipo+"','"+req.body.nombre_cliente+"','"+req.body.descripcion_servicio+
+                "','"+req.body.volumen_motivo+"','"+req.body.inicio_estimado_tiempo+"','"+req.body.estimacion_duracion_tiempo+"','"+req.body.observaciones+
+                "','"+req.body.descripcion+"','"+req.body.remoneracion+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
+    db.sequelize.query(query + data, {type: db.sequelize.QueryTypes.INSERT})
+    .then(function(data){
+        if (req.body.detalle_solicitud.length>0) {
+            var query_detalls="insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)";
+            for (let i = 0; i < req.body.detalle_solicitud.length; i++) {
+                const element = req.body.detalle_solicitud[i];
+                var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',0) ";
+                db.sequelize.query(query_detalls + data_detalls, {type: db.sequelize.QueryTypes.INSERT} )
+                .then(function(){
+                    res.json({
+                        "respuesta" : "success",
+                        "data" : data
+                    });
+                }).catch(function(err){
+                    res.json({
+                        "respuesta" : "error",
+                        "data" : err
+                    });
+                })
+            }
+        }
+    }).catch(function(err){
+        res.json({
+            "Message" : "error",
+            "data" : err
+        });
+          console.log(err);
+    });
+    console.log(req.body);
+})
+
+
+api.post(api_name+'/solicitudestest',(req,res)=>{
+    console.log(req.body.id_aprobador);
+});
+
+
+
+
 
 
 
