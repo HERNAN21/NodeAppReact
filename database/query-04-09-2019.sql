@@ -135,8 +135,20 @@ values(
 select * from users where codigo='0001';
 
 
+select * from solicitud;
+select * from detalle_solicitud;
 
 
+insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)
+values(1,7,'EQUIPO','',now(),'HROJAS',0);
 
+select * from grupo;
+
+SELECT max(id) from solicitud;
+
+select id,ltrim(codigo),sociedad,codigo_division,nombre_division_personal,codigo_sub_division,nombres_sub_division,dni,nombres, 
+apellido_paterno,apellido_materno,email_corp,email_personal,codigo_posicion,descripcion_posicion,codigo_centro_coste,
+centro_coste,codigo_funcion,funcion,codigo_ocupacion,ocupacion,codigo_unidad_org,unidad_organizativa,fecha_nac,
+inicio_contrata,fin_contrata,cod_jefe,saldo_dias_vacaion,saldo_dias_descanso,categoria from users;
 
 

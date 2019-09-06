@@ -67,22 +67,24 @@ api.post(api_name + '/solicitudes',(req,res)=>{
                 "','"+req.body.descripcion+"','"+req.body.remoneracion+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
     db.sequelize.query(query + data, {type: db.sequelize.QueryTypes.INSERT})
     .then(function(data){
-        var query_detalls="insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)";
-        for (let i = 0; i < req.body.detalle_solicitud.length; i++) {
-            const element = req.body.detalle_solicitud[i];
-            var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',0) ";
-            db.sequelize.query(query_detalls + data_detalls, {type: db.sequelize.QueryTypes.INSERT} )
-            .then(function(){
-                res.json({
-                    "respuesta" : "success",
-                    "data" : data
-                });
-            }).catch(function(err){
-                res.json({
-                    "respuesta" : "error",
-                    "data" : err
-                });
-            })
+        if (req.body.detalle_solicitud.length>0) {
+            var query_detalls="insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)";
+            for (let i = 0; i < req.body.detalle_solicitud.length; i++) {
+                const element = req.body.detalle_solicitud[i];
+                var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',0) ";
+                db.sequelize.query(query_detalls + data_detalls, {type: db.sequelize.QueryTypes.INSERT} )
+                .then(function(){
+                    res.json({
+                        "respuesta" : "success",
+                        "data" : data
+                    });
+                }).catch(function(err){
+                    res.json({
+                        "respuesta" : "error",
+                        "data" : err
+                    });
+                })
+            }
         }
     }).catch(function(err){
         res.json({
@@ -91,12 +93,18 @@ api.post(api_name + '/solicitudes',(req,res)=>{
         });
           console.log(err);
     });
+    console.log(req.body);
 })
 
 
 api.post(api_name+'/solicitudestest',(req,res)=>{
     console.log(req.body.id_aprobador);
 });
+
+
+
+
+
 
 
 

@@ -16,14 +16,12 @@ import 'react-block-ui/style.css';
 //  /puesto
 
 
-function test(t){
-    return(<><h1>{t}</h1></>);
-}
 
 class Solicitud extends React.Component {
     constructor(props) {
         super(props);
-
+        
+        
         this.state = {
             server:server,
             puesto:[],
@@ -50,12 +48,7 @@ class Solicitud extends React.Component {
                 fecha_estimada_inicio:'',
                 id_plazo:'',
                 id_plazo_tipo:'',
-                detalle_solicitud:[
-                    {
-                        id_grupo:8,
-                        id_grupo_tipo:"EQUIPO",
-                    }
-                ],
+                detalle_solicitud:[],
                 nombre_cliente:'',
                 descripcion_servicio:"",
                 volumen_motivo:"",
@@ -115,6 +108,9 @@ class Solicitud extends React.Component {
 
         this.btnguardar=this.btnguardar.bind(this);
 
+
+
+        
     }
 
     inputchange (event){
@@ -425,23 +421,55 @@ class Solicitud extends React.Component {
 
     dataEquipo =(e)=>{
         var data = this.state.equipo;
-        var dataArra=[];
-        for (let i = 0; i < data.length; i++) {
-            const element = data[i];
-            if (element.id==e.target.value) {
-                
+        if (e.target.checked==true) {
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i];
+                if (element.id==e.target.value) {
+                    var d={id_grupo:e.target.value,id_grupo_tipo:element.grupo};
+                    this.state.datasolicitud.detalle_solicitud.push(d);
+                    console.log(element)
+                }
+            }
+        }else{
+            // Remove equipo
+            const datos_detall=this.state.datasolicitud.detalle_solicitud;
+            for (let i = 0; i < datos_detall.length; i++) {
+                if (datos_detall[i].id_grupo===e.target.value) {
+                    datos_detall.splice(datos_detall.indexOf(datos_detall[i]),1);
+                }
             }
         }
-        console.log(e.target.value);
-        console.log(e.target.checked);
+        console.log(this.state.datasolicitud.detalle_solicitud);
+        // console.log(e.target.value);
+        // console.log(e.target.checked);
+        this.forceUpdate();
     }
 
-    /*test={
-        id_grupo:8,
-        id_grupo_tipo:"EQUIPO",
-        descripcion: "",
-    }*/
-
+    dataAccesos =(e)=>{
+        var data = this.state.accesos;
+        if (e.target.checked==true) {
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i];
+                if (element.id==e.target.value) {
+                    var d={id_grupo:e.target.value,id_grupo_tipo:element.grupo};
+                    this.state.datasolicitud.detalle_solicitud.push(d);
+                    console.log(element)
+                }
+            }
+        }else{
+            // Remove equipo
+            const datos_detall=this.state.datasolicitud.detalle_solicitud;
+            for (let i = 0; i < datos_detall.length; i++) {
+                if (datos_detall[i].id_grupo===e.target.value) {
+                    datos_detall.splice(datos_detall.indexOf(datos_detall[i]),1);
+                }
+            }
+        }
+        console.log(this.state.datasolicitud.detalle_solicitud);
+        // console.log(e.target.value);
+        // console.log(e.target.checked);
+        this.forceUpdate();
+    }
 
     // Sustentacion
     dataNombreCliente=(e)=>{
@@ -630,7 +658,7 @@ class Solicitud extends React.Component {
                                             return(<>
                                                 <FormGroup check style={{width:"90%"}}>
                                                     <Label check>
-                                                        <Input type="checkbox" value={v.id} id="checkbox2" onClick={this.dataEquipo} />{' '}
+                                                        <Input type="checkbox" value={v.id} id="" onClick={this.dataEquipo} />{' '}
                                                         {v.descripcion}
                                                     </Label>
                                                 </FormGroup>
@@ -647,7 +675,7 @@ class Solicitud extends React.Component {
                                             return(<>
                                                 <FormGroup check style={{width:"90%"}}>
                                                     <Label check>
-                                                        <Input type="checkbox" id="checkbox2" />{' '}
+                                                        <Input type="checkbox" value={v.id} id="" onClick={this.dataAccesos} />{' '}
                                                         {v.descripcion}
                                                     </Label>
                                                 </FormGroup>
