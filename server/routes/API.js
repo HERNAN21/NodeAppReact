@@ -88,7 +88,7 @@ api.post(api_name + '/solicitudes',(req,res)=>{
         }
     }).catch(function(err){
         res.json({
-            "Message" : "error",
+            "respuesta" : "error",
             "data" : err
         });
           console.log(err);
@@ -101,9 +101,9 @@ api.post(api_name+'/solicitudestest',(req,res)=>{
     console.log(req.body.id_aprobador);
 });
 
-
+// Datos Aprobaciones Pendientes 
 api.post(api_name+'/aprobacionespendientes',(req,res)=>{
-    var query = "select * from solicitud where 0=0 ";
+    var query = "select * from solicitud where 0=0  ";
     var condicion1="";
     if (req.body.num_solicitud != "") {
         condicion1=" and  id='"+req.body.num_solicitud+"'"; 
@@ -112,18 +112,20 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
     if (req.body.estado != "") {
         condicion12=" and estado='"+req.body.estado+"'";
     }
+    var limit =" limit 15";
     db.sequelize
-        .query(query + condicion1 + condicion12, {type: db.sequelize.QueryTypes.SELECT})
+        .query(query + condicion1 + condicion12+ limit, {type: db.sequelize.QueryTypes.SELECT})
         .then(result=>{
-            res.json(result)
-            console.log(result);
+            res.json({"respuesta" :"success","result" :result})
         })
         .catch(e=>{
-            res.json(e);
+            res.json(
+                {"respuesta" : "error","result" : e}
+            );
         })
 
-    
 })
+
 
 
 

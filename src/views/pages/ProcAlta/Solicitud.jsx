@@ -99,7 +99,6 @@ class Solicitud extends React.Component {
 
         // Insert data solicitud
         
-
         this.inputchange = this.inputchange.bind(this);
         this.buscar_user_apro = this.buscar_user_apro.bind(this);
         
