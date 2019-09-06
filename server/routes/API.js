@@ -102,7 +102,26 @@ api.post(api_name+'/solicitudestest',(req,res)=>{
 });
 
 
-api.get(api_name+'/aprobacionespendientes',(req,res)=>{
+api.post(api_name+'/aprobacionespendientes',(req,res)=>{
+    var query = "select * from solicitud where 0=0 ";
+    var condicion1="";
+    if (req.body.num_solicitud != "") {
+        condicion1=" and  id='"+req.body.num_solicitud+"'"; 
+    }
+    var condicion12="";
+    if (req.body.estado != "") {
+        condicion12=" and estado='"+req.body.estado+"'";
+    }
+    db.sequelize
+        .query(query + condicion1 + condicion12, {type: db.sequelize.QueryTypes.SELECT})
+        .then(result=>{
+            res.json(result)
+            console.log(result);
+        })
+        .catch(e=>{
+            res.json(e);
+        })
+
     
 })
 
