@@ -21,7 +21,10 @@ class Aprobaciones extends React.Component {
                 num_solicitud:'',
                 estado:''
             },
-
+            data_update:{
+                id_solicitud:'',
+                estado:''
+            }
         }
         this.cargarData=this.cargarData.bind(this);
         // this.cargarData=this.cargarData(this);
@@ -58,9 +61,29 @@ class Aprobaciones extends React.Component {
     }
 
     updateEstado=(e)=>{
-
+        alert(e.target.value);
+        // fetch(this.state.server + api_name+'/updatestatus',{
+        //     method: 'POST',
+        //     body: JSON.stringify(this.state.data_update),
+        //     headers:{'Content-Type':'application/json'}
+        // })
+        // .then(res=>res.json())
+        // .then(function (data) {
+        //     if (data.respuesta=='success') {
+        //         console.log(data.respuesta);
+        //     } else {
+        //         console.log(data.respuesta);
+        //     }
+        // })
     }
 
+    cargarEstado(value){
+        // if (value==1) {
+        //     return false;
+        // }else{
+        //     return true;
+        // }
+    }
 
 
 
@@ -91,6 +114,7 @@ class Aprobaciones extends React.Component {
                                     <Col md="2">
                                         <FormGroup>
                                         <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.bucarEstado} >
+                                            <option value="">[seleccione]</option>
                                             <option value="0">activo</option>
                                             <option value="1">Incativo</option>
                                         </Input>
@@ -115,7 +139,6 @@ class Aprobaciones extends React.Component {
                                 <tbody>
                                     {
                                         data_listar.map((listado,i)=>{
-                                            
                                             return (
                                                 <>
                                                     <tr>
@@ -142,7 +165,7 @@ class Aprobaciones extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" />
+                                                                <input defaultChecked type="checkbox" value={listado.id} checked={this.cargarEstado(listado.estado)} onChange={this.updateEstado}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                         </td>

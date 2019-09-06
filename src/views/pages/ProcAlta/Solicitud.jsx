@@ -58,7 +58,7 @@ class Solicitud extends React.Component {
                 descripcion:'',
                 remoneracion:'',
                 usuario_registro:'HROJAS',
-                estado:'0',
+                estado:'1',
             }
 
         };

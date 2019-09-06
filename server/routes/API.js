@@ -71,7 +71,7 @@ api.post(api_name + '/solicitudes',(req,res)=>{
             var query_detalls="insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)";
             for (let i = 0; i < req.body.detalle_solicitud.length; i++) {
                 const element = req.body.detalle_solicitud[i];
-                var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',0) ";
+                var data_detalls=" values((SELECT max(id) from solicitud),"+element.id_grupo+",'"+element.id_grupo_tipo+"','',now(),'"+req.body.usuario_registro+"',1) ";
                 db.sequelize.query(query_detalls + data_detalls, {type: db.sequelize.QueryTypes.INSERT} )
                 .then(function(){
                     res.json({
@@ -112,7 +112,7 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
     if (req.body.estado != "") {
         condicion12=" and estado='"+req.body.estado+"'";
     }
-    var limit =" limit 15";
+    var limit =" order by id desc limit 15";
     db.sequelize
         .query(query + condicion1 + condicion12+ limit, {type: db.sequelize.QueryTypes.SELECT})
         .then(result=>{
@@ -124,7 +124,19 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             );
         })
 
-})
+});
+
+// update solicitud status 
+api.put(api_name+'/updatestatus',(req,res)=>{
+    var query =" update solicitud set estado=:estado where id=:id_solicitud ";
+    db.sequelize.query(query, {replacements:{estado:req.body.estado, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE},{type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })  
+});
 
 
 

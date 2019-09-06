@@ -135,8 +135,13 @@ values(
 select * from users where codigo='0001';
 
 
-select * from solicitud;
-select * from detalle_solicitud;
+select * from solicitud limit 10;
+select * from detalle_solicitud ;
+
+select * from detalle_solicitud where id_solicitud=39;
+
+
+select * from solicitud where id=1 and estado=0;
 
 
 insert into detalle_solicitud(id_solicitud,id_grupo,id_grupo_tipo,descripcion,fecha_registro,usuario_registro,estado)
@@ -150,5 +155,11 @@ select id,ltrim(codigo),sociedad,codigo_division,nombre_division_personal,codigo
 apellido_paterno,apellido_materno,email_corp,email_personal,codigo_posicion,descripcion_posicion,codigo_centro_coste,
 centro_coste,codigo_funcion,funcion,codigo_ocupacion,ocupacion,codigo_unidad_org,unidad_organizativa,fecha_nac,
 inicio_contrata,fin_contrata,cod_jefe,saldo_dias_vacaion,saldo_dias_descanso,categoria from users;
+
+
+update solicitud set estado=1 where id=1;
+select estado, * from solicitud where id=1;
+
+
 
 
