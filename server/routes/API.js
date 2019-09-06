@@ -1,6 +1,7 @@
 const express = require("express")
 const api = express.Router()
 const cors = require('cors')
+const mailer = require('express-mailer')
 const db = require("../database/db_local")
 var https = require('https')
 api.use(cors())
