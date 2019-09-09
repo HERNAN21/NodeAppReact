@@ -42,7 +42,7 @@ class TimelineHeader extends React.Component {
                   >
                   </Breadcrumb>
                 </Col>
-                <Col className="text-right" lg="6" xs="5">
+                {/* <Col className="text-right" lg="6" xs="5">
                   <Button
                     className="btn-neutral"
                     color=""
@@ -61,7 +61,7 @@ class TimelineHeader extends React.Component {
                   >
                     Equipos
                   </Button>
-                </Col>
+                </Col> */}
               </Row>
             </div>
           </Container>
