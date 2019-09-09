@@ -36,7 +36,11 @@ ALTER TABLE solicitud ALTER id SET DEFAULT NEXTVAL('id_solicitud');
 
 ALTER TABLE solicitud ALTER COLUMN id_jefe_directo TYPE integer USING id_jefe_directo::integer;
 
+ALTER TABLE solicitud ADD COLUMN 
+sociedad varchar(100) null, ADD COLUMN lider_uo varchar(100) null, ADD COLUMN codigo_uo char(50) null, 
+ADD COLUMN descripcion_uo varchar(100) null, ADD COLUMN cod_divicion varchar(50), ADD COLUMN cod_sub_div varchar(50);
 
+select * from users;
 
 select * from grupo;
 select * from solicitud;
