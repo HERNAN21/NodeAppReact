@@ -20,10 +20,6 @@ class Aprobaciones extends React.Component {
             data_buscar:{
                 num_solicitud:'',
                 estado:''
-            },
-            data_update:{
-                id_solicitud:'',
-                estado:''
             }
         }
         this.cargarData=this.cargarData.bind(this);
@@ -61,20 +57,27 @@ class Aprobaciones extends React.Component {
     }
 
     updateEstado=(e)=>{
-        alert(e.target.value);
-        // fetch(this.state.server + api_name+'/updatestatus',{
-        //     method: 'POST',
-        //     body: JSON.stringify(this.state.data_update),
-        //     headers:{'Content-Type':'application/json'}
-        // })
-        // .then(res=>res.json())
-        // .then(function (data) {
-        //     if (data.respuesta=='success') {
-        //         console.log(data.respuesta);
-        //     } else {
-        //         console.log(data.respuesta);
-        //     }
-        // })
+        var estado=0;
+        if (e.target.checked==false) {
+            estado=1;
+        }
+        const data_update={
+            id_solicitud: e.target.value,
+            estado: estado
+        }
+        fetch(this.state.server + api_name+'/updatestatus',{
+            method: 'PUT',
+            body: JSON.stringify(data_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
     }
 
     cargarEstado(value){
@@ -91,7 +94,7 @@ class Aprobaciones extends React.Component {
     render() {
 
         const data_listar=this.state.solicitud_aprobaciones;
-        console.log(data_listar);
+        // console.log(data_listar);
         return (
             <>
              <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
@@ -138,7 +141,7 @@ class Aprobaciones extends React.Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        data_listar.map((listado,i)=>{
+                                        data_listar.map((listado,key)=>{
                                             return (
                                                 <>
                                                     <tr>
@@ -177,13 +180,13 @@ class Aprobaciones extends React.Component {
                                 </tbody>
                             </Table>
                         </CardBody>
-                    <CardFooter>
+                    {/* <CardFooter>
                         <Row>
                             <Col md="12">
                                 <Button color="success" className="btn btn-sm" style={{float:"right"}}>Confirmar</Button>
                             </Col>
                         </Row>
-                    </CardFooter>
+                    </CardFooter> */}
                 </Card>
             </Container>
         </>

@@ -104,16 +104,35 @@ api.post(api_name+'/solicitudestest',(req,res)=>{
 
 // Datos Aprobaciones Pendientes 
 api.post(api_name+'/aprobacionespendientes',(req,res)=>{
-    var query = "select * from solicitud where 0=0  ";
+    var query = "select "+
+            // data solicitudd
+            " sol.id,sol.id_aprobador,sol.id_jefe_directo,sol.id_puesto,sol.id_puesto_tipo,sol.cantidad,sol.id_modalidad,"+
+            " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
+            " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
+            " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
+            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            // data users
+            " us.id as id_apro,ltrim(us.codigo) as codigo_user,ltrim(us.sociedad)sociedad,us.codigo_division,us.nombre_division_personal,us.codigo_sub_division, "+
+            " us.nombres_sub_division,us.dni,us.nombres, us.apellido_paterno,us.apellido_materno,us.email_corp, "+
+            " us.email_personal,us.codigo_posicion,us.descripcion_posicion,us.codigo_centro_coste, "+
+            " us.centro_coste,us.codigo_funcion,us.funcion,us.codigo_ocupacion,us.ocupacion,us.codigo_unidad_org,us.unidad_organizativa, "+
+            " us.fecha_nac,us.inicio_contrata,us.fin_contrata,us.cod_jefe,us.saldo_dias_vacaion,us.saldo_dias_descanso,us.categoria, "+
+            // data Jefe dir
+            " j_d.id as id_jefe,ltrim(j_d.codigo) as codigo_jefe_dir, j_d.dni as dni_jefe,j_d.nombres as nombre_jefe, j_d.apellido_paterno as apellido_paterno_jefe, "+
+            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe "+
+            " from solicitud as sol"+
+            " inner join users as us on us.id=sol.id_aprobador "+
+            " inner join users as j_d on j_d.id=sol.id_jefe_directo"
+            " where 0=0  ";
     var condicion1="";
     if (req.body.num_solicitud != "") {
-        condicion1=" and  id='"+req.body.num_solicitud+"'"; 
+        condicion1=" and  sol.id='"+req.body.num_solicitud+"'"; 
     }
     var condicion12="";
     if (req.body.estado != "") {
-        condicion12=" and estado='"+req.body.estado+"'";
+        condicion12=" and sol.estado='"+req.body.estado+"'";
     }
-    var limit =" order by id desc limit 15";
+    var limit =" order by sol.id desc limit 15";
     db.sequelize
         .query(query + condicion1 + condicion12+ limit, {type: db.sequelize.QueryTypes.SELECT})
         .then(result=>{
@@ -136,8 +155,42 @@ api.put(api_name+'/updatestatus',(req,res)=>{
     })
     .catch((e)=>{
         res.json({'respuesta':'error','result':e});
-    })  
+    })
 });
+
+
+
+// Inssert Remoneracion
+
+api.post(api_name+'/remoneracion',(req,res)=>{
+    var query =" insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
+    // var values =" values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)";
+    var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remoneracion_basico+"','"+req.body.vales+"','"+
+                    req.body.asig_movilidad+"','"+req.body.asignacion_otros+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
+    db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e})
+    })
+    // console.log(req.body);
+});
+
+
+
+api.put(api_name+'/updatestatusvicepresidencia',(req,res)=>{
+    var query =" update solicitud set estado_vicepresidencia=:estado_vicepresidencia where id=:id_solicitud ";
+    db.sequelize.query(query, {replacements:{estado_vicepresidencia:req.body.estado_vicepresidencia, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE},{type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })
+})
+
+
 
 
 
