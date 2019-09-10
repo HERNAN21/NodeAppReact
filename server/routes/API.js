@@ -186,17 +186,49 @@ api.post(api_name+'/remoneracion',(req,res)=>{
 });
 
 
-
+// Aprobacion viceprosidencia
 api.put(api_name+'/updatestatusvicepresidencia',(req,res)=>{
     var query =" update solicitud set estado_vicepresidencia=:estado_vicepresidencia where id=:id_solicitud ";
-    db.sequelize.query(query, {replacements:{estado_vicepresidencia:req.body.estado_vicepresidencia, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE},{type:db.sequelize.QueryTypes.UPDATE})
+    db.sequelize.query(query, {replacements:{estado_vicepresidencia:req.body.estado_vicepresidencia, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE})
     .then((result)=>{
         res.json({'respuesta':'success', 'result':result})
     })
     .catch((e)=>{
         res.json({'respuesta':'error','result':e});
     })
-})
+});
+
+// guardar requerimiento solicitud
+// , ceco=:ceco, descuento_ceco=:descuento_ceco, porcentaje=:porcentaje
+
+api.put('',(req,res)=>{
+    var query = " update solicitud set glosa=:glosa,  sociedad=:sociedad, lider_uo=:lider_uo, codigo_uo=:codigo_uo, descripcion_uo=:descripcion_uo, "+
+                " cod_divicion=:cod_divicion, cod_sub_div=:cod_sub_div, sctr=:sctr, id_area_personal=:id_area_personal, id_relacion_personal=:id_relacion_personal, "+
+                " file_dp=:file_dp, direccion=:direccion  where id=:id ";
+    var data={id:req.body.id}
+    glosa
+    sociedad
+    lider_uo
+    codigo_uo
+    descripcion_uo
+    cod_divicion
+    cod_sub_div
+    sctr
+    id_area_personal
+    id_relacion_laboral
+    file_dp
+    direccion
+    db.sequelize.query(query,{replacements:data,type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })
+});
+
+
+
 
 
 
