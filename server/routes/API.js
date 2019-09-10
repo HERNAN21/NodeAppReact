@@ -201,7 +201,7 @@ api.put(api_name+'/updatestatusvicepresidencia',(req,res)=>{
 // guardar requerimiento solicitud
 // , ceco=:ceco, descuento_ceco=:descuento_ceco, porcentaje=:porcentaje
 
-api.put('',(req,res)=>{
+api.put(api_name+'/updaterequerimiento',(req,res)=>{
     var query = " update solicitud set glosa=:glosa,  sociedad=:sociedad, lider_uo=:lider_uo, codigo_uo=:codigo_uo, descripcion_uo=:descripcion_uo, "+
                 " cod_divicion=:cod_divicion, cod_sub_div=:cod_sub_div, sctr=:sctr, id_area_personal=:id_area_personal, id_relacion_personal=:id_relacion_personal, "+
                 " file_dp=:file_dp, direccion=:direccion  where id=:id ";
