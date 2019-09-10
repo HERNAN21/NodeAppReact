@@ -18,9 +18,10 @@ class Registrocandidatos extends React.Component {
                 creador_solicitud:''
             },
             data_solicitud_list:[],
-            // data_candidato:
+            data_candidato:{
+                id_solicitud:''
+            }
         }
-
 
         // this.cargarData=this.cargarData(this);
         this.cargarData=this.cargarData.bind(this);
@@ -60,13 +61,16 @@ class Registrocandidatos extends React.Component {
         this.forceUpdate();
     }
 
-    dataTest=(e)=>{
-        alert(e);
+    dataNuevoCandidato=(id_solicitud)=>{
+        this.state.data_candidato.id_solicitud=id_solicitud;
+        this.forceUpdate();
+
     }
 
 
   render() {
     const data_listar=this.state.data_solicitud_list;
+    const id_solicitud=this.state.data_candidato.id_solicitud;
     return (
       <>
         <SimpleHeader name="Registro de Candidatos" parentName="Tables" />
@@ -118,7 +122,7 @@ class Registrocandidatos extends React.Component {
                                     {
                                         data_listar.map((listado,key)=>{
                                             return (<>
-                                                    <tr onClick={()=>this.dataTest(listado.id)} >
+                                                    <tr onClick={()=>this.dataNuevoCandidato(listado.id)} >
                                                         <td className="table-user" style={{textAlign:"center"}} >
                                                             <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
                                                         </td>
@@ -168,7 +172,7 @@ class Registrocandidatos extends React.Component {
                     <CardHeader>
                         <Button className="btn btn-sm" color="primary" >Agregar Candidato <b>+</b></Button>
                         <br/>
-                        <span><b>Solicitud 100</b></span>
+                        <span><b>Solicitud {id_solicitud}</b></span>
                     </CardHeader>
                     <CardBody>
                         <Card style={{marginTop:"-10px"}}>
