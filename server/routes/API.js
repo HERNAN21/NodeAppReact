@@ -257,7 +257,10 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             // data grupo
             " puesto.id as puesto_id, puesto.grupo as puesto_grupo, puesto.descripcion as puesto_des, puesto.detalle as puesto_detalle, "+
             " modalidad.id as modalidad_id, modalidad.grupo as modalidad_grupo, modalidad.descripcion as modalidad_des, modalidad.detalle as modalidad_detalle,"+
-            " plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle "+
+            " plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle, "+
+            // Cantidad solicitante
+            " (select count(*) from candidato_solicitud as s where s.id_solicitud=sol.id) as cantidad_candidato " +
+
             " from solicitud as sol"+
             " inner join users as us on us.id=sol.id_aprobador "+
             " inner join users as j_d on j_d.id=sol.id_jefe_directo" +
@@ -287,6 +290,25 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             );
         })
 
+});
+
+
+// agregar candidatos
+
+api.post(api_name+'/candidatos',(req,res)=>{
+    var query ="     insert into candidato_solicitud  (id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento, numero_documento,disponibilidad,email,file_cv,observaciones,fecha_registro,usuario_registro,estado) ";
+    var values ="values("+req.body.id_solicitud+",'"+req.body.nombres+"','"+req.body.apellido_paterno+"','"+
+                        req.body.apellido_materno+"','"+req.body.tipo_documento+"','" +
+                        req.body.numero_documento+"','"+req.body.disponibilidad+"','"+req.body.email+"','"+req.body.file_cv+"','"+
+                        req.body.observaciones+"',now(),'"+req.body.usuario_registro+"',0)";
+    db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e})
+    })
+    // console.log(req.body);
 });
 
 

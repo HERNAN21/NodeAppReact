@@ -19,7 +19,17 @@ class Registrocandidatos extends React.Component {
             },
             data_solicitud_list:[],
             data_candidato:{
-                id_solicitud:''
+                id_solicitud:'',
+                nombres:"Hernan",
+                apellido_paterno:"Rojas",
+                apellido_materno:"Utani",
+                tipo_documento:"1",
+                numero_documento:"70586952",
+                disponibilidad:"1",
+                email:"test@gmail.com",
+                file_cv:"asd",
+                observaciones:"asd",
+                usuario_registro:"HROJAS"
             }
         }
 
@@ -64,7 +74,26 @@ class Registrocandidatos extends React.Component {
     dataNuevoCandidato=(id_solicitud)=>{
         this.state.data_candidato.id_solicitud=id_solicitud;
         this.forceUpdate();
+    }
 
+    // Guardar Candidato data_candidato
+
+    btnGuardar=(e)=>{
+        fetch(this.state.server + api_name+ '/candidatos',{
+            method: 'POST',
+            body: JSON.stringify(this.state.data_candidato),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                alert(data.respuesta)
+                console.log(data.result);
+                this.cargarData();
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
     }
 
 
@@ -148,7 +177,7 @@ class Registrocandidatos extends React.Component {
                                                             {/* {listado.} */}
                                                         </td>
                                                         <td style={{textAlign:"center"}}>
-                                                            
+                                                            {listado.cantidad_candidato}
                                                         </td>
                                                     </tr>
                                             </>);
@@ -170,7 +199,7 @@ class Registrocandidatos extends React.Component {
                 </Card>
                 <Card>
                     <CardHeader>
-                        <Button className="btn btn-sm" color="primary" >Agregar Candidato <b>+</b></Button>
+                        <Button className="btn btn-sm" color="primary" onClick={this.btnGuardar} >Agregar Candidato <b>+</b></Button>
                         <br/>
                         <span><b>Solicitud {id_solicitud}</b></span>
                     </CardHeader>
