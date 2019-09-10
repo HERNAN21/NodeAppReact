@@ -6,32 +6,207 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
+import { runInThisContext } from "vm";
+import { setTimeout } from "timers";
+import { Link } from "react-router-dom";
 
 class Aprobacionesgestor extends React.Component {
+
+
     
     constructor(props) {
         super(props);
 
         this.state = {
-            modal: false
+            server:server,
+            listado_solicitud:[],
+            buscar_listado:{
+                num_solicitud:'',
+                estado:''
+            },
+            data_update:{
+                id_solicitud:'',
+                estado:'',
+                estado_vicepresidencia:''
+            },
+
+            remoneracion_data_save:{
+                solicitud_id:'',
+                tipo_moneda:'',
+                remoneracion_basico:'',
+                vales:'',
+                asig_movilidad:'',
+                asignacion_otros:'',
+                usuario_registro:'HROJAS',
+                estado:'0'
+            },
+
+            aprobacionvicecheck: true,
+            modal: false,
+
         };
+
+        // this.cargarData=this.cargarData.bind(this);
+        this.cargarData=this.cargarData(this);
         this.ModalRemoneracion = this.ModalRemoneracion.bind(this);
+        
+        
+    }
+    
+    
+    
+    // this.props.router.push({
+    //     pathname: '/other-page',
+
+    //     state: {
+    //         id: 7,
+    //         color: 'green'
+    //     }
+    // })
+
+
+
+    cargarData=(e)=>{
+        fetch(this.state.server + api_name+ '/aprobacionespendientes',{
+            method: 'POST',
+            body: JSON.stringify(this.state.buscar_listado),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                this.setState({listado_solicitud:data.result})
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
+        
     }
 
-    ModalRemoneracion() {
+    // Abrir Modal y pasar data
+    ModalRemoneracion(data) {
+        this.state.remoneracion_data_save.solicitud_id=data.id;
+        this.forceUpdate();
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
     }
 
-    AprobacionVicepresidencia(){
+
+    
+
+
+    // data remonetarion
+
+    dataMoneda =(e)=>{
+        this.state.remoneracion_data_save.tipo_moneda=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataRemoneracion =(e)=>{
+        this.state.remoneracion_data_save.remoneracion_basico=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataVales=(e)=>{
+        this.state.remoneracion_data_save.vales=e.target.value;
+        this.forceUpdate();
+    }
+    
+    dataAsigMovilidad=(e)=>{
+        this.state.remoneracion_data_save.asig_movilidad=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataAsigOtros=(e)=>{
+        this.state.remoneracion_data_save.asignacion_otros=e.target.value;
+        this.forceUpdate();
+    }
+    
+
+    dataRemoneracionSave=(e) =>{
+        
+        var data_save = this.state.remoneracion_data_save;
+        fetch(this.state.server + api_name+ '/remoneracion',{
+            method: 'POST',
+            body: JSON.stringify(data_save),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                alert(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
+        
+    }
+    // update estado vicepresidencia
+
+    AprobacionVicepresidencia=(e)=>{
         // aprobacionvic
+        var estado=0;
+        if (e.target.checked==false) {
+            estado=1;
+        }
+        const data_update={
+            id_solicitud: e.target.value,
+            estado_vicepresidencia: estado
+        }
+        fetch(this.state.server + api_name+'/updatestatusvicepresidencia',{
+            method: 'PUT',
+            body: JSON.stringify(data_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+
+        // this.setState({aprobacionvicecheck: e.target.checked});
 
     }
+
+    // Update estado
+    updateEstado=(e)=>{
+        var estado=0;
+        if (e.target.checked==false) {
+            estado=1;
+        }
+        const data_update={
+            id_solicitud: e.target.value,
+            estado: estado
+        }
+        fetch(this.state.server + api_name+'/updatestatus',{
+            method: 'PUT',
+            body: JSON.stringify(data_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+    }
+    
+
+
+
+    
 
 
 
     render() {
+        const data_list=this.state.listado_solicitud;
         return (
             <>
              <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
@@ -66,137 +241,75 @@ class Aprobacionesgestor extends React.Component {
                             <Table className="align-items-center table-flush" responsive size="sm">
                                 <thead className="thead-light">
                                     <tr>
-                                    <th>Nro. Solicitud</th>
-                                    <th>Estado</th>
-                                    <th>Fecha De Creacion</th>
-                                    <th>Creador de Solicitud</th>
-                                    <th>Cantidad de Recursos</th>
-                                    <th>Descripcion de Puesto</th>
-                                    <th>Aprobación de Vicepresidencia</th>
-                                    <th>Remoneracion</th>
-                                    <th>¿Aprobar?</th>
+                                        <th style={{textAlign:"center"}} >Nro. <br/> Solicitud</th>
+                                        <th style={{textAlign:"center"}} >Estado</th>
+                                        <th style={{textAlign:"center"}} >Fecha <br/> De Creacion</th>
+                                        <th style={{textAlign:"center"}} >Creador de Solicitud</th>
+                                        <th style={{textAlign:"center"}} >Cantidad <br/> de <br/> Recursos</th>
+                                        <th style={{textAlign:"center"}} >Descripcion de Puesto</th>
+                                        <th style={{textAlign:"center"}} >Aprobación <br/> de Vicepresidencia</th>
+                                        <th style={{textAlign:"center"}} >Remoneracion</th>
+                                        <th style={{textAlign:"center"}} >¿Aprobar?</th>
                                     <th />
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" name="aprobacionvic" onClick={this.AprobacionVicepresidencia}/>
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                            <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                            <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                            <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar{this.props.buttonLabel}</Button>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
+                                    {
+                                        data_list.map((listado, key)=>{
+                                            return(
+                                                <>
+                                                    <tr>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            {/* <a className="font-weight-bold" href='/admin/Requerimiento' >{listado.id}</a> */}
+                                                            <Link  className="font-weight-bold" to={{pathname:'/admin/Requerimiento',state:{data:listado}}} >{listado.id}</Link>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.estado}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}} >
+                                                            <b>{listado.fecha_registro}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.codigo_user +' - '+ listado.nombres +', '+listado.apellido_paterno+' '+ listado.apellido_materno}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}} >
+                                                            <b>{listado.cantidad}</b>
+                                                        </td>
+                                                        <td>
+                                                            <span className="text-muted">{listado.descripcion}</span>
+                                                        </td>
+                                                        <td>
+                                                            <label className="custom-toggle">
+                                                                <input defaultChecked type="checkbox" name="" value={listado.id} checked={this.state.aprobacionvicecheck} onClick={this.AprobacionVicepresidencia}/>
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
+                                                            </label>
+                                                            <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
+                                                        </td>
+                                                        <td>
+                                                            {/* <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar</Button> */}
+                                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={()=>this.ModalRemoneracion(listado)}>Ingresar</Button>
+                                                        </td>
+                                                        <td>
+                                                            <label className="custom-toggle">
+                                                                <input defaultChecked type="checkbox" value={listado.id} onChange={this.updateEstado} />
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            );
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>
-                    <CardFooter>
+                    {/* <CardFooter>
                         <Row>
                             <Col md="12">
                                 <Button color="success" className="btn btn-sm" style={{float:"right"}}>Confirmar</Button>
                             </Col>
                         </Row>
-                    </CardFooter>
+                    </CardFooter> */}
                 </Card>
             </Container>
             {/* Modal Remoneracion */}
@@ -211,9 +324,10 @@ class Aprobacionesgestor extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Moneda</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="select" className="form-control-sm">
-                                            <option >Option 1</option>
-                                            <option >Option 2</option>
+                                        <Input  type="select" className="form-control-sm" onChange={this.dataMoneda}>
+                                            <option value="">[Seleccione]</option>
+                                            <option value="1">Soles</option>
+                                            <option value="2">Dolares</option>
                                         </Input>
                                     </FormGroup>
                                 </Col>
@@ -222,7 +336,7 @@ class Aprobacionesgestor extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Remoneración Básica</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="text" className="form-control-sm"/>
+                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataRemoneracion}/>
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -230,7 +344,7 @@ class Aprobacionesgestor extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Vales</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="text" className="form-control-sm"/>
+                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataVales} />
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -238,7 +352,7 @@ class Aprobacionesgestor extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Asignacion por Movilidad</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="text" className="form-control-sm"/>
+                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataAsigMovilidad} />
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -246,14 +360,14 @@ class Aprobacionesgestor extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Asignación Otros</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="text" className="form-control-sm"/>
+                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataAsigOtros}/>
                                     </FormGroup>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col md="12">
                                     <div style={{float:"right"}}>
-                                        <Button color="success" className="btn btn-sm" onClick={this.ModalRemoneracion}>Guardar</Button>
+                                        <Button color="success" className="btn btn-sm" onClick={this.dataRemoneracionSave}>Guardar</Button>
                                         <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
                                     </div>
                                 </Col>

@@ -63,8 +63,8 @@ const routes = [
       },
       {
         path:"/Requerimiento",
-        name: "Requerimiento",
-        icon: "ni ni-archive-2 text-green",
+        // name: "Requerimiento",
+        // icon: "ni ni-archive-2 text-green",
         component: Requerimiento,
         layout:"/admin"
       },

@@ -58,7 +58,7 @@ class Solicitud extends React.Component {
                 descripcion:'',
                 remoneracion:'',
                 usuario_registro:'HROJAS',
-                estado:'0',
+                estado:'1',
             }
 
         };
@@ -99,7 +99,6 @@ class Solicitud extends React.Component {
 
         // Insert data solicitud
         
-
         this.inputchange = this.inputchange.bind(this);
         this.buscar_user_apro = this.buscar_user_apro.bind(this);
         
@@ -427,7 +426,7 @@ class Solicitud extends React.Component {
                 if (element.id==e.target.value) {
                     var d={id_grupo:e.target.value,id_grupo_tipo:element.grupo};
                     this.state.datasolicitud.detalle_solicitud.push(d);
-                    console.log(element)
+                    // console.log(element)
                 }
             }
         }else{
@@ -439,7 +438,7 @@ class Solicitud extends React.Component {
                 }
             }
         }
-        console.log(this.state.datasolicitud.detalle_solicitud);
+        // console.log(this.state.datasolicitud.detalle_solicitud);
         // console.log(e.target.value);
         // console.log(e.target.checked);
         this.forceUpdate();
@@ -453,7 +452,7 @@ class Solicitud extends React.Component {
                 if (element.id==e.target.value) {
                     var d={id_grupo:e.target.value,id_grupo_tipo:element.grupo};
                     this.state.datasolicitud.detalle_solicitud.push(d);
-                    console.log(element)
+                    // console.log(element)
                 }
             }
         }else{
@@ -465,7 +464,7 @@ class Solicitud extends React.Component {
                 }
             }
         }
-        console.log(this.state.datasolicitud.detalle_solicitud);
+        // console.log(this.state.datasolicitud.detalle_solicitud);
         // console.log(e.target.value);
         // console.log(e.target.checked);
         this.forceUpdate();
@@ -475,37 +474,37 @@ class Solicitud extends React.Component {
     dataNombreCliente=(e)=>{
         this.state.datasolicitud.nombre_cliente=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.nombre_cliente);
+        // console.log(this.state.datasolicitud.nombre_cliente);
     }
 
     dataDescripcionServicio=(e)=>{
         this.state.datasolicitud.descripcion_servicio=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.descripcion_servicio);
+        // console.log(this.state.datasolicitud.descripcion_servicio);
     }
 
     dataVolumenMotivo=(e)=>{
         this.state.datasolicitud.volumen_motivo=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.volumen_motivo);
+        // console.log(this.state.datasolicitud.volumen_motivo);
     }
 
     dataInicioEstimadoTiempo =(e)=>{
         this.state.datasolicitud.inicio_estimado_tiempo=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.inicio_estimado_tiempo);
+        // console.log(this.state.datasolicitud.inicio_estimado_tiempo);
     }
 
     dataEstimacionDuracionTiempo =(e)=>{
         this.state.datasolicitud.estimacion_duracion_tiempo=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.estimacion_duracion_tiempo);
+        // console.log(this.state.datasolicitud.estimacion_duracion_tiempo);
     }
 
     dataObservaciones=(e)=>{
         this.state.datasolicitud.observaciones=e.target.value;
         this.forceUpdate();
-        console.log(this.state.datasolicitud.observaciones);
+        // console.log(this.state.datasolicitud.observaciones);
     }
 
     btnguardar=(event)=>{

@@ -1,4 +1,5 @@
 var express = require("express")
+var mailer = require('express-mailer')
 var cors = require("cors")
 var bodyParser = require("body-parser")
 var app = express();

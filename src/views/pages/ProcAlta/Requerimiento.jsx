@@ -2,15 +2,30 @@ import React from "react";
 import { Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText,Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+
 class Requerimiento extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            data_solicitud:this.props.location.state,
             modal: false
         };
         this.ModalCentroCosto = this.ModalCentroCosto.bind(this);
+        
+        // const { data } = this.props.location.state;
+        // console.log(data);
+        
+    }
+
+    componentDidMount () {
+        // const { handle } = this.props.match.params
+
+        // fetch(`https://api.twitter.com/user/${handle}`)
+        // .then((user) => {
+        //     this.setState(() => ({ user }))
+        // })
     }
 
     ModalCentroCosto() {
@@ -21,6 +36,8 @@ class Requerimiento extends React.Component {
 
 
   render() {
+    var data_list=this.state.data_solicitud['data'];
+    console.log(this.state.data_solicitud['data']);
     return (
       <>
         <SimpleHeader name="Datos de Requerimiento" parentName="Forms" />
@@ -36,12 +53,12 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Codigo Aprobador</Label>
                         <Col md="2">
                             <InputGroup>
-                                <Input className="form-control-sm" placeholder="" type="text" disabled/>
+                                <Input className="form-control-sm" placeholder="" type="text" disabled value={data_list.codigo_user}/>
                             </InputGroup>
                         </Col>
                         <Col md="5">
                             <FormGroup>
-                                <Input className="form-control-sm" id="example3cols1Input" placeholder="" type="text" disabled/>
+                                <Input className="form-control-sm" id="example3cols1Input" placeholder="" type="text" disabled value={data_list.nombres+', '+data_list.apellido_paterno+' '+data_list.apellido_materno } />
                             </FormGroup>
                         </Col>
                     </Row>
@@ -49,29 +66,29 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Código Jefe Directo</Label>
                         <Col md="2">
                             <InputGroup>
-                                <Input className="form-control-sm" placeholder="" type="text" disabled/>
+                                <Input className="form-control-sm" placeholder="" type="text" disabled value={data_list.codigo_jefe_dir}/>
                             </InputGroup>
                         </Col>
                         <Col md="5">
                             <FormGroup>
-                                <Input className="form-control-sm" id="example3cols1Input" placeholder="" type="text" disabled/>
+                                <Input className="form-control-sm" id="example3cols1Input" placeholder="" type="text" disabled value={data_list.nombre_jefe +','+data_list.apellido_paterno_jefe+' '+ data_list.apellido_materno_jefe} />
                             </FormGroup>
                         </Col>
                     </Row>
                     <Row>
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Descripción de Puesto</Label>
                         <Col md="2">
-                            <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled/>
+                            <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.descripcion} />
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Cantidad de Recurso</Label>
                         <Col md="1">
                             <FormGroup>
-                                <Input type="text" name="select" id="exampleSelect" className="form-control-sm" style={{width: "90%"}} disabled />
+                                <Input type="text" name="select" id="exampleSelect" className="form-control-sm" style={{width: "90%"}} disabled value={data_list.cantidad} />
                             </FormGroup>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-35px", marginTop:"-5px"}}>Modalidad</Label>
                         <Col md="2">
-                        <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled />
+                        <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.id_modalidad_tipo} />
                         </Col>
 
                     </Row>
@@ -87,12 +104,12 @@ class Requerimiento extends React.Component {
                     <Row>
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Fecha Estimada de Incio</Label>
                         <Col md="2">
-                            <Input type="date" name="select" id="exampleSelect" className="form-control-sm" disabled/>
+                            <Input type="date" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.fecha_estimada_inicio}/>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-85px", marginTop:"-5px"}}>Plazo</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="text" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}} disabled />
+                                <Input type="text" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}} disabled value={data_list.id_plazo_tipo}/>
                             </FormGroup>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-50px", marginTop:"-5px"}}>Equipo</Label>
