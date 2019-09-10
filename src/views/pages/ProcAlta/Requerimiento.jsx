@@ -12,6 +12,7 @@ class Requerimiento extends React.Component {
             data_solicitud:this.props.location.state,
             modal: false,
             data_solicitud_update:{
+                solicitud_id:'',
                 glosa:'',
                 sociedad:'',
                 lider_uo:'',
@@ -108,6 +109,8 @@ class Requerimiento extends React.Component {
 
   render() {
     var data_list=this.state.data_solicitud['data'];
+    this.state.data_solicitud_update.solicitud_id=data_list.id;
+    this.forceUpdate();
     // console.log(this.state.data_solicitud['data']);
     console.log(this.state.data_solicitud_update);
     return (
