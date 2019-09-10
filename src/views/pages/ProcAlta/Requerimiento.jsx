@@ -10,7 +10,21 @@ class Requerimiento extends React.Component {
 
         this.state = {
             data_solicitud:this.props.location.state,
-            modal: false
+            modal: false,
+            data_solicitud_update:{
+                glosa:'',
+                solciedad:'',
+                lider_uo:'',
+                codigo_uo:'',
+                descripcion_uo:'',
+                cod_divicion:'',
+                cod_sub_div:'',
+                sctr: '',
+                id_area_personal:'',
+                id_relacion_laboral:'',
+                file_dp:'',
+                direccion:''
+            }
         };
         this.ModalCentroCosto = this.ModalCentroCosto.bind(this);
         
@@ -19,14 +33,14 @@ class Requerimiento extends React.Component {
         
     }
 
-    componentDidMount () {
-        // const { handle } = this.props.match.params
+    // componentDidMount () {
+    //     const { handle } = this.props.match.params
 
-        // fetch(`https://api.twitter.com/user/${handle}`)
-        // .then((user) => {
-        //     this.setState(() => ({ user }))
-        // })
-    }
+    //     fetch(`https://api.twitter.com/user/${handle}`)
+    //     .then((user) => {
+    //         this.setState(() => ({ user }))
+    //     })
+    // }
 
     ModalCentroCosto() {
         this.setState(prevState => ({
@@ -34,10 +48,68 @@ class Requerimiento extends React.Component {
         }));
     }
 
+    // Data Update Save
+
+    dataGlosa=(e)=>{
+        this.state.data_solicitud_update.glosa=e.target.value;
+        this.forceUpdate();
+    }
+    
+    dataSociedad=(e)=>{
+        this.state.data_solicitud_update.solciedad=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataLideUo=(e)=>{
+        this.state.data_solicitud_update.lider_uo=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataCodigoUo=(e)=>{
+        this.state.data_solicitud_update.codigo_uo=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataDescripcionUo=(e)=>{
+        this.state.data_solicitud_update.descripcion_uo=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataDivicion=(e)=>{
+        this.state.data_solicitud_update.cod_divicion=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataCodSubDiv=(e)=>{
+        this.state.data_solicitud_update.cod_sub_div=e.target.value;
+        this.forceUpdate();
+    }
+    dataSctr=(e)=>{
+        this.state.data_solicitud_update.sctr=e.target.value;
+        this.forceUpdate();
+    }
+    dataIdAreaPersonal=(e)=>{
+        this.state.data_solicitud_update.id_area_personal=e.target.value;
+        this.forceUpdate();
+    }
+    dataIdRelacionLaboral=(e)=>{
+        this.state.data_solicitud_update.id_relacion_laboral=e.target.value;
+        this.forceUpdate();
+    }
+    dataFileDp=(e)=>{
+        this.state.data_solicitud_update.file_dp=e.target.value;
+        this.forceUpdate();
+    }
+    dataDireccion=(e)=>{
+        this.state.data_solicitud_update.direccion=e.target.value;
+        this.forceUpdate();
+    }
+
 
   render() {
     var data_list=this.state.data_solicitud['data'];
-    console.log(this.state.data_solicitud['data']);
+    // console.log(this.state.data_solicitud['data']);
+    console.log(this.state.data_solicitud_update);
     return (
       <>
         <SimpleHeader name="Datos de Requerimiento" parentName="Forms" />
@@ -177,7 +249,7 @@ class Requerimiento extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="3" style={{marginRight:"-25px", marginTop:"-5px"}}>Glosa</Label>
                                 <Col md="9">
                                     <FormGroup>
-                                        <Input type="textarea" name="text" id="exampleText" className="form-control-sm" rows="4" cols="50"/>
+                                        <Input type="textarea" name="text" id="exampleText" className="form-control-sm" rows="4" cols="50" onKeyUp={this.dataGlosa}/>
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -187,15 +259,15 @@ class Requerimiento extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Sociedad</Label>
                                 <Col md="4">
                                     <FormGroup>
-                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataSociedad}/>
                                     </FormGroup>
                                 </Col>
                                 <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Líder de UO</Label>
                                 <Col md="4">
                                     <FormGroup>
-                                        <Input type="select" name="text" id="exampleText" className="form-control-sm">
-                                            <option>Dir 1</option>
-                                            <option>Dir 2</option>
+                                        <Input type="select" name="text" id="exampleText" className="form-control-sm" onChange={this.dataLideUo}>
+                                            <option value="1">Dir 1</option>
+                                            <option value="2">Dir 2</option>
                                         </Input>
                                     </FormGroup>
                                 </Col>
@@ -204,13 +276,13 @@ class Requerimiento extends React.Component {
                                 <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Código UO</Label>
                                 <Col md="4">
                                     <FormGroup>
-                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataCodigoUo} />
                                     </FormGroup>
                                 </Col>
                                 <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-30px", marginTop:"-5px"}}>Descripción UO</Label>
                                 <Col md="4">
                                     <FormGroup>
-                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                        <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataDescripcionUo} />
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -223,19 +295,19 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Cod. Divición</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm"/>
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataDivicion} />
                             </FormGroup>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Cod. Sub Divición</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataCodSubDiv} />
                             </FormGroup>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>SCTR</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="text" name="text" id="exampleText" className="form-control-sm" />
+                                <Input type="text" name="text" id="exampleText" className="form-control-sm" onKeyUp={this.dataSctr} />
                             </FormGroup>
                         </Col>
                     </Row>
@@ -244,7 +316,7 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Área de Personal</Label>
                         <Col md="2">
                             <InputGroup>
-                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <Input className="form-control-sm" placeholder="" type="text" onChange={this.dataIdAreaPersonal} />
                                 <InputGroupAddon addonType="append">
                                 <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                     <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -273,7 +345,7 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-25px", marginTop:"-5px"}}>Relación Laboral</Label>
                         <Col md="2">
                             <InputGroup>
-                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <Input className="form-control-sm" placeholder="" type="text" onChange={this.dataIdRelacionLaboral}/>
                                 <InputGroupAddon addonType="append">
                                 <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                     <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -293,7 +365,7 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-30px", marginTop:"-5px"}}>Adjuntar archivo DP</Label>
                         <Col md="2">
                             <InputGroup>
-                                <Input className="form-control-sm" placeholder="" type="text"/>
+                                <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataFileDp} />
                                 <InputGroupAddon addonType="append">
                                 <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                     <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -315,9 +387,9 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginLeft:"-65px", marginTop:"-5px"}}>Ubicación</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="select" name="text" id="exampleText" className="form-control-sm">
-                                <option>Dir 1</option>
-                                <option>Dir 2</option>
+                                <Input type="select" name="text" id="exampleText" className="form-control-sm" onChange={this.dataDireccion} >
+                                <option value="1">Dir 1</option>
+                                <option value="2">Dir 2</option>
                                 </Input>
                             </FormGroup>
                         </Col>
