@@ -13,7 +13,7 @@ class Requerimiento extends React.Component {
             modal: false,
             data_solicitud_update:{
                 glosa:'',
-                solciedad:'',
+                sociedad:'',
                 lider_uo:'',
                 codigo_uo:'',
                 descripcion_uo:'',
@@ -56,7 +56,7 @@ class Requerimiento extends React.Component {
     }
     
     dataSociedad=(e)=>{
-        this.state.data_solicitud_update.solciedad=e.target.value;
+        this.state.data_solicitud_update.sociedad=e.target.value;
         this.forceUpdate();
     }
 
