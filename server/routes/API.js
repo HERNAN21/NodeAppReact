@@ -205,19 +205,21 @@ api.put('',(req,res)=>{
     var query = " update solicitud set glosa=:glosa,  sociedad=:sociedad, lider_uo=:lider_uo, codigo_uo=:codigo_uo, descripcion_uo=:descripcion_uo, "+
                 " cod_divicion=:cod_divicion, cod_sub_div=:cod_sub_div, sctr=:sctr, id_area_personal=:id_area_personal, id_relacion_personal=:id_relacion_personal, "+
                 " file_dp=:file_dp, direccion=:direccion  where id=:id ";
-    var data={id:req.body.id}
-    glosa
-    sociedad
-    lider_uo
-    codigo_uo
-    descripcion_uo
-    cod_divicion
-    cod_sub_div
-    sctr
-    id_area_personal
-    id_relacion_laboral
-    file_dp
-    direccion
+    var data={
+            id:req.body.solicitud_id,
+            glosa:req.body.glosa,
+            sociedad:req.body.sociedad,
+            lider_uo:req.body.lider_uo,
+            codigo_uo:req.body.codigo_uo,
+            descripcion_uo:req.body.descripcion_uo,
+            cod_divicion:req.body.cod_divicion,
+            cod_sub_div:req.body.cod_sub_div,
+            sctr:req.body.sctr,
+            id_area_personal:req.body.id_area_personal,
+            id_relacion_personal:req.body.id_relacion_laboral,
+            file_dp:req.body.file_dp,
+            direccion:req.body.direccion
+        }
     db.sequelize.query(query,{replacements:data,type:db.sequelize.QueryTypes.UPDATE})
     .then((result)=>{
         res.json({'respuesta':'success', 'result':result})
