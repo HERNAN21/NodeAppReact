@@ -2,8 +2,71 @@ import React from "react";
 import { Card, CardHeader,CardBody,Label, FormGroup,Table, CardFooter, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button} from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+
+import { server, api_name} from "variables/general.jsx";
+
 class Registrocandidatos extends React.Component {
+
+    constructor(props){
+        super(props);
+
+        this.state={
+            server:server,
+            api_name:api_name,
+            buscar_listado:{
+                num_solicitud:'',
+                creador_solicitud:''
+            },
+            data_solicitud_list:[],
+            // data_candidato:
+        }
+
+
+        // this.cargarData=this.cargarData(this);
+        this.cargarData=this.cargarData.bind(this);
+        
+    }
+
+    cargarData=(e)=>{
+        fetch(this.state.server + api_name+ '/listadosolicitudcandidatos',{
+            method: 'POST',
+            body: JSON.stringify(this.state.buscar_listado),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                this.setState({data_solicitud_list:data.result})
+                console.log(data.result);
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
+    }
+
+    btnBuscar=(e)=>{
+        this.cargarData();
+    }
+
+    dataBuscarNumero=(e)=>{
+        this.state.buscar_listado.num_solicitud=e.target.value;
+        this.cargarData();
+        this.forceUpdate();
+    }
+
+    dataBuscarCreador=(e)=>{
+        this.state.buscar_listado.creador_solicitud=e.target.value;
+        this.cargarData();
+        this.forceUpdate();
+    }
+
+    dataTest=(e)=>{
+        alert(e);
+    }
+
+
   render() {
+    const data_listar=this.state.data_solicitud_list;
     return (
       <>
         <SimpleHeader name="Registro de Candidatos" parentName="Tables" />
@@ -14,10 +77,10 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Nro. Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarNumero} />
                                             <InputGroupAddon addonType="append">
                                                 <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnBuscar} />
                                                 </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -25,10 +88,10 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-110px", marginTop:"-5px"}}>Creador de Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarCreador}/>
                                             <InputGroupAddon addonType="append">
                                                 <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                    <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}  onClick={this.btnBuscar} />
                                                 </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -40,76 +103,53 @@ class Registrocandidatos extends React.Component {
                             <Table className="align-items-center table-flush" responsive size="sm">
                                 <thead className="thead-light">
                                     <tr>
-                                        <th>Nro. Solicitud</th>
-                                        <th>Estado</th>
-                                        <th>Fecha De Creacion</th>
-                                        <th>Creador de Solicitud</th>
-                                        <th>Cantidad de Recursos</th>
-                                        <th>Descripcion de Puesto</th>
-                                        <th>Archivo DP</th>
-                                        <th>Remoneración</th>
-                                        <th>Cantidad de Candidatos</th>    
+                                        <th style={{textAlign:"center", width:"3%"}} >Nro. <br/> Solicitud</th>
+                                        <th style={{textAlign:"center", width:"5%"}} >Estado</th>
+                                        <th style={{textAlign:"center", width:"5%"}} >Fecha  De <br/> Creacion</th>
+                                        <th style={{textAlign:"center", width:"15%"}} >Creador  de <br/> Solicitud</th>
+                                        <th style={{textAlign:"center", width:"2%"}} >Cantidad <br/> de <br/> Recursos</th>
+                                        <th style={{textAlign:"center", width:"15%"}} >Descripcion <br/> de Puesto</th>
+                                        <th style={{textAlign:"center", width:"8%"}} >Archivo DP</th>
+                                        <th style={{textAlign:"center", width:"5%"}} >Remoneración</th>
+                                        <th style={{textAlign:"center", width:"3%"}} >Cantidad <br/> de <br/> Candidatos</th>    
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            Archivo
-                                        </td>
-                                        <td>
-                                            Remoneracion en soles
-                                        </td>
-                                        <td>
-                                            12
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            Archivo
-                                        </td>
-                                        <td>
-                                            Remoneracion en soles
-                                        </td>
-                                        <td>
-                                            12
-                                        </td>
-                                    </tr>
+                                    {
+                                        data_listar.map((listado,key)=>{
+                                            return (<>
+                                                    <tr onClick={()=>this.dataTest(listado.id)} >
+                                                        <td className="table-user" style={{textAlign:"center"}} >
+                                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}} >
+                                                            <b>{listado.estado}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <b>{listado.fecha_registro}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.codigo_user +' - '+ listado.nombres + ', '+ listado.apellido_paterno+ ' '+ listado.apellido_materno}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <b>{listado.cantidad}</b>
+                                                        </td>
+                                                        <td>
+                                                            <span className="text-muted">{listado.descripcion}</span>
+                                                        </td>
+                                                        <td>
+                                                            {listado.file_dp}
+                                                        </td>
+                                                        <td style={{textAlign:"center"}}>
+                                                            {/* {listado.} */}
+                                                        </td>
+                                                        <td style={{textAlign:"center"}}>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                            </>);
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>
