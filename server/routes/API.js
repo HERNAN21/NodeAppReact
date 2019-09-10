@@ -119,11 +119,19 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " us.fecha_nac,us.inicio_contrata,us.fin_contrata,us.cod_jefe,us.saldo_dias_vacaion,us.saldo_dias_descanso,us.categoria, "+
             // data Jefe dir
             " j_d.id as id_jefe,ltrim(j_d.codigo) as codigo_jefe_dir, j_d.dni as dni_jefe,j_d.nombres as nombre_jefe, j_d.apellido_paterno as apellido_paterno_jefe, "+
-            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe "+
+            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe, "+
+            // data grupo
+            " puesto.id as puesto_id, puesto.grupo as puesto_grupo, puesto.descripcion as puesto_des, puesto.detalle as puesto_detalle, "+
+            " modalidad.id as modalidad_id, modalidad.grupo as modalidad_grupo, modalidad.descripcion as modalidad_des, modalidad.detalle as modalidad_detalle,"+
+            " plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle "+
             " from solicitud as sol"+
             " inner join users as us on us.id=sol.id_aprobador "+
-            " inner join users as j_d on j_d.id=sol.id_jefe_directo"
+            " inner join users as j_d on j_d.id=sol.id_jefe_directo" +
+            " inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo "+
+            " inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo "+
+            " inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo "+
             " where 0=0  ";
+
     var condicion1="";
     if (req.body.num_solicitud != "") {
         condicion1=" and  sol.id='"+req.body.num_solicitud+"'"; 
