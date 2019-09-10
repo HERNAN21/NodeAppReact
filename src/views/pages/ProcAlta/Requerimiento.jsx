@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardHeader,CardBody,Label, FormGroup, Form, Input, Container, Row, Col, InputGroup, InputGroupAddon,InputGroupText,Button,CardTitle,CardText,Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
 
 class Requerimiento extends React.Component {
 
@@ -33,15 +34,6 @@ class Requerimiento extends React.Component {
         // console.log(data);
         
     }
-
-    // componentDidMount () {
-    //     const { handle } = this.props.match.params
-
-    //     fetch(`https://api.twitter.com/user/${handle}`)
-    //     .then((user) => {
-    //         this.setState(() => ({ user }))
-    //     })
-    // }
 
     ModalCentroCosto() {
         this.setState(prevState => ({
@@ -106,13 +98,29 @@ class Requerimiento extends React.Component {
         this.forceUpdate();
     }
 
+    updateRequerimiento=(e)=>{
+        // console.log(this.state.data_solicitud_update);
+        fetch(server + api_name+'/updaterequerimiento',{
+            method: 'PUT',
+            body: JSON.stringify(this.state.data_solicitud_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+                alert(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+    }
+
+
 
   render() {
     var data_list=this.state.data_solicitud['data'];
     this.state.data_solicitud_update.solicitud_id=data_list.id;
-    this.forceUpdate();
-    // console.log(this.state.data_solicitud['data']);
-    console.log(this.state.data_solicitud_update);
     return (
       <>
         <SimpleHeader name="Datos de Requerimiento" parentName="Forms" />
@@ -399,7 +407,7 @@ class Requerimiento extends React.Component {
                         <Col md="2">
                             <div style={{width:"100%",marginLeft:"10px"}}>
                                 <Button color="warning" className="btn btn-sm" style={{width:"45%"}}>Limpiar</Button>
-                                <Button color="success" className="btn btn-sm" style={{width:"45%"}}>Guardar</Button>
+                                <Button color="success" className="btn btn-sm" style={{width:"45%"}} onClick={this.updateRequerimiento} >Guardar</Button>
                             </div>
                         </Col>
                     </Row>
@@ -462,7 +470,80 @@ class Requerimiento extends React.Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md="12">
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input className="form-control-sm " />
+                                </FormGroup>
+                            </Col>
+                            <Col md="5">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                            <Col md="2">
+                                <FormGroup>
+                                    <Input  className="form-control-sm"/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="10">
+                                <div style={{float:"right"}}>
+                                    <Button color="success" className="btn btn-sm" onClick={this.ModalCentroCosto}>Guardar</Button>
+                                </div>
+                            </Col>
+                            <Col md="2">
                                 <div style={{float:"right"}}>
                                     <Button color="danger" className="btn btn-sm" onClick={this.ModalCentroCosto}>Cerrar</Button>
                                 </div>
