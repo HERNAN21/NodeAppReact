@@ -78,7 +78,7 @@ class Requerimiento extends React.Component {
                     <Row>
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-70px", marginTop:"-5px"}}>Descripción de Puesto</Label>
                         <Col md="2">
-                            <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.descripcion} />
+                            <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.puesto_des} />
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Cantidad de Recurso</Label>
                         <Col md="1">
@@ -88,7 +88,7 @@ class Requerimiento extends React.Component {
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-35px", marginTop:"-5px"}}>Modalidad</Label>
                         <Col md="2">
-                        <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.id_modalidad_tipo} />
+                        <Input type="text" name="select" id="exampleSelect" className="form-control-sm" disabled value={data_list.modalidad_des} />
                         </Col>
 
                     </Row>
@@ -96,7 +96,7 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="3" style={{marginRight:"-70px",marginTop:"-10px"}}>Especificación de la Modalidad Contractual </Label>
                         <Col md="6">
                             <FormGroup>
-                                <Input type="text" name="" id="" className="form-control-sm"  disabled/>
+                                <Input type="text" name="" id="" className="form-control-sm"  disabled value={data_list.modalidad_detalle}/>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -109,7 +109,7 @@ class Requerimiento extends React.Component {
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-85px", marginTop:"-5px"}}>Plazo</Label>
                         <Col md="2">
                             <FormGroup>
-                                <Input type="text" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}} disabled value={data_list.id_plazo_tipo}/>
+                                <Input type="text" name="select" id="exampleSelect" bsSize="sm" className="form-control-sm" style={{width: "90%"}} disabled value={data_list.plazo_des}/>
                             </FormGroup>
                         </Col>
                         <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginRight:"-50px", marginTop:"-5px"}}>Equipo</Label>
