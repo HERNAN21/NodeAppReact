@@ -354,5 +354,8 @@ ADD COLUMN contacto_sede char(50) null,
 ADD COLUMN fecha_entrevista TIMESTAMP null,
 ADD COLUMN prioridad char(10) null;
 
+select * from candidato_solicitud;
+
+update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1';
 
 

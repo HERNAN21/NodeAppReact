@@ -22,7 +22,7 @@ class Registronuevopersonal extends React.Component {
             data_solicitud_list:[],
             buscar_listado:{
                 num_solicitud:'',
-                estado:''
+                creador_solicitud:''
             }
         };
 
@@ -48,6 +48,23 @@ class Registronuevopersonal extends React.Component {
         }.bind(this))
     }
 
+    btnCargarData=(e)=>{
+        this.cargarData();
+    }
+
+    dataBuscarNumero=(e)=>{
+        this.state.buscar_listado.num_solicitud=e.target.value;
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+    dataBuscarCreadorSolicitud=(e)=>{
+        this.state.buscar_listado.num_solicitud=e.target.value
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+
     ModalNuevo() {
         this.setState(prevState => ({
             modal: !prevState.modal
@@ -62,6 +79,7 @@ class Registronuevopersonal extends React.Component {
 
 
     render() {
+        const data_list=this.state.data_solicitud_list;
         return (
             <>
              <SimpleHeader name="Registro de Nuevo Personal" parentName="Tables" />
@@ -72,10 +90,10 @@ class Registronuevopersonal extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Nro. Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarNumero} />
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnCargarData} />
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -83,10 +101,10 @@ class Registronuevopersonal extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Creador de Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarCreadorSolicitud} />
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnCargarData} />
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -111,37 +129,46 @@ class Registronuevopersonal extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalNuevo}>100{this.props.buttonLabel}</a>
-                                            {/* onClick={this.ModalRemoneracion} */}
-                                            {/* {this.props.buttonLabel} */}
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            28/08/2019
-                                        </td>
-                                        <td>
-                                            Sede San Jose
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} >Regresar</Button>
-                                        </td>
-                                    </tr>
+                                    {
+                                        data_list.map((listado,key)=>{
+                                            return (
+                                                <>
+                                                    <tr>
+                                                        <td className="table-user">
+                                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalNuevo}>{listado.id}{this.props.buttonLabel}</a>
+                                                            {/* onClick={this.ModalRemoneracion} */}
+                                                            {/* {this.props.buttonLabel} */}
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.estado}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{format.asString('dd/MM/yyyy', new Date(listado.fecha_registro))}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.codigo_user+' - ' +listado.nombres+', '+listado.apellido_paterno+' '+listado.apellido_materno}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.puesto_des}</b>
+                                                        </td>
+                                                        <td>
+                                                            <span className="text-muted">{listado.glosa}</span>
+                                                        </td>
+                                                        <td>
+                                                            {listado.inicio_estimado_tiempo}
+                                                        </td>
+                                                        <td>
+                                                            por ver 
+                                                            {listado.direccion}
+                                                        </td>
+                                                        <td>
+                                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} >Regresar</Button>
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            );
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>
