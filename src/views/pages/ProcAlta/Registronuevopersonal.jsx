@@ -6,6 +6,9 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+import { server, api_name} from "variables/general.jsx";
+
+var  format = require("date-format");
 
 class Registronuevopersonal extends React.Component {
     
@@ -13,9 +16,36 @@ class Registronuevopersonal extends React.Component {
         super(props);
 
         this.state = {
-            modal: false
+            server:server,
+            api_name:api_name,
+            modal: false,
+            data_solicitud_list:[],
+            buscar_listado:{
+                num_solicitud:'',
+                estado:''
+            }
         };
+
+
+        this.cargarData=this.cargarData.bind(this);
         this.ModalNuevo = this.ModalNuevo.bind(this);
+    }
+
+    cargarData=(e)=>{
+        fetch(this.state.server + api_name+ '/listadosolicitudcandidatos',{
+            method: 'POST',
+            body: JSON.stringify(this.state.buscar_listado),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                this.setState({data_solicitud_list:data.result})
+                // console.log(data.result);
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
     }
 
     ModalNuevo() {

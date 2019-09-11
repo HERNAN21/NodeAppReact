@@ -335,6 +335,18 @@ api.get(api_name+'/listado/candidatos',(req,res)=>{
 });
 
 
+// Api Update candidato
+api.put(api_name+'/updatecandidato',(req,res)=>{
+    var query =" update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1' ";
+    db.sequelize.query(query, {type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+});
+
 
 
 

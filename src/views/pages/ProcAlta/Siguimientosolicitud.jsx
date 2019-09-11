@@ -37,6 +37,7 @@ class Siguimientosolicitud extends React.Component {
 
         }
 
+        // this.cargarData=this.cargarData(this);
         this.cargarData=this.cargarData.bind(this);
         // Cargar candidatos all
         fetch(this.state.server + this.state.api_name +'/listado/candidatos')
@@ -132,19 +133,19 @@ class Siguimientosolicitud extends React.Component {
     }
 
     dataContactoSede=(e)=>{
-
+        console.log(e.target.value)
     }
 
     dataProgramarEntrevista=(e)=>{
-
+        console.log(e.target.value)
     }
 
     dataEstado=(e)=>{
-
+        console.log(e.target.value)
     }
 
     dataPrioridad=(e)=>{
-
+        console.log(e.target.value)
     }
 
 
@@ -155,7 +156,7 @@ class Siguimientosolicitud extends React.Component {
         const data_solicitud=this.state.data_solicitud_list;
         // console.log(this.state.data_solicitud_list);
         const data_candidato_listar=this.state.buscar_listado.data_listado_candidato_solicitud;
-        console.log(data_candidato_listar);
+        // console.log(data_candidato_listar);
         // console.log(this.state.buscar_listado.data_listado_candidato_solicitud);
     return (
       <>
@@ -378,7 +379,7 @@ class Siguimientosolicitud extends React.Component {
                                                                 </td>
                                                                 <td style={{padding:"10px"}}>
                                                                     <InputGroup>
-                                                                        <Input className="form-control-sm" placeholder="" type="text"/>
+                                                                        <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataContactoSede} />
                                                                         <InputGroupAddon addonType="append">
                                                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                                                                 <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -388,7 +389,7 @@ class Siguimientosolicitud extends React.Component {
                                                                 </td>
                                                                 <td style={{textAlign:"center",padding:"10px"}}>
                                                                     <InputGroup>
-                                                                        <Input className="form-control-sm" placeholder="" type="date"/>
+                                                                        <Input className="form-control-sm" placeholder="" type="date" onChange={this.dataProgramarEntrevista} />
                                                                         <InputGroupAddon addonType="append">
                                                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                                                                 <Button className="btn btn-sm" color="warning" title="Programar"><i class="fa fa-calendar" aria-hidden="true"></i></Button>
@@ -397,17 +398,17 @@ class Siguimientosolicitud extends React.Component {
                                                                     </InputGroup>
                                                                 </td>
                                                                 <td>
-                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}}>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={this.dataEstado}>
                                                                         <option value="">[Select]</option>
                                                                         <option value="0">Activo</option>
                                                                         <option value="1">Inactivo</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}}>
-                                                                        <option>[Select]</option>
-                                                                        <option>Prioridad 1</option>
-                                                                        <option>Prioridad 2</option>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={this.dataPrioridad}>
+                                                                        <option value="">[Select]</option>
+                                                                        <option value="0">Prioridad 1</option>
+                                                                        <option value="1">Prioridad 2</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
