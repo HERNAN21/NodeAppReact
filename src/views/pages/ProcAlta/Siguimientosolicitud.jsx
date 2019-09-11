@@ -33,6 +33,7 @@ class Siguimientosolicitud extends React.Component {
                 progress_color:'danger',
             },
             data_listado_cadidato_all:[],
+            data_update_candidato:[],
             
 
         }
@@ -128,8 +129,10 @@ class Siguimientosolicitud extends React.Component {
 
     // Update data candidatos
 
-    dataSedeEntrevista=(e)=>{
-        console.log(e.target.value);
+    dataSedeEntrevista=(data)=>{
+        console.log(data);
+        // data_update_candidato
+
     }
 
     dataContactoSede=(e)=>{
@@ -371,10 +374,10 @@ class Siguimientosolicitud extends React.Component {
                                                                     <span className="text-muted">{listado.numero_documento}</span>
                                                                 </td>
                                                                 <td style={{padding:"10px"}} className="table-user">
-                                                                    <Input type="select" className="form-control-sm" onChange={this.dataSedeEntrevista}>
-                                                                        <option>[Select]</option>
-                                                                        <option>Sede 1</option>
-                                                                        <option>Sede 2</option>
+                                                                    <Input type="select" className="form-control-sm" onChange={()=>this.dataSedeEntrevista(listado)}>
+                                                                        <option value="">[Select]</option>
+                                                                        <option value="1">Sede 1</option>
+                                                                        <option value="2">Sede 2</option>
                                                                     </Input>
                                                                 </td>
                                                                 <td style={{padding:"10px"}}>
