@@ -110,7 +110,7 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
-            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
             " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
             " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
 
@@ -242,7 +242,7 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
-            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
             " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
             " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
             // data users
@@ -309,6 +309,27 @@ api.post(api_name+'/candidatos',(req,res)=>{
         res.json({'respuesta':'error', 'result':e})
     })
     // console.log(req.body);
+});
+
+
+// listado candidatos
+
+api.get(api_name+'/listado/candidatos',(req,res)=>{
+    var query = " select id,id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,numero_documento,disponibilidad, " +
+	            " email,file_cv,observaciones,fecha_registro,usuario_registro,fecha_modificacion,usuario_modificacion,estado, " +
+	            " CASE " +
+                " WHEN estado=0 THEN 'Activo' "+
+		        " WHEN estado=1 THEN 'Inactivo' "+
+	            " END as estado_des, "+
+	            " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad "+
+                " from candidato_solicitud ";
+    db.sequelize.query(query,{type:db.sequelize.QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })
 });
 
 
