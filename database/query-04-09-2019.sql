@@ -36,14 +36,37 @@ ALTER TABLE solicitud ALTER id SET DEFAULT NEXTVAL('id_solicitud');
 
 ALTER TABLE solicitud ALTER COLUMN id_jefe_directo TYPE integer USING id_jefe_directo::integer;
 
-ALTER TABLE solicitud ADD COLUMN 
-sociedad varchar(100) null, ADD COLUMN lider_uo varchar(100) null, ADD COLUMN codigo_uo char(50) null, 
-ADD COLUMN descripcion_uo varchar(100) null, ADD COLUMN cod_divicion varchar(50), ADD COLUMN cod_sub_div varchar(50);
+
+
+ALTER TABLE solicitud 
+ADD COLUMN glosa varchar(100) null,
+ADD COLUMN sociedad varchar(100) null, 
+ADD COLUMN lider_uo varchar(100) null, 
+ADD COLUMN codigo_uo char(50) null, 
+ADD COLUMN descripcion_uo varchar(100) null, 
+ADD COLUMN cod_divicion varchar(50), 
+ADD COLUMN cod_sub_div varchar(50)
+ADD COLUMN sctr varchar(100) null,
+ADD COLUMN id_area_personal varchar(100) null,
+ADD COLUMN id_relacion_personal varchar(100) null,
+ADD COLUMN file_dp varchar(500) null,
+ADD COLUMN direccion varchar(150) null,
+ADD COLUMN ceco char(50) null,
+add column descuento_ceco char(50) null,
+add column porcentaje char(10) null
+
+
+
+
+
+
+
+select * from solicitud;
 
 select * from users;
 
 select * from grupo;
-select * from solicitud;
+
 
 insert into solicitud(
 	id_aprobador,id_jefe_directo,id_puesto,id_puesto_tipo,cantidad,id_modalidad,id_modalidad_tipo,fecha_estimada_inicio,id_plazo,id_plazo_tipo,
@@ -194,15 +217,23 @@ select
 		us.fecha_nac,us.inicio_contrata,us.fin_contrata,us.cod_jefe,us.saldo_dias_vacaion,us.saldo_dias_descanso,us.categoria,
 		-- Jefe Directo
 		j_d.id as id_jefe, j_d.dni as dni_jefe,j_d.nombres as nombre_jefe, j_d.apellido_paterno as apellido_paterno_jefe,
-		j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe
+		j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe,
+		-- 	data grupo
+		puesto.id as puesto_id, puesto.grupo as puesto_grupo, puesto.descripcion as puesto_des, puesto.detalle as puesto_detalle,
+		modalidad.id as modalidad_id, modalidad.grupo as modalidad_grupo, modalidad.descripcion as modalidad_des, modalidad.detalle as modalidad_detalle,
+		plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle,
+		(select count(*) from candidato_solicitud where id_solicitud=sol.id) as cantidad_candidato
+		
 from solicitud as sol
 inner join users as us on us.id=sol.id_aprobador
 inner join users as j_d on j_d.id=sol.id_jefe_directo
+inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo
+inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo
+inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo
 ;
 
-select * from solicitud sol
-inner join users as us on sol.id_aprobador =us.id
-;
+select * from grupo;
+
 
 select * from solicitud;
 select * from users;
@@ -247,8 +278,58 @@ values(42,1,'2500.00','valest test','asig Movilidad Test','Asig Otros',now(),HRO
 
 
 
+-- Update solicitud Requerimiento
+update solicitud set glosa='',  sociedad='', lider_uo='', codigo_uo='', descripcion_uo='', cod_divicion='', cod_sub_div='', sctr='', id_area_personal='', id_relacion_personal='', file_dp='', direccion='', ceco='', descuento_ceco='',
+porcentaje='' where id=1
 
+select * from solicitud order by id desc;
 
+create table centro_costo(
+	id int not null primary key,
+	id_solicitud int not null,
+	centro_costo float not null,
+	descuento_costo float not null,
+	porcentaje float not null,
+	fecha_registro date not null,
+	usuario_registro varchar(50) not null,
+	fecha_modificacion date null,
+	suario_modificacion varchar(100),
+	estado int not null,
+	foreign key(id_solicitud) references centro_costo(id)
+);
 
+CREATE SEQUENCE id_centro_costo;
+ALTER TABLE centro_costo ALTER id SET DEFAULT NEXTVAL('id_centro_costo');
 
+select * from centro_costo;
+
+create table candidato_solicitud(
+	id int not null primary key,
+	id_solicitud int not null,
+	nombres varchar(100) not null,
+	apellido_paterno varchar(100) not null,
+	apellido_materno varchar(100) not null,
+	tipo_documento int not null,
+	numero_documento char(20) not null,
+	disponibilidad int not null,
+	email varchar(100) not null,
+	file_cv varchar(200) not null,
+	observaciones varchar(250) not null,
+	fecha_registro date not null,
+	usuario_registro varchar(50) not null,
+	fecha_modificacion date null,
+	usuario_modificacion varchar(50) null,
+	estado int not null,
+	foreign key(id_solicitud) references solicitud (id)
+)
+
+CREATE SEQUENCE id_candidato_solicitud;
+ALTER TABLE candidato_solicitud ALTER id SET DEFAULT NEXTVAL('id_candidato_solicitud');
+
+select * from candidato_solicitud;
+
+insert into candidato_solicitud 
+(id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,
+numero_documento,disponibilidad,email,file_cv,observaciones,fecha_registro,usuario_registro,estado)
+values(1,'Hernan','rojas','Utani','1','50458569','1','hernanrojasutani@gmail.com','file/50458569/50458569.pdf','nada',now(),'HROJAS',0);
 

@@ -111,6 +111,9 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
             " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
+            " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
+
             // data users
             " us.id as id_apro,ltrim(us.codigo) as codigo_user,ltrim(us.sociedad)sociedad,us.codigo_division,us.nombre_division_personal,us.codigo_sub_division, "+
             " us.nombres_sub_division,us.dni,us.nombres, us.apellido_paterno,us.apellido_materno,us.email_corp, "+
@@ -119,11 +122,19 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " us.fecha_nac,us.inicio_contrata,us.fin_contrata,us.cod_jefe,us.saldo_dias_vacaion,us.saldo_dias_descanso,us.categoria, "+
             // data Jefe dir
             " j_d.id as id_jefe,ltrim(j_d.codigo) as codigo_jefe_dir, j_d.dni as dni_jefe,j_d.nombres as nombre_jefe, j_d.apellido_paterno as apellido_paterno_jefe, "+
-            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe "+
+            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe, "+
+            // data grupo
+            " puesto.id as puesto_id, puesto.grupo as puesto_grupo, puesto.descripcion as puesto_des, puesto.detalle as puesto_detalle, "+
+            " modalidad.id as modalidad_id, modalidad.grupo as modalidad_grupo, modalidad.descripcion as modalidad_des, modalidad.detalle as modalidad_detalle,"+
+            " plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle "+
             " from solicitud as sol"+
             " inner join users as us on us.id=sol.id_aprobador "+
-            " inner join users as j_d on j_d.id=sol.id_jefe_directo"
+            " inner join users as j_d on j_d.id=sol.id_jefe_directo" +
+            " inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo "+
+            " inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo "+
+            " inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo "+
             " where 0=0  ";
+
     var condicion1="";
     if (req.body.num_solicitud != "") {
         condicion1=" and  sol.id='"+req.body.num_solicitud+"'"; 
@@ -178,17 +189,129 @@ api.post(api_name+'/remoneracion',(req,res)=>{
 });
 
 
-
+// Aprobacion viceprosidencia
 api.put(api_name+'/updatestatusvicepresidencia',(req,res)=>{
     var query =" update solicitud set estado_vicepresidencia=:estado_vicepresidencia where id=:id_solicitud ";
-    db.sequelize.query(query, {replacements:{estado_vicepresidencia:req.body.estado_vicepresidencia, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE},{type:db.sequelize.QueryTypes.UPDATE})
+    db.sequelize.query(query, {replacements:{estado_vicepresidencia:req.body.estado_vicepresidencia, id_solicitud:req.body.id_solicitud},type: db.sequelize.QueryTypes.UPDATE})
     .then((result)=>{
         res.json({'respuesta':'success', 'result':result})
     })
     .catch((e)=>{
         res.json({'respuesta':'error','result':e});
     })
-})
+});
+
+// guardar requerimiento solicitud
+// , ceco=:ceco, descuento_ceco=:descuento_ceco, porcentaje=:porcentaje
+
+api.put(api_name+'/updaterequerimiento',(req,res)=>{
+    var query = " update solicitud set glosa=:glosa,  sociedad=:sociedad, lider_uo=:lider_uo, codigo_uo=:codigo_uo, descripcion_uo=:descripcion_uo, "+
+                " cod_divicion=:cod_divicion, cod_sub_div=:cod_sub_div, sctr=:sctr, id_area_personal=:id_area_personal, id_relacion_personal=:id_relacion_personal, "+
+                " file_dp=:file_dp, direccion=:direccion  where id=:id ";
+    var data={
+            id:req.body.solicitud_id,
+            glosa:req.body.glosa,
+            sociedad:req.body.sociedad,
+            lider_uo:req.body.lider_uo,
+            codigo_uo:req.body.codigo_uo,
+            descripcion_uo:req.body.descripcion_uo,
+            cod_divicion:req.body.cod_divicion,
+            cod_sub_div:req.body.cod_sub_div,
+            sctr:req.body.sctr,
+            id_area_personal:req.body.id_area_personal,
+            id_relacion_personal:req.body.id_relacion_laboral,
+            file_dp:req.body.file_dp,
+            direccion:req.body.direccion
+        }
+    db.sequelize.query(query,{replacements:data,type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })
+});
+
+
+// Datos registro candidatos
+
+api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
+    var query = "select "+
+            // data solicitudd
+            " sol.id,sol.id_aprobador,sol.id_jefe_directo,sol.id_puesto,sol.id_puesto_tipo,sol.cantidad,sol.id_modalidad,"+
+            " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
+            " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
+            " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
+            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
+            " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
+            // data users
+            " us.id as id_apro,ltrim(us.codigo) as codigo_user,ltrim(us.sociedad)sociedad,us.codigo_division,us.nombre_division_personal,us.codigo_sub_division, "+
+            " us.nombres_sub_division,us.dni,us.nombres, us.apellido_paterno,us.apellido_materno,us.email_corp, "+
+            " us.email_personal,us.codigo_posicion,us.descripcion_posicion,us.codigo_centro_coste, "+
+            " us.centro_coste,us.codigo_funcion,us.funcion,us.codigo_ocupacion,us.ocupacion,us.codigo_unidad_org,us.unidad_organizativa, "+
+            " us.fecha_nac,us.inicio_contrata,us.fin_contrata,us.cod_jefe,us.saldo_dias_vacaion,us.saldo_dias_descanso,us.categoria, "+
+            // data Jefe dir
+            " j_d.id as id_jefe,ltrim(j_d.codigo) as codigo_jefe_dir, j_d.dni as dni_jefe,j_d.nombres as nombre_jefe, j_d.apellido_paterno as apellido_paterno_jefe, "+
+            " j_d.apellido_materno as apellido_materno_jefe,j_d.email_corp as email_corp_jefe,j_d.email_personal as email_personal_jefe, "+
+            // data grupo
+            " puesto.id as puesto_id, puesto.grupo as puesto_grupo, puesto.descripcion as puesto_des, puesto.detalle as puesto_detalle, "+
+            " modalidad.id as modalidad_id, modalidad.grupo as modalidad_grupo, modalidad.descripcion as modalidad_des, modalidad.detalle as modalidad_detalle,"+
+            " plazo.id as plazo_id, plazo.grupo as plazo_grupo, plazo.descripcion as plazo_des, plazo.detalle as plazo_detalle, "+
+            // Cantidad solicitante
+            " (select count(*) from candidato_solicitud as s where s.id_solicitud=sol.id) as cantidad_candidato " +
+
+            " from solicitud as sol"+
+            " inner join users as us on us.id=sol.id_aprobador "+
+            " inner join users as j_d on j_d.id=sol.id_jefe_directo" +
+            " inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo "+
+            " inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo "+
+            " inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo "+
+            " where 0=0  and sol.estado=0 ";
+            
+            var condicion1="";
+            if (req.body.num_solicitud != "") {
+                condicion1=" and  sol.id='"+req.body.num_solicitud+"'"; 
+            }
+            
+            var condicion2='';
+            if (req.body.creador_solicitud!="") {
+                condicion2=" and ltrim(us.codigo) like '%"+req.body.creador_solicitud+"%' ";
+            }
+            var limit =" order by sol.id desc limit 10";
+    db.sequelize
+        .query(query + condicion1 + condicion2+ limit, {type: db.sequelize.QueryTypes.SELECT})
+        .then(result=>{
+            res.json({"respuesta" :"success","result" :result})
+        })
+        .catch(e=>{
+            res.json(
+                {"respuesta" : "error","result" : e}
+            );
+        })
+
+});
+
+
+// agregar candidatos
+
+api.post(api_name+'/candidatos',(req,res)=>{
+    var query ="     insert into candidato_solicitud  (id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento, numero_documento,disponibilidad,email,file_cv,observaciones,fecha_registro,usuario_registro,estado) ";
+    var values ="values("+req.body.id_solicitud+",'"+req.body.nombres+"','"+req.body.apellido_paterno+"','"+
+                        req.body.apellido_materno+"','"+req.body.tipo_documento+"','" +
+                        req.body.numero_documento+"','"+req.body.disponibilidad+"','"+req.body.email+"','"+req.body.file_cv+"','"+
+                        req.body.observaciones+"',now(),'"+req.body.usuario_registro+"',0)";
+    db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
+    .then((result)=>{
+        res.json({'respuesta':'success', 'result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e})
+    })
+    // console.log(req.body);
+});
+
+
 
 
 
