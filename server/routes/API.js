@@ -267,7 +267,9 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             " inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo "+
             " inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo "+
             " inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo "+
-            " where 0=0  and sol.estado=0 ";
+            " where 0=0 ";
+            // Por verser
+            //  and sol.estado=0 ;
             
             var condicion1="";
             if (req.body.num_solicitud != "") {

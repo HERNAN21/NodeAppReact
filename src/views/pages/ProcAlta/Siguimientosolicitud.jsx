@@ -3,6 +3,9 @@ import { Card, CardHeader,CardBody,Label, FormGroup, Table, CardFooter, Input, C
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 import { server, api_name} from "variables/general.jsx";
+
+var  format = require("date-format");
+
 class Siguimientosolicitud extends React.Component {
     constructor(props){
         super(props);
@@ -25,6 +28,9 @@ class Siguimientosolicitud extends React.Component {
                 area:'',
                 fecha:'',
                 hora:'',
+                progress1:'0',
+                progress_value1:'0',
+                progress_color:'danger',
             },
             data_listado_cadidato_all:[],
             
@@ -79,16 +85,33 @@ class Siguimientosolicitud extends React.Component {
     }
 
     buscarCandidato=(data_solicitud)=>{
-        console.log(data_solicitud);
+        // console.log(data_solicitud);
         this.state.buscar_listado.data_listado_candidato_solicitud='';
+
+        // Data progress
+        if (data_solicitud.estado==1) {
+            this.state.data_seguimiento_solicitud.progress1='25';
+            this.state.data_seguimiento_solicitud.progress_value1='25%';
+            this.state.data_seguimiento_solicitud.progress_color='danger';
+        }else if(data_solicitud.estado==0 && data_solicitud.estado_vicepresidencia==0){
+            this.state.data_seguimiento_solicitud.progress1='50';
+            this.state.data_seguimiento_solicitud.progress_value1='50%';
+            this.state.data_seguimiento_solicitud.progress_color='warning';
+            // falta añadir 2 condiciones estatus
+        }else{
+            this.state.data_seguimiento_solicitud.progress1='0';
+            this.state.data_seguimiento_solicitud.progress_value1='0';
+            this.state.data_seguimiento_solicitud.progress_color='danger';
+        }
+
         // Data Creador Solicitud
         this.state.data_seguimiento_solicitud.solicitud_id=data_solicitud.id;
         this.state.data_seguimiento_solicitud.nombres=data_solicitud.nombres;
         this.state.data_seguimiento_solicitud.apellido_paterno=data_solicitud.apellido_paterno;
         this.state.data_seguimiento_solicitud.apellido_materno=data_solicitud.apellido_materno;
         // this.state.data_seguimiento_solicitud.area=
-        this.state.data_seguimiento_solicitud.fecha=data_solicitud.fecha_registro;
-        // this.state.data_seguimiento_solicitud.hora=
+        this.state.data_seguimiento_solicitud.fecha=format.asString('dd/MM/yyyy', new Date(data_solicitud.fecha_registro));
+        this.state.data_seguimiento_solicitud.hora=format.asString('hh:mm:ss SSS', new Date(data_solicitud.fecha_registro));
         
         const data_candidato=this.state.data_listado_cadidato_all;
         var data_candidato_list=[];
@@ -102,14 +125,37 @@ class Siguimientosolicitud extends React.Component {
         this.forceUpdate();
     }
 
+    // Update data candidatos
+
+    dataSedeEntrevista=(e)=>{
+        console.log(e.target.value);
+    }
+
+    dataContactoSede=(e)=>{
+
+    }
+
+    dataProgramarEntrevista=(e)=>{
+
+    }
+
+    dataEstado=(e)=>{
+
+    }
+
+    dataPrioridad=(e)=>{
+
+    }
+
+
 
 
 
   render() {
         const data_solicitud=this.state.data_solicitud_list;
         // console.log(this.state.data_solicitud_list);
-        
         const data_candidato_listar=this.state.buscar_listado.data_listado_candidato_solicitud;
+        console.log(data_candidato_listar);
         // console.log(this.state.buscar_listado.data_listado_candidato_solicitud);
     return (
       <>
@@ -228,53 +274,48 @@ class Siguimientosolicitud extends React.Component {
                             <div style={{height:"10px"}}></div>
                             <Row>
                                 <Col md="12">
-                                    {/* <Progress color="warning" value={50} /> */}
-                                    {/* <Progress color="info" value={50} /> */}
-                                    <Progress multi>
-                                        <Progress bar color="success" value="25" />
-                                        <Progress bar color="success" value="0" />
-                                        <Progress bar color="success" value="0" />
-                                        <Progress bar color="success" value="0" />
-                                    </Progress>
+                                    <div>
+                                        <Progress color={this.state.data_seguimiento_solicitud.progress_color} value={this.state.data_seguimiento_solicitud.progress1} style={{height:"12px"}}>{this.state.data_seguimiento_solicitud.progress_value1}</Progress>
+                                    </div>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col md="3">
                                     <p>
-                                        <span><b>Solicitud Nro.</b> {this.state.data_seguimiento_solicitud.solicitud_id}</span><br/>
-                                        <span><b>Nombres:</b> {this.state.data_seguimiento_solicitud.nombres+', '+this.state.data_seguimiento_solicitud.apellido_paterno +' '+this.state.data_seguimiento_solicitud.apellido_materno}</span><br/>
-                                        <span><b>Estado:</b>{this.state.data_seguimiento_solicitud.estado}</span><br/>
-                                        <span><b>Área:</b>{this.state.data_seguimiento_solicitud.area}</span><br/>
-                                        <span><b>Fecha:</b>{this.state.data_seguimiento_solicitud.fecha}</span><br/>
-                                        <span><b>Hora:</b>{this.state.data_seguimiento_solicitud.hora}</span><br/>
+                                        <span><b>Solicitud Nro. </b> {this.state.data_seguimiento_solicitud.solicitud_id}</span><br/>
+                                        <span><b>Nombres: </b> {this.state.data_seguimiento_solicitud.nombres+', '+this.state.data_seguimiento_solicitud.apellido_paterno +' '+this.state.data_seguimiento_solicitud.apellido_materno}</span><br/>
+                                        <span><b>Estado: </b>{this.state.data_seguimiento_solicitud.estado}</span><br/>
+                                        <span><b>Área: </b>{this.state.data_seguimiento_solicitud.area}</span><br/>
+                                        <span><b>Fecha: </b>{this.state.data_seguimiento_solicitud.fecha}</span><br/>
+                                        <span><b>Hora: </b>{this.state.data_seguimiento_solicitud.hora}</span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
                                         <span><b>Aprobacion de Gerente</b></span><br/>
                                         <span><b>Nombres: </b></span><br/>
-                                        <span><b>Estado:</b></span><br/>
+                                        <span><b>Estado: </b></span><br/>
                                         <span><b>Área: </b></span><br/>
-                                        <span><b>Fecha:</b></span><br/>
-                                        <span><b>Hora:</b></span><br/>
+                                        <span><b>Fecha: </b></span><br/>
+                                        <span><b>Hora: </b></span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
                                         <span><b>Aprobacion de Gestor</b></span><br/>
-                                        <span><b>Nombres:</b></span><br/>
-                                        <span><b>Estado:</b></span><br/>
-                                        <span><b>Área:</b></span><br/>
-                                        <span><b>Fecha:</b></span><br/>
-                                        <span><b>Hora:</b></span><br/>
+                                        <span><b>Nombres: </b></span><br/>
+                                        <span><b>Estado: </b></span><br/>
+                                        <span><b>Área: </b></span><br/>
+                                        <span><b>Fecha: </b></span><br/>
+                                        <span><b>Hora: </b></span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
-                                        <span><b>Estado:</b> Buscando Candidatos</span><br/>
-                                        <span><b>Área:</b></span><br/>
-                                        <span><b>Fecha:</b></span><br/>
-                                        <span><b>Hora:</b></span><br/>
+                                        <span><b>Estado: </b> Buscando Candidatos</span><br/>
+                                        <span><b>Área: </b></span><br/>
+                                        <span><b>Fecha: </b></span><br/>
+                                        <span><b>Hora: </b></span><br/>
                                     </p>
                                 </Col>
                             </Row>
@@ -329,7 +370,7 @@ class Siguimientosolicitud extends React.Component {
                                                                     <span className="text-muted">{listado.numero_documento}</span>
                                                                 </td>
                                                                 <td style={{padding:"10px"}} className="table-user">
-                                                                    <Input type="select" className="form-control-sm">
+                                                                    <Input type="select" className="form-control-sm" onChange={this.dataSedeEntrevista}>
                                                                         <option>[Select]</option>
                                                                         <option>Sede 1</option>
                                                                         <option>Sede 2</option>

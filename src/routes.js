@@ -144,7 +144,7 @@ const routes = [
       // Old Examples
 
 
-      {
+      /*{
         path: "/Aprobaciones",
         name: "Aprobaciones Pendientes",
         icon: "ni ni-archive-2 text-green",
@@ -178,7 +178,8 @@ const routes = [
         icon: "ni ni-archive-2 text-green",
         component: CerrarSolicitud,
         layout: "/admin"
-      },
+      },*/
+      
       // {
       //   path: "/cierrespendientes",
       //   name: "Cierres Pendienes",

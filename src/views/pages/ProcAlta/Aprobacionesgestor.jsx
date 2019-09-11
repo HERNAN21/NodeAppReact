@@ -280,7 +280,7 @@ class Aprobacionesgestor extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" name="" value={listado.id} checked={this.state.aprobacionvicecheck} onClick={this.AprobacionVicepresidencia}/>
+                                                                <input defaultChecked type="checkbox" name="" value={listado.id}  onChange={this.AprobacionVicepresidencia}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
