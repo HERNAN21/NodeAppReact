@@ -20,15 +20,15 @@ class Registrocandidatos extends React.Component {
             data_solicitud_list:[],
             data_candidato:{
                 id_solicitud:'',
-                nombres:"Hernan",
-                apellido_paterno:"Rojas",
-                apellido_materno:"Utani",
-                tipo_documento:"1",
+                nombres:"",
+                apellido_paterno:"",
+                apellido_materno:"",
+                tipo_documento:"",
                 numero_documento:"70586952",
-                disponibilidad:"1",
-                email:"test@gmail.com",
-                file_cv:"asd",
-                observaciones:"asd",
+                disponibilidad:"",
+                email:"",
+                file_cv:"",
+                observaciones:"",
                 usuario_registro:"HROJAS"
             }
         }
@@ -76,6 +76,57 @@ class Registrocandidatos extends React.Component {
         this.forceUpdate();
     }
 
+    //  add data nuevo candidato
+    
+
+    dataNombres=(e)=>{
+        this.state.data_candidato.nombres=e.target.value;
+        this.forceUpdate();
+    }
+    
+    dataApellidoPaterno=(e)=>{
+        this.state.data_candidato.apellido_paterno=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataApellidoMaterno=(e)=>{
+        this.state.data_candidato.apellido_materno=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataTipoDni=(e)=>{
+        this.state.data_candidato.tipo_documento=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataDocumento=(e)=>{
+        this.state.data_candidato.numero_documento=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataDisponibilidad=(e)=>{
+        this.state.data_candidato.disponibilidad=e.target.value;
+        this.forceUpdate();
+    }
+    dataEmail=(e)=>{
+        this.state.data_candidato.email=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataFileCv=(e)=>{
+        this.state.data_candidato.file_cv=e.target.value;
+        this.forceUpdate();
+    }
+    dataObservaciones=(e)=>{
+        this.state.data_candidato.observaciones=e.target.value;
+        this.forceUpdate();
+    }
+
+    
+
+    
+
+
     // Guardar Candidato data_candidato
 
     btnGuardar=(e)=>{
@@ -100,6 +151,7 @@ class Registrocandidatos extends React.Component {
   render() {
     const data_listar=this.state.data_solicitud_list;
     const id_solicitud=this.state.data_candidato.id_solicitud;
+    console.log(this.state.data_candidato);
     return (
       <>
         <SimpleHeader name="Registro de Candidatos" parentName="Tables" />
@@ -210,19 +262,19 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginTop:"-5px"}}>Nombres</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text" name="nombres"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" name="nombres" onKeyUp={this.dataNombres} />
                                         </InputGroup>
                                     </Col>
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-90px", marginTop:"-5px"}}>Apellido Paterno</Label>
                                     <Col md="3">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text" name="apellidoP" />
+                                            <Input className="form-control-sm" placeholder="" type="text" name="apellidoP" onKeyUp={this.dataApellidoPaterno} />
                                         </InputGroup>
                                     </Col>
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Apellido Materno</Label>
                                     <Col md="3">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text" name="apellidoM"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" name="apellidoM" onKeyUp={this.dataApellidoMaterno}/>
                                         </InputGroup>
                                     </Col>
                                 </Row>
@@ -231,26 +283,26 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{ marginTop:"-5px"}}>Tipo de Documento</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" type="select" name="tipoDoc" id="tipoDoc">
-                                                <option>Dni</option>
-                                                <option>Carnet</option>
-                                                <option>Pasaporte</option>
-                                                <option>Otros</option>
+                                            <Input className="form-control-sm" type="select" name="tipoDoc" id="tipoDoc" onChange={this.dataTipoDni}>
+                                                <option value="1">Dni</option>
+                                                <option value="2">Carnet</option>
+                                                <option value="3">Pasaporte</option>
+                                                <option value="4">Otros</option>
                                             </Input>
                                         </InputGroup>
                                     </Col>
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-90px", marginTop:"-5px"}}>Numero de Documento</Label>
                                     <Col md="3">
                                         <InputGroup>
-                                            <Input className="form-control-sm" type="text" name="numeroDoc" id="numeroDoc" />
+                                            <Input className="form-control-sm" type="text" name="numeroDoc" id="numeroDoc" onKeyUp={this.dataDocumento} />
                                         </InputGroup>
                                     </Col>
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Disponibilidad</Label>
                                     <Col md="3">
                                         <InputGroup>
-                                            <Input className="form-control-sm"  type="select" name="disponibilidad" id="disponibilidad">
-                                                <option >Option 1</option>
-                                                <option >Option 2</option>
+                                            <Input className="form-control-sm"  type="select" name="disponibilidad" id="disponibilidad" onChange={this.dataDisponibilidad} >
+                                                <option value="1">Inmediato</option>
+                                                <option value="2">Fin de Mes</option>
                                             </Input>
                                         </InputGroup>
                                     </Col>
@@ -259,13 +311,13 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{marginTop:"-5px"}}>Correo Electrónico</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="email" name="email"/>
+                                            <Input className="form-control-sm" placeholder="" type="email" name="email" onKeyUp={this.dataEmail} />
                                         </InputGroup>
                                     </Col>
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>CV</Label>
                                     <Col md="3">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="file" name="filecv" />
+                                            <Input className="form-control-sm" placeholder="" type="file" name="filecv" onKeyUp={this.dataFileCv} />
                                         </InputGroup>
                                     </Col>
                                 </Row>
@@ -273,7 +325,7 @@ class Registrocandidatos extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="1" style={{ marginTop:"-5px"}}>Glosa</Label>
                                     <Col md="11">
                                         <FormGroup>
-                                            <Input type="textarea" name="glosa" id="glosa" className="form-control-sm" rows="2"/>
+                                            <Input type="textarea" name="glosa" id="glosa" className="form-control-sm" rows="2" onKeyUp={this.dataObservaciones} />
                                         </FormGroup>
                                     </Col>
                                 </Row>
