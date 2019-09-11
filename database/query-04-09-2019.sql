@@ -33,8 +33,10 @@ create table solicitud(
 CREATE SEQUENCE id_solicitud;
 ALTER TABLE solicitud ALTER id SET DEFAULT NEXTVAL('id_solicitud');
 
-
+select * from solicitud;
 ALTER TABLE solicitud ALTER COLUMN id_jefe_directo TYPE integer USING id_jefe_directo::integer;
+ALTER TABLE solicitud ALTER COLUMN fecha_registro type TIMESTAMP USING fecha_registro::TIMESTAMP;
+ALTER TABLE solicitud ALTER COLUMN fecha_modificacion type TIMESTAMP USING fecha_modificacion::TIMESTAMP;
 
 
 
@@ -208,7 +210,7 @@ select
 		sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente,
 		sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo,
 		sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro,
-		sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia,
+		sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia,
 		-- data users 		
 		us.id as id_apro,ltrim(us.codigo),us.sociedad,us.codigo_division,us.nombre_division_personal,us.codigo_sub_division,
 		us.nombres_sub_division,us.dni,us.nombres, us.apellido_paterno,us.apellido_materno,us.email_corp,
@@ -332,4 +334,25 @@ insert into candidato_solicitud
 (id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,
 numero_documento,disponibilidad,email,file_cv,observaciones,fecha_registro,usuario_registro,estado)
 values(1,'Hernan','rojas','Utani','1','50458569','1','hernanrojasutani@gmail.com','file/50458569/50458569.pdf','nada',now(),'HROJAS',0);
+
+
+select 
+	id,id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,numero_documento,disponibilidad,
+	email,file_cv,observaciones,fecha_registro,usuario_registro,fecha_modificacion,usuario_modificacion,estado, 
+	CASE 
+		WHEN estado=0 THEN 'Activo' 
+		WHEN estado=1 THEN 'Inactivo'
+	END as estado_des,
+	id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad
+from candidato_solicitud ;
+
+
+
+ALTER TABLE candidato_solicitud 
+ADD COLUMN id_sede_entrevista int null,
+ADD COLUMN contacto_sede char(50) null,
+ADD COLUMN fecha_entrevista TIMESTAMP null,
+ADD COLUMN prioridad char(10) null;
+
+
 

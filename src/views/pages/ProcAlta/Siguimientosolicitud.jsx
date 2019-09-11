@@ -13,18 +13,33 @@ class Siguimientosolicitud extends React.Component {
             api_name:api_name,
             buscar_listado:{
                 num_solicitud:'',
-                creador_solicitud:''
+                creador_solicitud:'',
+                data_listado_candidato_solicitud:[],
             },
             data_solicitud_list:[],
             data_seguimiento_solicitud:{
                 solicitud_id:'',
-                nombres:''
-
-            }
+                nombres:'',
+                apellido_paterno:'',
+                apellido_materno:'',
+                area:'',
+                fecha:'',
+                hora:'',
+            },
+            data_listado_cadidato_all:[],
+            
 
         }
 
         this.cargarData=this.cargarData.bind(this);
+        // Cargar candidatos all
+        fetch(this.state.server + this.state.api_name +'/listado/candidatos')
+        .then(response=>response.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                this.setState({data_listado_cadidato_all:data.result});
+            }
+        }.bind(this));
 
     }
 
@@ -39,13 +54,14 @@ class Siguimientosolicitud extends React.Component {
         .then(function(data) {
             if (data.respuesta=='success') {
                 this.setState({data_solicitud_list:data.result})
-                console.log(data.result);
+                // console.log(data.result);
             } else {
                 console.log(data.respuesta);
             }
         }.bind(this))
     }
 
+    
     btnBuscar=(e)=>{
         this.cargarData();
     }
@@ -64,8 +80,25 @@ class Siguimientosolicitud extends React.Component {
 
     buscarCandidato=(data_solicitud)=>{
         console.log(data_solicitud);
+        this.state.buscar_listado.data_listado_candidato_solicitud='';
+        // Data Creador Solicitud
         this.state.data_seguimiento_solicitud.solicitud_id=data_solicitud.id;
         this.state.data_seguimiento_solicitud.nombres=data_solicitud.nombres;
+        this.state.data_seguimiento_solicitud.apellido_paterno=data_solicitud.apellido_paterno;
+        this.state.data_seguimiento_solicitud.apellido_materno=data_solicitud.apellido_materno;
+        // this.state.data_seguimiento_solicitud.area=
+        this.state.data_seguimiento_solicitud.fecha=data_solicitud.fecha_registro;
+        // this.state.data_seguimiento_solicitud.hora=
+        
+        const data_candidato=this.state.data_listado_cadidato_all;
+        var data_candidato_list=[];
+        for (let i = 0; i < data_candidato.length; i++) {
+            const element = data_candidato[i];
+            if (data_solicitud.id==element.id_solicitud) {
+                data_candidato_list.push(element);
+            }
+        }
+        this.state.buscar_listado.data_listado_candidato_solicitud=data_candidato_list;
         this.forceUpdate();
     }
 
@@ -74,7 +107,10 @@ class Siguimientosolicitud extends React.Component {
 
   render() {
         const data_solicitud=this.state.data_solicitud_list;
-        console.log(this.state.data_solicitud_list);
+        // console.log(this.state.data_solicitud_list);
+        
+        const data_candidato_listar=this.state.buscar_listado.data_listado_candidato_solicitud;
+        // console.log(this.state.buscar_listado.data_listado_candidato_solicitud);
     return (
       <>
         <SimpleHeader name="Seguimiento de Solicitud de Alta" parentName="Tables" />
@@ -110,7 +146,7 @@ class Siguimientosolicitud extends React.Component {
                         <CardBody>
                             <Row>
                                 <Col md="12">
-                                    <Table className="align-items-center table-flush" responsive size="sm">
+                                    <Table className="align-items-center table-flush" responsive size="sm" hover>
                                         <thead className="thead-light">
                                             <tr>
                                                 <th style={{textAlign:"center",width:"2%"} }>Nro. <br/> Solicitud</th>
@@ -205,40 +241,40 @@ class Siguimientosolicitud extends React.Component {
                             <Row>
                                 <Col md="3">
                                     <p>
-                                        <span>Solicitud Nro. {this.state.data_seguimiento_solicitud.solicitud_id}</span><br/>
-                                        <span>Nombres: {this.state.data_seguimiento_solicitud.nombres}</span><br/>
-                                        <span>Estado:</span><br/>
-                                        <span>Área:</span><br/>
-                                        <span>Fecha:</span><br/>
-                                        <span>Hora:</span><br/>
+                                        <span><b>Solicitud Nro.</b> {this.state.data_seguimiento_solicitud.solicitud_id}</span><br/>
+                                        <span><b>Nombres:</b> {this.state.data_seguimiento_solicitud.nombres+', '+this.state.data_seguimiento_solicitud.apellido_paterno +' '+this.state.data_seguimiento_solicitud.apellido_materno}</span><br/>
+                                        <span><b>Estado:</b>{this.state.data_seguimiento_solicitud.estado}</span><br/>
+                                        <span><b>Área:</b>{this.state.data_seguimiento_solicitud.area}</span><br/>
+                                        <span><b>Fecha:</b>{this.state.data_seguimiento_solicitud.fecha}</span><br/>
+                                        <span><b>Hora:</b>{this.state.data_seguimiento_solicitud.hora}</span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
-                                        <span>Aprobacion de Gerente</span><br/>
-                                        <span>Nombres: </span><br/>
-                                        <span>Estado:</span><br/>
-                                        <span>Área: </span><br/>
-                                        <span>Fecha:</span><br/>
-                                        <span>Hora:</span><br/>
+                                        <span><b>Aprobacion de Gerente</b></span><br/>
+                                        <span><b>Nombres: </b></span><br/>
+                                        <span><b>Estado:</b></span><br/>
+                                        <span><b>Área: </b></span><br/>
+                                        <span><b>Fecha:</b></span><br/>
+                                        <span><b>Hora:</b></span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
-                                        <span>Aprobacion de Gestor</span><br/>
-                                        <span>Nombres:</span><br/>
-                                        <span>Estado:</span><br/>
-                                        <span>Área:</span><br/>
-                                        <span>Fecha:</span><br/>
-                                        <span>Hora:</span><br/>
+                                        <span><b>Aprobacion de Gestor</b></span><br/>
+                                        <span><b>Nombres:</b></span><br/>
+                                        <span><b>Estado:</b></span><br/>
+                                        <span><b>Área:</b></span><br/>
+                                        <span><b>Fecha:</b></span><br/>
+                                        <span><b>Hora:</b></span><br/>
                                     </p>
                                 </Col>
                                 <Col md="3">
                                     <p>
-                                        <span>Estado: Buscando Candidatos</span><br/>
-                                        <span>Área:</span><br/>
-                                        <span>Fecha:</span><br/>
-                                        <span>Hora:</span><br/>
+                                        <span><b>Estado:</b> Buscando Candidatos</span><br/>
+                                        <span><b>Área:</b></span><br/>
+                                        <span><b>Fecha:</b></span><br/>
+                                        <span><b>Hora:</b></span><br/>
                                     </p>
                                 </Col>
                             </Row>
@@ -251,95 +287,101 @@ class Siguimientosolicitud extends React.Component {
                             <div style={{height:"5px"}}></div>
                             <Row>
                                 <Col md="12">
-                                    <Table className="align-items-center table-flush" responsive size="sm">
+                                    <Table className="align-items-center table-flush" responsive size="lg" hover>
                                         <thead className="thead-light">
                                             <tr>
-                                                <th style={{textAlign:"center",padding:10 }}>Nombres <br/> Y <br/> Apellidos</th>
-                                                <th style={{textAlign:"center",padding:10 }}>CV</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Disponibilidad <br/> De <br/> Creacion</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Correo <br/>Electrónico</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Tipo <br/> Documento</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Nro. <br/> Documento</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Sede <br/> de Entrevista</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Contacto <br/> por Sede</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Programar <br/> Entrevista</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Estado</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Prioridad</th>
-                                                <th style={{textAlign:"center",padding:10 }}>Observaciones</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Nombres <br/> Y <br/> Apellidos</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">CV</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Disponibilidad <br/> De <br/> Creacion</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Correo <br/>Electrónico</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Tipo <br/> Documento</th>
+                                                <th style={{textAlign:"center"}} width="5%" >Nro. <br/> Documento</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Sede de Entrevista</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Contacto  por Sede</th>
+                                                <th style={{textAlign:"center"}} width="15%" >Programar Entrevista</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Estado</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Prioridad</th>
+                                                <th style={{textAlign:"center"}} width="8.3%">Observaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    Colaborador
-                                                </td>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    <a className="font-weight-bold" href="" onClick={e => e.preventDefault()}>File</a>
-                                                </td>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    <b>28/08/2019</b>
-                                                </td>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    <b>Colaborador</b>
-                                                </td>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    <b>DNI</b>
-                                                </td>
-                                                <td style={{padding:"10px"}}>
-                                                    <span className="text-muted">705485695</span>
-                                                </td>
-                                                <td style={{padding:"10px"}} className="table-user">
-                                                    <Input type="select" className="form-control-sm">
-                                                        <option>[Select]</option>
-                                                        <option>Sede 1</option>
-                                                        <option>Sede 2</option>
-                                                    </Input>
-                                                </td>
-                                                <td style={{padding:"10px"}}>
-                                                    <InputGroup>
-                                                        <Input className="form-control-sm" placeholder="" type="text"/>
-                                                        <InputGroupAddon addonType="append">
-                                                            <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
-                                                            </InputGroupText>
-                                                        </InputGroupAddon>
-                                                    </InputGroup>
-                                                </td>
-                                                <td style={{textAlign:"center"}}>
-                                                    <InputGroup>
-                                                        <Input className="form-control-sm" placeholder="" type="date"/>
-                                                        <InputGroupAddon addonType="append">
-                                                            <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                                <Button className="btn btn-sm" color="warning">Programar</Button>
-                                                            </InputGroupText>
-                                                        </InputGroupAddon>
-                                                    </InputGroup>
-                                                </td>
-                                                <td>
-                                                    <Input type="select" className="form-control-sm">
-                                                        <option>[Select]</option>
-                                                        <option>Estado 1</option>
-                                                        <option>Estado 2</option>
-                                                    </Input>
-                                                </td>
-                                                <td>
-                                                    <Input type="select" className="form-control-sm">
-                                                        <option>[Select]</option>
-                                                        <option>Prioridad 1</option>
-                                                        <option>Prioridad 2</option>
-                                                    </Input>
-                                                </td>
-                                                <td>
-                                                    glosa
-                                                </td>
-                                            </tr>
+                                            {
+                                                data_candidato_listar.map((listado,key)=>{
+                                                    return(
+                                                        <>
+                                                            <tr>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    {listado.nombres+', '+listado.apellido_paterno+' '+listado.apellido_materno}
+                                                                </td>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    <a className="font-weight-bold" href="" onClick={e => e.preventDefault()}>{listado.file_cv}</a>
+                                                                </td>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    <b>por ver</b>
+                                                                </td>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    <b>{listado.email}</b>
+                                                                </td>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    <b>{listado.tipo_documento}</b>
+                                                                </td>
+                                                                <td style={{padding:"10px",textAlign:"center" }}>
+                                                                    <span className="text-muted">{listado.numero_documento}</span>
+                                                                </td>
+                                                                <td style={{padding:"10px"}} className="table-user">
+                                                                    <Input type="select" className="form-control-sm">
+                                                                        <option>[Select]</option>
+                                                                        <option>Sede 1</option>
+                                                                        <option>Sede 2</option>
+                                                                    </Input>
+                                                                </td>
+                                                                <td style={{padding:"10px"}}>
+                                                                    <InputGroup>
+                                                                        <Input className="form-control-sm" placeholder="" type="text"/>
+                                                                        <InputGroupAddon addonType="append">
+                                                                            <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
+                                                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                                            </InputGroupText>
+                                                                        </InputGroupAddon>
+                                                                    </InputGroup>
+                                                                </td>
+                                                                <td style={{textAlign:"center",padding:"10px"}}>
+                                                                    <InputGroup>
+                                                                        <Input className="form-control-sm" placeholder="" type="date"/>
+                                                                        <InputGroupAddon addonType="append">
+                                                                            <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
+                                                                                <Button className="btn btn-sm" color="warning" title="Programar"><i class="fa fa-calendar" aria-hidden="true"></i></Button>
+                                                                            </InputGroupText>
+                                                                        </InputGroupAddon>
+                                                                    </InputGroup>
+                                                                </td>
+                                                                <td>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}}>
+                                                                        <option value="">[Select]</option>
+                                                                        <option value="0">Activo</option>
+                                                                        <option value="1">Inactivo</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}}>
+                                                                        <option>[Select]</option>
+                                                                        <option>Prioridad 1</option>
+                                                                        <option>Prioridad 2</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    {listado.observaciones}
+                                                                </td>
+                                                            </tr>
+                                                        </>
+                                                    );
+                                                })
+                                            }
                                         </tbody>
                                     </Table>
                                 </Col>
                             </Row>
                             <br/>
-
-
                         </CardBody>
                     <CardFooter>
                         <Row>
