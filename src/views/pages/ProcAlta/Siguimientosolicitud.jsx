@@ -16,6 +16,11 @@ class Siguimientosolicitud extends React.Component {
                 creador_solicitud:''
             },
             data_solicitud_list:[],
+            data_seguimiento_solicitud:{
+                solicitud_id:'',
+                nombres:''
+
+            }
 
         }
 
@@ -54,6 +59,13 @@ class Siguimientosolicitud extends React.Component {
     dataBuscarCreador=(e)=>{
         this.state.buscar_listado.creador_solicitud=e.target.value;
         this.cargarData();
+        this.forceUpdate();
+    }
+
+    buscarCandidato=(data_solicitud)=>{
+        console.log(data_solicitud);
+        this.state.data_seguimiento_solicitud.solicitud_id=data_solicitud.id;
+        this.state.data_seguimiento_solicitud.nombres=data_solicitud.nombres;
         this.forceUpdate();
     }
 
@@ -120,7 +132,7 @@ class Siguimientosolicitud extends React.Component {
                                                 data_solicitud.map((listado,key)=>{
                                                     return (
                                                     <>
-                                                        <tr>
+                                                        <tr onClick={()=>this.buscarCandidato(listado)}>
                                                             <td className="table-user">
                                                                 <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
                                                             </td>
@@ -169,7 +181,7 @@ class Siguimientosolicitud extends React.Component {
                             <br/>
                             <Row>
                                 <Col md="12">
-                                    <b>Solicitud 100</b>
+                                    <b>Solicitud {this.state.data_seguimiento_solicitud.solicitud_id}</b>
                                 </Col>
                             </Row>
                             <Row>
@@ -193,8 +205,8 @@ class Siguimientosolicitud extends React.Component {
                             <Row>
                                 <Col md="3">
                                     <p>
-                                        <span>Solicitud Nro.</span><br/>
-                                        <span>Nombres:</span><br/>
+                                        <span>Solicitud Nro. {this.state.data_seguimiento_solicitud.solicitud_id}</span><br/>
+                                        <span>Nombres: {this.state.data_seguimiento_solicitud.nombres}</span><br/>
                                         <span>Estado:</span><br/>
                                         <span>Área:</span><br/>
                                         <span>Fecha:</span><br/>

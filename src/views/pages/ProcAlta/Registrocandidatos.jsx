@@ -284,6 +284,7 @@ class Registrocandidatos extends React.Component {
                                     <Col md="2">
                                         <InputGroup>
                                             <Input className="form-control-sm" type="select" name="tipoDoc" id="tipoDoc" onChange={this.dataTipoDni}>
+                                                <option value="">[Seleccione]</option>
                                                 <option value="1">Dni</option>
                                                 <option value="2">Carnet</option>
                                                 <option value="3">Pasaporte</option>
@@ -301,6 +302,7 @@ class Registrocandidatos extends React.Component {
                                     <Col md="3">
                                         <InputGroup>
                                             <Input className="form-control-sm"  type="select" name="disponibilidad" id="disponibilidad" onChange={this.dataDisponibilidad} >
+                                                <option value="">[Seleccione]</option>
                                                 <option value="1">Inmediato</option>
                                                 <option value="2">Fin de Mes</option>
                                             </Input>
