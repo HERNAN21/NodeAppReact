@@ -6,8 +6,95 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
+import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
+
+
+
 class Aprobaciones extends React.Component {
+    constructor (props){
+        super(props)
+
+        this.state={
+            server:server,
+            solicitud_aprobaciones:[],
+            data_buscar:{
+                num_solicitud:'',
+                estado:''
+            }
+        }
+        this.cargarData=this.cargarData.bind(this);
+        // this.cargarData=this.cargarData(this);
+    }
+
+    cargarData=(e)=>{
+        fetch(this.state.server + api_name+ '/aprobacionespendientes',{
+            method: 'POST',
+            body: JSON.stringify(this.state.data_buscar),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                this.setState({solicitud_aprobaciones:data.result})
+            } else {
+                console.log(data.respuesta);
+            }
+        }.bind(this))
+    }
+
+    buscarNumeroSolicitud=(e)=>{
+        var values=e.target.value;
+        this.state.data_buscar.num_solicitud=values;
+        this.cargarData();
+        this.forceUpdate();
+    }
+
+    bucarEstado=(e)=>{
+        var values=e.target.value;
+        this.state.data_buscar.estado=values;
+        this.cargarData();
+        this.forceUpdate();
+    }
+
+    updateEstado=(e)=>{
+        var estado=0;
+        if (e.target.checked==false) {
+            estado=1;
+        }
+        const data_update={
+            id_solicitud: e.target.value,
+            estado: estado
+        }
+        fetch(this.state.server + api_name+'/updatestatus',{
+            method: 'PUT',
+            body: JSON.stringify(data_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+    }
+
+    cargarEstado(value){
+        // if (value==1) {
+        //     return false;
+        // }else{
+        //     return true;
+        // }
+    }
+
+
+
+
     render() {
+
+        const data_listar=this.state.solicitud_aprobaciones;
+        // console.log(data_listar);
         return (
             <>
              <SimpleHeader name="Aprobaciones Pendientes" parentName="Tables" />
@@ -18,10 +105,10 @@ class Aprobaciones extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Nro. Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.buscarNumeroSolicitud}/>
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.buscarNumeroSolicitud}/>
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -29,128 +116,77 @@ class Aprobaciones extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Estado</Label>
                                     <Col md="2">
                                         <FormGroup>
-                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
-                                            <option>State 1</option>
-                                            <option>State 2</option>
-                                            <option>State 3</option>
+                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.bucarEstado} >
+                                            <option value="">[seleccione]</option>
+                                            <option value="0">activo</option>
+                                            <option value="1">Incativo</option>
                                         </Input>
                                         </FormGroup>
                                     </Col>
                                 </Row>
                         </CardHeader>
                         <CardBody>
-                            <Table className="align-items-center table-flush" responsive size="sm">
+                            <Table className="align-items-center table-flush" responsive size="sm" hover>
                                 <thead className="thead-light">
                                     <tr>
-                                    <th>Nro. Solicitud</th>
-                                    <th>Estado</th>
-                                    <th>Fecha De Creacion</th>
-                                    <th>Creador de Solicitud</th>
-                                    <th>Cantidad de Recursos</th>
-                                    <th>Descripcion de Puesto</th>
-                                    <th>Remoneración</th>
-                                    <th>¿Aprobar?</th>
-                                    <th />
+                                        <th style={{width:'1%', textAlign:"center"}} >Nro. <br/> Solicitud</th>
+                                        <th style={{width:'1%', textAlign:"center"}} >Estado</th>
+                                        <th style={{width:'5%', textAlign:"center"}} >Fecha <br/> De Creacion</th>
+                                        <th style={{width:'5%', textAlign:"center"}} >Creador de Solicitud</th>
+                                        <th style={{width:'2%', textAlign:"center"}} >Cantidad <br/> de Recursos</th>
+                                        <th style={{width:'10%', textAlign:"center"}} >Descripcion de Puesto</th>
+                                        <th style={{width:'5%', textAlign:"center"}} >Remoneración</th>
+                                        <th style={{width:'2%', textAlign:"center"}} >¿Aprobar?</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>$ 1000</a>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>$ 1000</a>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>100</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>100</b>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">Description</span>
-                                        </td>
-                                        <td>
-                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>$ 1000</a>
-                                        </td>
-                                        <td>
-                                            <label className="custom-toggle">
-                                                <input defaultChecked type="checkbox" />
-                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
-                                            </label>
-                                        </td>
-                                    </tr>
+                                    {
+                                        data_listar.map((listado,key)=>{
+                                            return (
+                                                <>
+                                                    <tr>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <b>{listado.estado}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <b>{listado.fecha_registro}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.nombres}</b>
+                                                        </td>
+                                                        <td className="table-user" style={{textAlign:"center"}}>
+                                                            <b>{listado.cantidad}</b>
+                                                        </td>
+                                                        <td>
+                                                            <span className="text-muted">{listado.descripcion}</span>
+                                                        </td>
+                                                        <td style={{textAlign:"center"}}>
+                                                            <span>{listado.remoneracion}</span>
+                                                        </td>
+                                                        <td>
+                                                            <label className="custom-toggle">
+                                                                <input defaultChecked type="checkbox" value={listado.id} checked={this.cargarEstado(listado.estado)} onChange={this.updateEstado}/>
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            );
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>
-                    <CardFooter>
+                    {/* <CardFooter>
                         <Row>
                             <Col md="12">
                                 <Button color="success" className="btn btn-sm" style={{float:"right"}}>Confirmar</Button>
                             </Col>
                         </Row>
-                    </CardFooter>
+                    </CardFooter> */}
                 </Card>
             </Container>
         </>
