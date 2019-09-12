@@ -373,6 +373,30 @@ api.put(api_name+'/updatecandidatoposicion',(req,res)=>{
             res.json({'respuesta':'error', 'result':e});
         })
     }
+});
+
+// exist
+api.get(api_name+'/validarremuneracion',(req,res)=>{
+    var query = " select * from detalle_candidato_remuneracion where candidato_id="+req.body.candidato_id;
+    db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+})
+
+api.post(api_name+'/insertremoneracioncandidato',(req,res)=>{
+    var query = " insert into detalle_candidato_remuneracion (candidato_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
+    var value = " values(1,'1','5000.00','0','1234','125',now(),'HROJAS',0) ";
+    db.sequelize.query(query,{type:db.sequelize.QueryTypes.INSERT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
 })
 
 
