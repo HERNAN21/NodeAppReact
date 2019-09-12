@@ -74,7 +74,7 @@ class Registronuevopersonal extends React.Component {
     }
 
     dataBuscarCreadorSolicitud=(e)=>{
-        this.state.buscar_listado.num_solicitud=e.target.value
+        this.state.buscar_listado.creador_solicitud=e.target.value
         this.forceUpdate();
         this.cargarData();
     }

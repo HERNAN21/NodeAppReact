@@ -34,4 +34,22 @@ var hora_actual = h + ':' + mm
 var inicio_mes = y + "-" + (m > 9 ? (m + 1) : '0' + (m + 1)) + "-01"
 var fin_mes = y + "-" + (m > 9 ? (m + 1) : '0' + (m + 1)) + "-" + new Date(y, m + 1, 0).getDate()
 
+
+
+const estado_proceso_de_altas=[];
+estado_proceso_de_altas.push({id:1,value:'Pendiente de Aprobación'});
+estado_proceso_de_altas.push({id:2,value:'Enviado al Gestor'});
+estado_proceso_de_altas.push({id:3,value:'Rechazado por el Gerente'});
+estado_proceso_de_altas.push({id:4,value:'Aprobado por Vicepresidencia'});
+estado_proceso_de_altas.push({id:5,value:'Rechazado por Vicepresidencia'});
+estado_proceso_de_altas.push({id:6,value:'Buscando Candidatos'});
+estado_proceso_de_altas.push({id:7,value:'Rechazado por Gestor'});
+estado_proceso_de_altas.push({id:8,value:'Cargo Asignado'});
+estado_proceso_de_altas.push({id:9,value:'Enviado a Excellia'});
+estado_proceso_de_altas.push({id:10,value:'Creado por Excellia'});
+estado_proceso_de_altas.push({id:11,value:'Finalizado'});
+
+
+
+
 export { inicio_mes, fin_mes, today, hora_actual, server, listEstrellas, listDisponible, listUnidadTiempo, api_name };

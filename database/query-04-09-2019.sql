@@ -270,13 +270,32 @@ create table remoneracion(
 CREATE SEQUENCE id_remoneracion;
 ALTER TABLE remoneracion ALTER id SET DEFAULT NEXTVAL('id_remoneracion');
 
-select * from remoneracion;
+ALTER TABLE remuneracion 
+ADD COLUMN tipo_moneda_neg int null,
+ADD COLUMN remoneracion_basico_neg float null,
+ADD COLUMN vales_neg varchar(100) null,
+ADD COLUMN fecha_inicio timestamp null,
+ADD COLUMN fecha_inicio_neg timestamp null;
+
+
+
+
+select * from remuneracion;
+
+-- truncate remuneracion;
 
 insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)
 values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)
 
 insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)  
 values(42,1,'2500.00','valest test','asig Movilidad Test','Asig Otros',now(),HROJAS,0)
+
+update remuneracion set 
+tipo_moneda_neg=1,
+remoneracion_basico_neg='6000.00',
+vales_neg='400',
+fecha_inicio_neg=now() where id=2 and solicitud_id=42;
+
 
 
 
@@ -362,33 +381,7 @@ update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_en
 
 
 
-create table detalle_candidato_remuneracion(
-	id int not null primary key,
-	candidato_id int not null,
-	tipo_moneda int not null,
-	remuneracion_basico float not null,
-	vales varchar(100) not null,
-	asig_movilidad varchar(100) not null,
-	asignacion_otros varchar(100) not null,
-	fecha_registro date not null,
-	usuario_registro varchar(50) not null,
-	fecha_modificacion date null,
-	usuario_modificacion varchar(50) null,
-	estado int not null,
-	foreign key (candidato_id) references candidato_solicitud(id)
-)
 
-CREATE SEQUENCE id_detalle_candidato_remuneracion;
-ALTER TABLE detalle_candidato_remuneracion ALTER id SET DEFAULT NEXTVAL('id_detalle_candidato_remuneracion');
-
-select * from detalle_candidato_remuneracion;
-
-
-insert into detalle_candidato_remuneracion 
-	(candidato_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) 
-	values(1,'1','5000.00','0','1234','125',now(),'HROJAS',0)
-
-select * from detalle_candidato_remuneracion where candidato_id=1;
 
 
 

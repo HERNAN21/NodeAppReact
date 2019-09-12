@@ -175,7 +175,6 @@ api.put(api_name+'/updatestatus',(req,res)=>{
 
 api.post(api_name+'/remuneracion',(req,res)=>{
     var query =" insert into remuneracion(solicitud_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
-    // var values =" values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)";
     var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remuneracion_basico+"','"+req.body.vales+"','"+
                     req.body.asig_movilidad+"','"+req.body.asignacion_otros+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
     db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
@@ -377,7 +376,7 @@ api.put(api_name+'/updatecandidatoposicion',(req,res)=>{
 
 // exist
 api.get(api_name+'/validarremuneracion',(req,res)=>{
-    var query = " select * from detalle_candidato_remuneracion where candidato_id="+req.body.candidato_id;
+    var query = " select * from remuneracion where solicitud_id="+req.body.solicitud_id;
     db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})
     .then((result)=>{
         res.json({'respuesta':'success','result':result});
@@ -387,10 +386,10 @@ api.get(api_name+'/validarremuneracion',(req,res)=>{
     })
 })
 
-api.post(api_name+'/insertremoneracioncandidato',(req,res)=>{
-    var query = " insert into detalle_candidato_remuneracion (candidato_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
-    var value = " values(1,'1','5000.00','0','1234','125',now(),'HROJAS',0) ";
-    db.sequelize.query(query,{type:db.sequelize.QueryTypes.INSERT})
+// list all
+api.get(api_name+'/list/remuneracion',(req,res)=>{
+    var query = " select * from remuneracion";
+    db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})
     .then((result)=>{
         res.json({'respuesta':'success','result':result});
     })
@@ -398,6 +397,31 @@ api.post(api_name+'/insertremoneracioncandidato',(req,res)=>{
         res.json({'respuesta':'error', 'result':e});
     })
 })
+
+// Update remuneracion negociado
+api.put(api_name+'/updateremuneracionnegociable',(req,res)=>{
+    var fecha_neg='now()';
+    if (req.body.fecha_inicio_neg!='') {
+        fecha_neg=req.body.fecha_inicio_neg;
+    }
+    var query = " update remuneracion set  tipo_moneda_neg=:tipo_moneda_neg,remuneracion_basico_neg=:remuneracion_basico_neg, "+
+                " vales_neg=:vales_neg,fecha_inicio_neg=:fecha_inicio_neg where id=:id and solicitud_id=:solicitud_id ";
+    var data={
+        tipo_moneda_neg:req.body.tipo_moneda_neg,
+        remuneracion_basico_neg:req.body.remuneracion_basico_neg,
+        vales_neg:req.body.vales_neg,
+        fecha_inicio_neg:fecha_neg,
+        id:req.body.id,
+        solicitud_id:req.body.solicitud_id
+    }
+    db.sequelize.query(query,{replacements:data,type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+});
 
 
 

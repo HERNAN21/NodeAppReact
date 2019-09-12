@@ -4,8 +4,12 @@ import React from "react";
 import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col,FormGroup,Label,InputGroup,Input,InputGroupAddon,InputGroupText,
     Modal, ModalHeader, ModalBody, ModalFooter
 } from "reactstrap";
+
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
+
+import { server, api_name} from "variables/general.jsx";
+var  format = require("date-format");
 
 class Validarenvioalta extends React.Component {
     
@@ -13,21 +17,148 @@ class Validarenvioalta extends React.Component {
         super(props);
 
         this.state = {
-            modal: false
+            modal: false,
+            server:server,
+            api_name:api_name,
+            remuneracion_negociado_update:{
+                tipo_moneda_neg:'',
+                remuneracion_basico_neg:'',
+                vales_neg:'',
+                fecha_inicio_neg:'',
+                id:'',
+                solicitud_id:''
+            },
+            buscar_listado:{
+                num_solicitud:'',
+                creador_solicitud:''
+            },
+            solicitud_data_all:[],
+            remuneracion_data_all:[],
+            remuneracion_data_modal:[],
         };
+
         this.ModalValidacion = this.ModalValidacion.bind(this);
+
+        fetch(this.state.server + this.state.api_name +'/list/remuneracion')
+        .then(response=>response.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                this.setState({remuneracion_data_all:data.result});
+            }
+        }.bind(this));
+
+
     }
 
-    ModalValidacion() {
+
+    // Listado solicitud
+    cargarData=(e)=>{
+        fetch(this.state.server + api_name+ '/listadosolicitudcandidatos',{
+            method: 'POST',
+            body: JSON.stringify(this.state.buscar_listado),
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function(data) {
+            if (data.respuesta=='success') {
+                this.setState({solicitud_data_all:data.result})
+                
+            } else {
+                
+            }
+        }.bind(this))
+    }
+
+    btnCargarData=(e)=>{
+        this.cargarData();
+    }
+
+    dataBuscarNumero=(e)=>{
+        this.state.buscar_listado.num_solicitud=e.target.value;
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+    dataBuscarCreadorSolicitud=(e)=>{
+        this.state.buscar_listado.creador_solicitud=e.target.value
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+
+
+    // /validarremuneracion
+
+
+
+    ModalValidacion(data_soli) {
+        const id =data_soli.id;
+        const data_remuneracion=this.state.remuneracion_data_all;
+        const data_push_remuneracion=[];
+        for (let i = 0; i < data_remuneracion.length; i++) {
+            const element = data_remuneracion[i];
+            if (element.solicitud_id==id) {
+                data_push_remuneracion.push(element);
+                this.state.remuneracion_negociado_update.id=element.id;
+                this.state.remuneracion_negociado_update.solicitud_id=id;
+                this.forceUpdate();
+            }
+        }
+        this.setState({remuneracion_data_modal:data_push_remuneracion});
+        
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
+
+    }
+
+    // update data
+    dataTipoMonedaReg=(e)=>{
+        this.state.remuneracion_negociado_update.tipo_moneda_neg=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataRemuneracionBasicReg=(e)=>{
+        this.state.remuneracion_negociado_update.remuneracion_basico_neg=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataValesReg=(e)=>{
+        this.state.remuneracion_negociado_update.vales_neg=e.target.value;
+        this.forceUpdate();
+    }
+
+    dataFechaInicioReg=(e)=>{
+        this.state.remuneracion_negociado_update.fecha_inicio_neg=e.target.value;
+        this.forceUpdate();
+    }
+
+    btnSaveUpdateRemuneracion=(e)=>{
+        fetch(this.state.server + api_name+'/updateremuneracionnegociable',{
+            method: 'PUT',
+            body: JSON.stringify(this.state.remuneracion_negociado_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                
+            } else {
+                
+            }
+        })
+    }
+
+    btndescargar=(e)=>{
+        console.log('btn download file');
     }
 
 
 
 
     render() {
+        const data_solicitud_listar=this.state.solicitud_data_all;
+        const data_remuneracion_listar=this.state.remuneracion_data_modal;
         return (
             <>
              <SimpleHeader name="Validación y Envió de Alta" parentName="Tables" />
@@ -38,10 +169,10 @@ class Validarenvioalta extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Nro. Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarNumero} />
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnCargarData} />
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -49,10 +180,10 @@ class Validarenvioalta extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-100px", marginTop:"-5px"}}>Creador de Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataBuscarCreadorSolicitud} />
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnCargarData} />
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -75,34 +206,43 @@ class Validarenvioalta extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="table-user">
-                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalRemoneracion}>100{this.props.buttonLabel}</a>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>State</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>28/08/2019</b>
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Colaborador</b>
-                                        </td>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td className="table-user">
-                                            <b>Analista</b>
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="warning" onClick={this.ModalValidacion}>Validar</Button>
-                                        </td>
-                                        <td>
-                                            <Button className="btn btn-sm" color="primary">
-                                                <i class="fa fa-download" aria-hidden="true">  Descargar</i>
-                                            </Button>
-                                        </td>
-                                    </tr>
+                                    {
+                                        data_solicitud_listar.map((listado,key)=>{
+                                            return(
+                                                <>
+                                                    <tr>
+                                                        <td className="table-user">
+                                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalRemoneracion}>{listado.id}{this.props.buttonLabel}</a>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.estado}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{format.asString('dd/MM/yyyy', new Date(listado.fecha_registro))}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.codigo_user+' - ' +listado.nombres+', '+listado.apellido_paterno+' '+listado.apellido_materno}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b>{listado.puesto_des}</b>
+                                                        </td>
+                                                        <td className="table-user">
+                                                            <b>{listado.cantidad}</b>
+                                                        </td>
+                                                        <td>
+                                                            <Button className="btn btn-sm" color="warning" onClick={()=>this.ModalValidacion(listado)}>Validar</Button>
+                                                        </td>
+                                                        <td>
+                                                            <Button className="btn btn-sm" color="primary">
+                                                                <i class="fa fa-download" aria-hidden="true" onClick={this.btndescargar}>  Descargar</i>
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+
+                                                </>
+                                            )
+                                        })
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>
@@ -151,15 +291,24 @@ class Validarenvioalta extends React.Component {
                                                         </Col>
                                                     </Row>
                                                     <Row>
-                                                        <Col md="12">
-                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Moneda:</Label>
-                                                        </Col><br/>
-                                                        <Col md="12">
-                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Básico:</Label>
-                                                        </Col>
-                                                        <Col md="12">
-                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Vales:</Label>
-                                                        </Col>
+                                                        {
+                                                            data_remuneracion_listar.map((listado,key)=>{
+                                                                return (
+                                                                    <>
+                                                                        <Col md="12">
+                                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Moneda: {listado.tipo_moneda}</Label>
+                                                                        </Col><br/>
+                                                                        <Col md="12">
+                                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Básico: {listado.remuneracion_basico}</Label>
+                                                                        </Col>
+                                                                        <Col md="12">
+                                                                            <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{ marginTop:"-5px"}}>Vales: {listado.vales} </Label>
+                                                                        </Col>
+                                                                    </>
+                                                                );
+                                                            })
+                                                        }
+                                                        
                                                     </Row>
                                                 </td>
                                                 <td>
@@ -174,9 +323,10 @@ class Validarenvioalta extends React.Component {
                                                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"25px", marginTop:"-5px"}}>Moneda:</Label>
                                                         <Col md="9">
                                                             <InputGroup>
-                                                                <Input className="form-control-sm" placeholder="" type="select" name="moneda" id="moneda">
-                                                                    <option >Soles</option>
-                                                                    <option >Dolar</option>
+                                                                <Input className="form-control-sm" placeholder="" type="select" onChange={this.dataTipoMonedaReg}>
+                                                                    <option value="">[seleccione]</option>
+                                                                    <option value="1">Soles</option>
+                                                                    <option value="2">Dolar</option>
                                                                 </Input>
                                                             </InputGroup>
                                                         </Col>
@@ -185,7 +335,7 @@ class Validarenvioalta extends React.Component {
                                                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"25px", marginTop:"-5px"}}>Básico:</Label>
                                                         <Col md="9">
                                                             <InputGroup>
-                                                                <Input className="form-control-sm" placeholder="" type="text" name="basico" id="basico"/>
+                                                                <Input className="form-control-sm" placeholder="" type="text" name="basico" id="basico" onKeyUp={this.dataRemuneracionBasicReg}/>
                                                             </InputGroup>
                                                         </Col>
                                                     </Row>
@@ -193,7 +343,7 @@ class Validarenvioalta extends React.Component {
                                                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"25px", marginTop:"-5px"}}>Vales:</Label>
                                                         <Col md="9">
                                                             <InputGroup>
-                                                                <Input className="form-control-sm" placeholder="" type="text" name="vales" id="vales" />
+                                                                <Input className="form-control-sm" placeholder="" type="text" name="vales" id="vales" onKeyUp={this.dataValesReg} />
                                                             </InputGroup>
                                                         </Col>
                                                     </Row>
@@ -201,16 +351,18 @@ class Validarenvioalta extends React.Component {
                                             </tr>
                                             <tr>
                                                 <td>
+                                                    {/* Date */}
                                                     <Row>
                                                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"25px", marginTop:"-5px"}}>Fecha Inicio:</Label>
                                                     </Row>
+                                                    {/* End Date */}
                                                 </td>
                                                 <td>
                                                     <Row>
                                                         <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"28px", marginTop:"-5px"}}>Fecha Inicio:</Label>
                                                         <Col md="9">
                                                             <InputGroup>
-                                                                <Input className="form-control-sm" placeholder="" type="date" name="startdate" id="startdate" />
+                                                                <Input className="form-control-sm" placeholder="" type="date" name="startdate" id="startdate" onChange={this.dataFechaInicioReg}/>
                                                             </InputGroup>
                                                         </Col>
                                                     </Row>
@@ -243,7 +395,7 @@ class Validarenvioalta extends React.Component {
                             <Row>
                                 <Col md="12">
                                     <div style={{float:"right"}}>
-                                        <Button color="success" className="btn btn-sm" onClick={this.ModalValidacion}>Guardar</Button>
+                                        <Button color="success" className="btn btn-sm" onClick={this.btnSaveUpdateRemuneracion}>Guardar</Button>
                                         <Button color="danger" className="btn btn-sm" onClick={this.ModalValidacion}>Cerrar</Button>
                                     </div>
                                 </Col>
