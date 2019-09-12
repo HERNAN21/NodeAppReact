@@ -23,12 +23,27 @@ class Registronuevopersonal extends React.Component {
             buscar_listado:{
                 num_solicitud:'',
                 creador_solicitud:''
-            }
+            },
+            data_listado_cadidato_all:[],
+            data_candidato_solicitud:[],
+            data_update_candidato:[],
+
         };
 
 
         this.cargarData=this.cargarData.bind(this);
         this.ModalNuevo = this.ModalNuevo.bind(this);
+
+
+        // Cargar candidatos all
+        fetch(this.state.server + this.state.api_name +'/listado/candidatos')
+        .then(response=>response.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                this.setState({data_listado_cadidato_all:data.result});
+            }
+        }.bind(this));
+
     }
 
     cargarData=(e)=>{
@@ -65,10 +80,59 @@ class Registronuevopersonal extends React.Component {
     }
 
 
-    ModalNuevo() {
+    ModalNuevo(data) {
+        // console.log(data);
+        // console.log(this.state.data_listado_cadidato_all);
+        const data_listar=this.state.data_listado_cadidato_all;
+        var data_push=[];
+        var data_push_update=[];
+        for (let i = 0; i < data_listar.length; i++) {
+            const element = data_listar[i];
+            if (element.id_solicitud==data.id) {
+                data_push.push(element);
+                var data_add={'candidato_id':element.id,'codigo_posicion':element.codigo_posicion}
+                data_push_update.push(data_add);
+            }
+        }
+        this.setState({data_candidato_solicitud:data_push});
+        this.setState({data_update_candidato:data_push_update})
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
+
+        // console.log(this.state.data_update_candidato);
+        this.dataCodigoPosicion=this.dataCodigoPosicion.bind(this);
+    }
+
+    dataCodigoPosicion=(datas)=>{
+        // console.log(datas);
+        var data =this.state.data_update_candidato;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_update_candidato[i].codigo_posicion=datas.value;
+            }
+        }
+        this.forceUpdate();
+        console.log(this.state.data_update_candidato);
+    }
+
+    // Update cod posicion
+    dataSaveUpdate=(e)=>{
+        fetch(this.state.server + api_name+'/updatecandidatoposicion',{
+            method: 'PUT',
+            body: JSON.stringify(this.state.data_update_candidato),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+        
     }
 
     AprobacionVicepresidencia(){
@@ -80,6 +144,8 @@ class Registronuevopersonal extends React.Component {
 
     render() {
         const data_list=this.state.data_solicitud_list;
+        const data_candidato_solicitud_list=this.state.data_candidato_solicitud;
+        // console.log(this.state.data_candidato_solicitud);
         return (
             <>
              <SimpleHeader name="Registro de Nuevo Personal" parentName="Tables" />
@@ -135,7 +201,7 @@ class Registronuevopersonal extends React.Component {
                                                 <>
                                                     <tr>
                                                         <td className="table-user">
-                                                            <a className="font-weight-bold" href="#pablo" onClick={this.ModalNuevo}>{listado.id}{this.props.buttonLabel}</a>
+                                                            <a className="font-weight-bold" href="#pablo" onClick={()=>this.ModalNuevo(listado)}>{listado.id}{this.props.buttonLabel}</a>
                                                             {/* onClick={this.ModalRemoneracion} */}
                                                             {/* {this.props.buttonLabel} */}
                                                         </td>
@@ -178,7 +244,7 @@ class Registronuevopersonal extends React.Component {
             </Container>
             {/* Modal Nuevo Registro */}
              {/* Modal Centro de Costos */}
-            <Modal isOpen={this.state.modal} ModalNuevo={this.ModalNuevo} className={this.props.className} style={{marginTop:"150px"}}>
+            <Modal isOpen={this.state.modal} ModalNuevo={this.ModalNuevo} className={this.props.className} style={{marginTop:"150px"}} size="lg">
                 {/* <ModalHeader ModalCentroCosto={this.ModalCentroCosto}>Centro de Costos</ModalHeader> */}
                 <ModalBody>
                     <Card>
@@ -190,26 +256,28 @@ class Registronuevopersonal extends React.Component {
                                         <thead>
                                             <tr>
                                                 <th>Candidato</th>
+                                                <th>DNI</th>
+                                                <th>Nombres y Apellidos</th>
                                                 <th>Código de Posición</th>
                                                 <th>¿Asignar?</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Candidato 1</td>
-                                                <td><Input className="form-control-sm" type="text"></Input></td>
-                                                <td style={{textAlign:"center"}}><Input type="checkbox"></Input> </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Candidato 2</td>
-                                                <td> <Input className="form-control-sm" type="text"></Input> </td>
-                                                <td style={{textAlign:"center"}}><Input type="checkbox"></Input> </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Candidato 3</td>
-                                                <td><Input className="form-control-sm" type="text"></Input></td>
-                                                <td style={{textAlign:"center"}}><Input type="checkbox"></Input> </td>
-                                            </tr>
+                                            {
+                                                data_candidato_solicitud_list.map((listar,key)=>{
+                                                    return (<>
+                                                        <tr>
+                                                            <td>Candidato {(key+1)}</td>
+                                                            <td>{listar.numero_documento}</td>
+                                                            <td>{listar.nombres+' - '+ listar.apellido_paterno+', '+listar.apellido_materno}</td>
+                                                            <td>
+                                                                <Input className="form-control-sm" type="text" onKeyUp={(e)=>this.dataCodigoPosicion({value:e.target.value,'listado':listar})} ></Input>
+                                                            </td>
+                                                            <td style={{textAlign:"center"}}><Input type="checkbox"></Input> </td>
+                                                        </tr>
+                                                    </>);
+                                                })
+                                            }
                                         </tbody>
                                         <tfoot>
 
@@ -221,7 +289,8 @@ class Registronuevopersonal extends React.Component {
                             <Row>
                                 <Col md="12">
                                     <div style={{float:"right"}}>
-                                        <Button color="success" className="btn btn-sm" onClick={this.ModalNuevo}>Asignar Cargo</Button>
+                                        {/* cerrar modal por verse this.ModalNuevo */}
+                                        <Button color="success" className="btn btn-sm" onClick={this.dataSaveUpdate}>Asignar Cargo</Button>
                                         <Button color="danger" className="btn btn-sm" onClick={this.ModalNuevo}>Cerrar</Button>
                                     </div>
                                 </Col>

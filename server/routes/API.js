@@ -323,7 +323,7 @@ api.get(api_name+'/listado/candidatos',(req,res)=>{
                 " WHEN estado=0 THEN 'Activo' "+
 		        " WHEN estado=1 THEN 'Inactivo' "+
 	            " END as estado_des, "+
-	            " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad "+
+	            " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad,codigo_posicion "+
                 " from candidato_solicitud ";
     db.sequelize.query(query,{type:db.sequelize.QueryTypes.SELECT})
     .then((result)=>{
@@ -360,7 +360,20 @@ api.put(api_name+'/updatecandidato',(req,res)=>{
 
 });
 
-
+// Update codigo_posicion candidato
+api.put(api_name+'/updatecandidatoposicion',(req,res)=>{
+    for (let i = 0; i < req.body.length; i++) {
+        const element = req.body[i];
+        var query =" update  candidato_solicitud set codigo_posicion='"+element.codigo_posicion+"' where id='"+element.candidato_id+"' ";
+        db.sequelize.query(query, {type:db.sequelize.QueryTypes.UPDATE})
+        .then((result)=>{
+            res.json({'respuesta':'success','result':result});
+        })
+        .catch((e)=>{
+            res.json({'respuesta':'error', 'result':e});
+        })
+    }
+})
 
 
 

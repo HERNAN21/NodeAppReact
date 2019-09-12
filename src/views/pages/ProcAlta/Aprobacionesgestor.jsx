@@ -88,6 +88,7 @@ class Aprobacionesgestor extends React.Component {
     ModalRemoneracion(data) {
         this.state.remoneracion_data_save.solicitud_id=data.id;
         this.forceUpdate();
+        
         this.setState(prevState => ({
             modal: !prevState.modal
         }));

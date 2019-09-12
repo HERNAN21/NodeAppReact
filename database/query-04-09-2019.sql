@@ -349,12 +349,13 @@ from candidato_solicitud ;
 
 
 ALTER TABLE candidato_solicitud 
+ADD COLUMN codigo_posicion char(50) null,
 ADD COLUMN id_sede_entrevista int null,
 ADD COLUMN contacto_sede char(50) null,
 ADD COLUMN fecha_entrevista TIMESTAMP null,
 ADD COLUMN prioridad char(10) null;
 
-select * from candidato_solicitud;
+select * from candidato_solicitud where id=10;
 
 update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1';
 
