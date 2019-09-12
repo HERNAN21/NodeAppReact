@@ -34,6 +34,7 @@ class Siguimientosolicitud extends React.Component {
             },
             data_listado_cadidato_all:[],
             data_update_candidato:[],
+            data_list_update:[],
             
 
         }
@@ -117,40 +118,101 @@ class Siguimientosolicitud extends React.Component {
         
         const data_candidato=this.state.data_listado_cadidato_all;
         var data_candidato_list=[];
+        var data_add_update=[];
         for (let i = 0; i < data_candidato.length; i++) {
             const element = data_candidato[i];
             if (data_solicitud.id==element.id_solicitud) {
                 data_candidato_list.push(element);
+                var data_ele={'candidato_id':element.id,'estado':element.estado,'id_sede_entrevista':element.id_sede_entrevista,'contacto_sede':element.contacto_sede,'fecha_entrevista':element.fecha_entrevista,'prioridad':element.prioridad}
+                data_add_update.push(data_ele);
             }
         }
         this.state.buscar_listado.data_listado_candidato_solicitud=data_candidato_list;
+        this.state.data_list_update=data_add_update;
         this.forceUpdate();
     }
 
+
     // Update data candidatos
-
-    dataSedeEntrevista=(data)=>{
-        console.log(data);
+    
+    dataSedeEntrevista=(datas)=>{
+        // console.log(datas);
         // data_update_candidato
-
+        var data =this.state.data_list_update;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_list_update[i].id_sede_entrevista=datas.value;
+            }
+        }
+        this.forceUpdate();
+        // console.log(this.state.data_list_update);
+        
+    }
+    
+    dataContactoSede=(datas)=>{
+        var data =this.state.data_list_update;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_list_update[i].contacto_sede=datas.value;
+            }
+        }
+        this.forceUpdate();
+        // console.log(this.state.data_list_update);
+    }
+    
+    dataProgramarEntrevista=(datas)=>{
+        var data =this.state.data_list_update;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_list_update[i].fecha_entrevista=datas.value;
+            }
+        }
+        this.forceUpdate();
+        // 'fecha_entrevista':element.fecha_entrevista,
+    }
+    
+    dataEstado=(datas)=>{
+        var data =this.state.data_list_update;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_list_update[i].estado=datas.value;
+            }
+        }
+        this.forceUpdate();
+    }
+    
+    dataPrioridad=(datas)=>{
+        var data =this.state.data_list_update;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.candidato_id==datas.listado.id) {
+                this.state.data_list_update[i].prioridad=datas.value;
+            }
+        }
+        this.forceUpdate();
     }
 
-    dataContactoSede=(e)=>{
-        console.log(e.target.value)
-    }
+    btnSaveUpdate=(e)=>{
+        // console.log(this.state.data_list_update);
+        fetch(this.state.server + api_name+'/updatecandidato',{
+            method: 'PUT',
+            body: JSON.stringify(this.state.data_list_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
 
-    dataProgramarEntrevista=(e)=>{
-        console.log(e.target.value)
     }
-
-    dataEstado=(e)=>{
-        console.log(e.target.value)
-    }
-
-    dataPrioridad=(e)=>{
-        console.log(e.target.value)
-    }
-
 
 
 
@@ -374,7 +436,7 @@ class Siguimientosolicitud extends React.Component {
                                                                     <span className="text-muted">{listado.numero_documento}</span>
                                                                 </td>
                                                                 <td style={{padding:"10px"}} className="table-user">
-                                                                    <Input type="select" className="form-control-sm" onChange={()=>this.dataSedeEntrevista(listado)}>
+                                                                    <Input type="select" className="form-control-sm" onChange={(e)=>this.dataSedeEntrevista({value: e.target.value, 'listado':listado})}>
                                                                         <option value="">[Select]</option>
                                                                         <option value="1">Sede 1</option>
                                                                         <option value="2">Sede 2</option>
@@ -382,7 +444,7 @@ class Siguimientosolicitud extends React.Component {
                                                                 </td>
                                                                 <td style={{padding:"10px"}}>
                                                                     <InputGroup>
-                                                                        <Input className="form-control-sm" placeholder="" type="text" onKeyUp={this.dataContactoSede} />
+                                                                        <Input className="form-control-sm" placeholder="" type="text" onKeyUp={(e)=>this.dataContactoSede({value: e.target.value, 'listado':listado})} />
                                                                         <InputGroupAddon addonType="append">
                                                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                                                                 <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
@@ -392,7 +454,7 @@ class Siguimientosolicitud extends React.Component {
                                                                 </td>
                                                                 <td style={{textAlign:"center",padding:"10px"}}>
                                                                     <InputGroup>
-                                                                        <Input className="form-control-sm" placeholder="" type="date" onChange={this.dataProgramarEntrevista} />
+                                                                        <Input className="form-control-sm" placeholder="" type="date" onChange={(e)=>this.dataProgramarEntrevista({value: e.target.value, 'listado':listado})} />
                                                                         <InputGroupAddon addonType="append">
                                                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                                                                 <Button className="btn btn-sm" color="warning" title="Programar"><i class="fa fa-calendar" aria-hidden="true"></i></Button>
@@ -401,14 +463,14 @@ class Siguimientosolicitud extends React.Component {
                                                                     </InputGroup>
                                                                 </td>
                                                                 <td>
-                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={this.dataEstado}>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={(e)=>this.dataEstado({value: e.target.value, 'listado':listado})}>
                                                                         <option value="">[Select]</option>
                                                                         <option value="0">Activo</option>
                                                                         <option value="1">Inactivo</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={this.dataPrioridad}>
+                                                                    <select type="select" className="form-control-sm form-control" style={{width:"120px"}} onChange={(e)=>this.dataPrioridad({value: e.target.value, 'listado':listado})}>
                                                                         <option value="">[Select]</option>
                                                                         <option value="0">Prioridad 1</option>
                                                                         <option value="1">Prioridad 2</option>
@@ -432,7 +494,7 @@ class Siguimientosolicitud extends React.Component {
                         <Row>
                             <Col md="12">
                                 <div style={{float:"right"}}>
-                                    <Button color="success" className="btn btn-sm" >Guardar</Button>
+                                    <Button color="success" className="btn btn-sm" onClick={this.btnSaveUpdate} >Guardar</Button>
                                     <Button color="info" className="btn btn-sm" >Terminar Proceso de Búsqueda</Button>
                                 </div>
                             </Col>
