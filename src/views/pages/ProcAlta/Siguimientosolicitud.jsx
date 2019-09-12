@@ -35,6 +35,10 @@ class Siguimientosolicitud extends React.Component {
             data_listado_cadidato_all:[],
             data_update_candidato:[],
             data_list_update:[],
+
+            // Test
+            test:'input test',
+            
             
 
         }
@@ -50,7 +54,21 @@ class Siguimientosolicitud extends React.Component {
             }
         }.bind(this));
 
+        // 
+        this.dataContactoSede=this.dataContactoSede.bind(this);
+
+        // this.cambiotest=this.cambiotest.bind(this)
+
     }
+
+    // cambiotest=(e)=>{
+    //     this.setState({test:e.target.value});
+    //     console.log(e.target.value);
+    // }
+
+    
+
+
 
 
     cargarData=(e)=>{
@@ -130,6 +148,7 @@ class Siguimientosolicitud extends React.Component {
         this.state.buscar_listado.data_listado_candidato_solicitud=data_candidato_list;
         this.state.data_list_update=data_add_update;
         this.forceUpdate();
+        console.log(this.state.buscar_listado.data_listado_candidato_solicitud);
     }
 
 
@@ -156,6 +175,8 @@ class Siguimientosolicitud extends React.Component {
             const element = data[i];
             if (element.candidato_id==datas.listado.id) {
                 this.state.data_list_update[i].contacto_sede=datas.value;
+                var test=this.state.data_list_update[i]=element.contacto_sede;
+                this.setState({test});
             }
         }
         this.forceUpdate();
@@ -213,8 +234,6 @@ class Siguimientosolicitud extends React.Component {
         })
 
     }
-
-
 
 
   render() {
@@ -444,7 +463,7 @@ class Siguimientosolicitud extends React.Component {
                                                                 </td>
                                                                 <td style={{padding:"10px"}}>
                                                                     <InputGroup>
-                                                                        <Input className="form-control-sm" placeholder="" type="text" onKeyUp={(e)=>this.dataContactoSede({value: e.target.value, 'listado':listado})} />
+                                                                        <Input className="form-control-sm" placeholder="" type="text" value={listado.contacto_sede} onChange={(e)=>this.dataContactoSede({value: e.target.value, 'listado':listado})} />
                                                                         <InputGroupAddon addonType="append">
                                                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
                                                                                 <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>

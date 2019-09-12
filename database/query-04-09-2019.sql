@@ -284,10 +284,10 @@ select * from remuneracion;
 
 -- truncate remuneracion;
 
-insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)
+insert into remuneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)
 values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)
 
-insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)  
+insert into remuneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)  
 values(42,1,'2500.00','valest test','asig Movilidad Test','Asig Otros',now(),HROJAS,0)
 
 update remuneracion set 
@@ -380,7 +380,7 @@ select * from candidato_solicitud where id=3;
 update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1';
 
 
-
+select * from solicitud;
 
 
 
