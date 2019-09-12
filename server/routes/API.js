@@ -173,10 +173,10 @@ api.put(api_name+'/updatestatus',(req,res)=>{
 
 // Inssert Remoneracion
 
-api.post(api_name+'/remoneracion',(req,res)=>{
-    var query =" insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
+api.post(api_name+'/remuneracion',(req,res)=>{
+    var query =" insert into remuneracion(solicitud_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
     // var values =" values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)";
-    var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remoneracion_basico+"','"+req.body.vales+"','"+
+    var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remuneracion_basico+"','"+req.body.vales+"','"+
                     req.body.asig_movilidad+"','"+req.body.asignacion_otros+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
     db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
     .then((result)=>{

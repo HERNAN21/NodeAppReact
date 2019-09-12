@@ -135,7 +135,7 @@ class Aprobaciones extends React.Component {
                                         <th style={{width:'5%', textAlign:"center"}} >Creador de Solicitud</th>
                                         <th style={{width:'2%', textAlign:"center"}} >Cantidad <br/> de Recursos</th>
                                         <th style={{width:'10%', textAlign:"center"}} >Descripcion de Puesto</th>
-                                        <th style={{width:'5%', textAlign:"center"}} >Remoneración</th>
+                                        <th style={{width:'5%', textAlign:"center"}} >Remuneración</th>
                                         <th style={{width:'2%', textAlign:"center"}} >¿Aprobar?</th>
                                     </tr>
                                 </thead>

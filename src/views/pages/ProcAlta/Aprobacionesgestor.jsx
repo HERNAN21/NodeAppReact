@@ -31,10 +31,10 @@ class Aprobacionesgestor extends React.Component {
                 estado_vicepresidencia:''
             },
 
-            remoneracion_data_save:{
+            remuneracion_data_save:{
                 solicitud_id:'',
                 tipo_moneda:'',
-                remoneracion_basico:'',
+                remuneracion_basico:'',
                 vales:'',
                 asig_movilidad:'',
                 asignacion_otros:'',
@@ -49,7 +49,7 @@ class Aprobacionesgestor extends React.Component {
 
         // this.cargarData=this.cargarData.bind(this);
         this.cargarData=this.cargarData(this);
-        this.ModalRemoneracion = this.ModalRemoneracion.bind(this);
+        this.ModalRemuneracion = this.ModalRemuneracion.bind(this);
         
         
     }
@@ -85,10 +85,10 @@ class Aprobacionesgestor extends React.Component {
     }
 
     // Abrir Modal y pasar data
-    ModalRemoneracion(data) {
-        this.state.remoneracion_data_save.solicitud_id=data.id;
+    ModalRemuneracion(data) {
+        this.state.remuneracion_data_save.solicitud_id=data.id;
         this.forceUpdate();
-        
+
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
@@ -101,35 +101,35 @@ class Aprobacionesgestor extends React.Component {
     // data remonetarion
 
     dataMoneda =(e)=>{
-        this.state.remoneracion_data_save.tipo_moneda=e.target.value;
+        this.state.remuneracion_data_save.tipo_moneda=e.target.value;
         this.forceUpdate();
     }
 
-    dataRemoneracion =(e)=>{
-        this.state.remoneracion_data_save.remoneracion_basico=e.target.value;
+    dataRemuneracion =(e)=>{
+        this.state.remuneracion_data_save.remuneracion_basico=e.target.value;
         this.forceUpdate();
     }
 
     dataVales=(e)=>{
-        this.state.remoneracion_data_save.vales=e.target.value;
+        this.state.remuneracion_data_save.vales=e.target.value;
         this.forceUpdate();
     }
     
     dataAsigMovilidad=(e)=>{
-        this.state.remoneracion_data_save.asig_movilidad=e.target.value;
+        this.state.remuneracion_data_save.asig_movilidad=e.target.value;
         this.forceUpdate();
     }
 
     dataAsigOtros=(e)=>{
-        this.state.remoneracion_data_save.asignacion_otros=e.target.value;
+        this.state.remuneracion_data_save.asignacion_otros=e.target.value;
         this.forceUpdate();
     }
     
 
-    dataRemoneracionSave=(e) =>{
+    dataRemuneracionSave=(e) =>{
         
-        var data_save = this.state.remoneracion_data_save;
-        fetch(this.state.server + api_name+ '/remoneracion',{
+        var data_save = this.state.remuneracion_data_save;
+        fetch(this.state.server + api_name+ '/remuneracion',{
             method: 'POST',
             body: JSON.stringify(data_save),
             headers: {'Content-Type':'application/json'}
@@ -249,7 +249,7 @@ class Aprobacionesgestor extends React.Component {
                                         <th style={{textAlign:"center"}} >Cantidad <br/> de <br/> Recursos</th>
                                         <th style={{textAlign:"center"}} >Descripcion de Puesto</th>
                                         <th style={{textAlign:"center"}} >Aprobación <br/> de Vicepresidencia</th>
-                                        <th style={{textAlign:"center"}} >Remoneracion</th>
+                                        <th style={{textAlign:"center"}} >Remuneracion</th>
                                         <th style={{textAlign:"center"}} >¿Aprobar?</th>
                                     <th />
                                     </tr>
@@ -287,8 +287,8 @@ class Aprobacionesgestor extends React.Component {
                                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
                                                         </td>
                                                         <td>
-                                                            {/* <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemoneracion}>Ingresar</Button> */}
-                                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={()=>this.ModalRemoneracion(listado)}>Ingresar</Button>
+                                                            {/* <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={this.ModalRemuneracion}>Ingresar</Button> */}
+                                                            <Button className="btn btn-sm" color="warning" style={{float:"right"}} onClick={()=>this.ModalRemuneracion(listado)}>Ingresar</Button>
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
@@ -313,9 +313,9 @@ class Aprobacionesgestor extends React.Component {
                     </CardFooter> */}
                 </Card>
             </Container>
-            {/* Modal Remoneracion */}
+            {/* Modal Remuneracion */}
              {/* Modal Centro de Costos */}
-            <Modal isOpen={this.state.modal} ModalRemoneracion={this.ModalRemoneracion} className={this.props.className} style={{marginTop:"150px"}}>
+            <Modal isOpen={this.state.modal} ModalRemuneracion={this.ModalRemuneracion} className={this.props.className} style={{marginTop:"150px"}}>
                 {/* <ModalHeader ModalCentroCosto={this.ModalCentroCosto}>Centro de Costos</ModalHeader> */}
                 <ModalBody>
                     <Card>
@@ -334,10 +334,10 @@ class Aprobacionesgestor extends React.Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Remoneración Básica</Label>
+                                <Label className="form-control-label" htmlFor="example-text-input" md="4" style={{marginRight:"0px", marginTop:"-5px"}}>Remuneración Básica</Label>
                                 <Col md="8">
                                     <FormGroup>
-                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataRemoneracion}/>
+                                        <Input  type="text" className="form-control-sm" onKeyUp={this.dataRemuneracion}/>
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -368,8 +368,8 @@ class Aprobacionesgestor extends React.Component {
                             <Row>
                                 <Col md="12">
                                     <div style={{float:"right"}}>
-                                        <Button color="success" className="btn btn-sm" onClick={this.dataRemoneracionSave}>Guardar</Button>
-                                        <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
+                                        <Button color="success" className="btn btn-sm" onClick={this.dataRemuneracionSave}>Guardar</Button>
+                                        <Button color="danger" className="btn btn-sm" onClick={this.ModalRemuneracion}>Cerrar</Button>
                                     </div>
                                 </Col>
                             </Row>
@@ -378,8 +378,8 @@ class Aprobacionesgestor extends React.Component {
                     </Card>
                 </ModalBody>
                 {/* <ModalFooter>
-                    <Button color="success" className="btn btn-sm" onClick={this.ModalRemoneracion}>Guardar</Button>
-                    <Button color="danger" className="btn btn-sm" onClick={this.ModalRemoneracion}>Cerrar</Button>
+                    <Button color="success" className="btn btn-sm" onClick={this.ModalRemuneracion}>Guardar</Button>
+                    <Button color="danger" className="btn btn-sm" onClick={this.ModalRemuneracion}>Cerrar</Button>
                 </ModalFooter> */}
             </Modal>
 
