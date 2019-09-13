@@ -380,8 +380,24 @@ select * from candidato_solicitud where id=3;
 update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1';
 
 
-select * from solicitud;
+select * from solicitud where id=45;
 
 
+
+
+select * from solicitud_baja;
+
+
+INSERT INTO public.grupo (grupo,descripcion,detalle,fecha_registro,usuario_registro,fecha_nodificacion,usuario_modificacion,estado) VALUES 
+('TIPO_CESE_FORMAL','Tipo cese formal 2','Tipo cese formal 2','2019-09-11','WPEREYRAC',NULL,NULL,0)
+,('TIPO_CESE_REAL','Tipo cese real 1',NULL,'2019-09-11','WPEREYRAC',NULL,NULL,0)
+,('TIPO_CESE_REAL','Tipo cese real 2',NULL,'2019-09-11','WPEREYRAC',NULL,NULL,0)
+
+
+
+
+select * from candidato_solicitud where numero_documento='70586952';
+
+select * from remuneracion where solicitud_id=47; 
 
 
