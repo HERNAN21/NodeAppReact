@@ -52,4 +52,4 @@ estado_proceso_de_altas.push({id:11,value:'Finalizado'});
 
 
 
-export { inicio_mes, fin_mes, today, hora_actual, server, listEstrellas, listDisponible, listUnidadTiempo, api_name };
+export { inicio_mes, fin_mes, today, hora_actual, server, listEstrellas, listDisponible, listUnidadTiempo, api_name,estado_proceso_de_altas };

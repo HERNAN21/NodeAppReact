@@ -6,7 +6,7 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 } from "reactstrap";
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
-import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
+import { server, api_name, estado_proceso_de_altas } from "variables/general.jsx";
 import { runInThisContext } from "vm";
 import { setTimeout } from "timers";
 import { Link } from "react-router-dom";
@@ -47,13 +47,28 @@ class Aprobacionesgestor extends React.Component {
 
         };
 
-        // this.cargarData=this.cargarData.bind(this);
-        this.cargarData=this.cargarData(this);
+        this.cargarData=this.cargarData.bind(this);
+        // this.cargarData=this.cargarData(this);
         this.ModalRemuneracion = this.ModalRemuneracion.bind(this);
         
         
     }
     
+    buscarNumero=(e)=>{
+        this.state.buscar_listado.num_solicitud=e.target.value;
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+    buscarEstado=(e)=>{
+        this.state.buscar_listado.estado=e.target.value;
+        this.forceUpdate();
+        this.cargarData();
+    }
+
+    btnBuscar=(e)=>{
+        this.cargarData();
+    }
     
     
     // this.props.router.push({
@@ -76,7 +91,20 @@ class Aprobacionesgestor extends React.Component {
         .then(res=>res.json())
         .then(function(data) {
             if (data.respuesta=='success') {
-                this.setState({listado_solicitud:data.result})
+                var data_p=[];
+                for (let i = 0; i < data.result.length; i++) {
+                    if (data.result[i].estado==2) {
+                        data.result[i].estado=false;
+                        data_p.push(data.result[i]);
+                    }
+                    if (data.result[i].estado_vicepresidencia==4) {
+                        data.result[i].estado_vicepresidencia=true;
+                    }else{
+                        data.result[i].estado_vicepresidencia=false;
+                    }
+
+                }
+                this.setState({listado_solicitud:data_p});
             } else {
                 console.log(data.respuesta);
             }
@@ -148,9 +176,9 @@ class Aprobacionesgestor extends React.Component {
 
     AprobacionVicepresidencia=(e)=>{
         // aprobacionvic
-        var estado=0;
+        var estado=4;
         if (e.target.checked==false) {
-            estado=1;
+            estado=5;
         }
         const data_update={
             id_solicitud: e.target.value,
@@ -170,33 +198,45 @@ class Aprobacionesgestor extends React.Component {
             }
         })
 
+        this.cargarData();
+
         // this.setState({aprobacionvicecheck: e.target.checked});
 
     }
 
     // Update estado
     updateEstado=(e)=>{
-        var estado=0;
-        if (e.target.checked==false) {
-            estado=1;
+        var estado=4;
+        if (e.target.name=='aprobar') {
+            if (e.target.checked==true) {
+                estado=5;
+            }
         }
+
+        if (e.target.name=='rechazado') {
+            estado=5;
+        }
+
+        console.log(estado)
+
         const data_update={
             id_solicitud: e.target.value,
             estado: estado
         }
-        fetch(this.state.server + api_name+'/updatestatus',{
-            method: 'PUT',
-            body: JSON.stringify(data_update),
-            headers:{'Content-Type':'application/json'}
-        })
-        .then(res=>res.json())
-        .then(function (data) {
-            if (data.respuesta=='success') {
-                console.log(data.respuesta);
-            } else {
-                console.log(data.respuesta);
-            }
-        })
+
+        // fetch(this.state.server + api_name+'/updatestatus',{
+        //     method: 'PUT',
+        //     body: JSON.stringify(data_update),
+        //     headers:{'Content-Type':'application/json'}
+        // })
+        // .then(res=>res.json())
+        // .then(function (data) {
+        //     if (data.respuesta=='success') {
+        //         console.log(data.respuesta);
+        //     } else {
+        //         console.log(data.respuesta);
+        //     }
+        // })
     }
     
 
@@ -218,10 +258,10 @@ class Aprobacionesgestor extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Nro. Solicitud</Label>
                                     <Col md="2">
                                         <InputGroup>
-                                            <Input className="form-control-sm" placeholder="" type="text"/>
+                                            <Input className="form-control-sm" placeholder="" type="text" onChange={this.buscarNumero} />
                                             <InputGroupAddon addonType="append">
                                             <InputGroupText className="form-control-sm" style={{margin:0, padding:0}}>
-                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}}/>
+                                                <Button className="fas fa-search btn btn-sm " style={{width:"100%"}} onClick={this.btnBuscar} />
                                             </InputGroupText>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -229,10 +269,10 @@ class Aprobacionesgestor extends React.Component {
                                     <Label className="form-control-label" htmlFor="example-text-input" md="2" style={{marginRight:"-150px", marginTop:"-5px"}}>Estado</Label>
                                     <Col md="2">
                                         <FormGroup>
-                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm">
-                                            <option>State 1</option>
-                                            <option>State 2</option>
-                                            <option>State 3</option>
+                                        <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.buscarEstado} >
+                                            <option value="" >[Todos]</option>
+                                            <option value="" >State 2</option>
+                                            <option value="" >State 3</option>
                                         </Input>
                                         </FormGroup>
                                     </Col>
@@ -251,6 +291,7 @@ class Aprobacionesgestor extends React.Component {
                                         <th style={{textAlign:"center"}} >Aprobación <br/> de Vicepresidencia</th>
                                         <th style={{textAlign:"center"}} >Remuneracion</th>
                                         <th style={{textAlign:"center"}} >¿Aprobar?</th>
+                                        <th style={{textAlign:"center"}} >Rechazar</th>
                                     <th />
                                     </tr>
                                 </thead>
@@ -281,7 +322,7 @@ class Aprobacionesgestor extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" name="" value={listado.id}  onChange={this.AprobacionVicepresidencia}/>
+                                                                <input type="checkbox" name="" value={listado.id}  onChange={this.AprobacionVicepresidencia} checked={listado.estado_vicepresidencia}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                             <Button className="btn btn-sm" color="info" style={{float:"right", marginTop:"-25px"}}>Enviar</Button>    
@@ -292,7 +333,13 @@ class Aprobacionesgestor extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" value={listado.id} onChange={this.updateEstado} />
+                                                                <input type="checkbox" value={listado.id} name='aprobar' onChange={this.updateEstado} checked={listado.estado}/>
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
+                                                            </label>
+                                                        </td>
+                                                        <td>
+                                                            <label className="custom-toggle">
+                                                                <input type="checkbox" value={listado.id} name="rechazar" onChange={this.updateEstado} checked={listado.estado}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
                                                             </label>
                                                         </td>

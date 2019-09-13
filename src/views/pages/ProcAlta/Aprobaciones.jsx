@@ -6,7 +6,7 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
-import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
+import { server, api_name, estado_proceso_de_altas } from "variables/general.jsx";
 
 
 
@@ -20,7 +20,8 @@ class Aprobaciones extends React.Component {
             data_buscar:{
                 num_solicitud:'',
                 estado:''
-            }
+            },
+            estado: false,
         }
         this.cargarData=this.cargarData.bind(this);
         // this.cargarData=this.cargarData(this);
@@ -35,6 +36,22 @@ class Aprobaciones extends React.Component {
         .then(res=>res.json())
         .then(function(data) {
             if (data.respuesta=='success') {
+                for (let i = 0; i < data.result.length; i++) {
+                    console.log(estado_proceso_de_altas);
+                    if (data.result[i].estado==1) {
+                        data.result[i].estado_des=estado_proceso_de_altas[0].value;
+                        data.result[i].estado=false;    
+                    }else if(data.result[i].estado==2){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[1].value;
+                    }else if(data.result[i].estado==4){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[3].value;
+                    }else if(data.result[i].estado==11){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[10].value;
+                    }
+                }
                 this.setState({solicitud_aprobaciones:data.result})
             } else {
                 console.log(data.respuesta);
@@ -56,13 +73,14 @@ class Aprobaciones extends React.Component {
         this.forceUpdate();
     }
 
-    updateEstado=(e)=>{
-        var estado=0;
+    updateEstado=(e, id)=>{
+
+        var estado=2;
         if (e.target.checked==false) {
             estado=1;
         }
         const data_update={
-            id_solicitud: e.target.value,
+            id_solicitud: id,
             estado: estado
         }
         fetch(this.state.server + api_name+'/updatestatus',{
@@ -78,6 +96,7 @@ class Aprobaciones extends React.Component {
                 console.log(data.respuesta);
             }
         })
+        
     }
 
     cargarEstado(value){
@@ -117,9 +136,18 @@ class Aprobaciones extends React.Component {
                                     <Col md="2">
                                         <FormGroup>
                                         <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.bucarEstado} >
-                                            <option value="">[seleccione]</option>
-                                            <option value="0">activo</option>
-                                            <option value="1">Incativo</option>
+                                            <option value="">[Todos]</option>
+                                            {
+                                                estado_proceso_de_altas.map((select,key)=>{
+                                                    return (
+                                                        <>
+                                                            <option value={select.id}>{select.value}</option>
+                                                            
+                                                        </>
+                                                    );
+
+                                                })
+                                            }
                                         </Input>
                                         </FormGroup>
                                     </Col>
@@ -149,7 +177,7 @@ class Aprobaciones extends React.Component {
                                                             <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}}>
-                                                            <b>{listado.estado}</b>
+                                                            <b>{listado.estado_des}</b>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}}>
                                                             <b>{listado.fecha_registro}</b>
@@ -168,7 +196,7 @@ class Aprobaciones extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" value={listado.id} checked={this.cargarEstado(listado.estado)} onChange={this.updateEstado}/>
+                                                                <input type="checkbox" onChange={ e =>this.updateEstado(e, listado.id)} checked={listado.estado}  />
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                         </td>

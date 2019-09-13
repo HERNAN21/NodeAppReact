@@ -175,8 +175,8 @@ class Siguimientosolicitud extends React.Component {
             const element = data[i];
             if (element.candidato_id==datas.listado.id) {
                 this.state.data_list_update[i].contacto_sede=datas.value;
-                var test=this.state.data_list_update[i]=element.contacto_sede;
-                this.setState({test});
+                // var test=this.state.data_list_update[i]=element.contacto_sede;
+                // this.setState({test});
             }
         }
         this.forceUpdate();
