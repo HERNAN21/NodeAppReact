@@ -106,23 +106,36 @@ class Siguimientosolicitud extends React.Component {
     }
 
     buscarCandidato=(data_solicitud)=>{
-        // console.log(data_solicitud);
+        console.log(data_solicitud);
         this.state.buscar_listado.data_listado_candidato_solicitud='';
 
         // Data progress
+
         if (data_solicitud.estado==1) {
             this.state.data_seguimiento_solicitud.progress1='25';
             this.state.data_seguimiento_solicitud.progress_value1='25%';
             this.state.data_seguimiento_solicitud.progress_color='danger';
         }else if(data_solicitud.estado==2){
-            this.state.data_seguimiento_solicitud.progress1='25';
-            this.state.data_seguimiento_solicitud.progress_value1='25%';
-            this.state.data_seguimiento_solicitud.progress_color='danger';
-        }if(data_solicitud.estado==6){
             this.state.data_seguimiento_solicitud.progress1='50';
             this.state.data_seguimiento_solicitud.progress_value1='50%';
             this.state.data_seguimiento_solicitud.progress_color='warning';
+        }else if(data_solicitud.estado==3){
+            this.state.data_seguimiento_solicitud.progress1='100';
+            this.state.data_seguimiento_solicitud.progress_value1='100% rechazado por el gerente';
+            this.state.data_seguimiento_solicitud.progress_color='danger';
+        }else if(data_solicitud.estado==5){
+            this.state.data_seguimiento_solicitud.progress1='100';
+            this.state.data_seguimiento_solicitud.progress_value1='100% rechazado por vicepresidencia';
+            this.state.data_seguimiento_solicitud.progress_color='danger';
+        }else if(data_solicitud.estado==6){
+            this.state.data_seguimiento_solicitud.progress1='100';
+            this.state.data_seguimiento_solicitud.progress_value1='100%';
+            this.state.data_seguimiento_solicitud.progress_color='success';
 
+        } else if(data_solicitud.estado==7){
+            this.state.data_seguimiento_solicitud.progress1='100';
+            this.state.data_seguimiento_solicitud.progress_value1='100% rechazado por el gestor';
+            this.state.data_seguimiento_solicitud.progress_color='danger';
         }else if(data_solicitud.estado==0 && data_solicitud.estado_vicepresidencia==0){
             this.state.data_seguimiento_solicitud.progress1='50';
             this.state.data_seguimiento_solicitud.progress_value1='50%';
@@ -130,7 +143,7 @@ class Siguimientosolicitud extends React.Component {
             // falta añadir 2 condiciones estatus
         }else if(data_solicitud.estado==11){
             this.state.data_seguimiento_solicitud.progress1='100';
-            this.state.data_seguimiento_solicitud.progress_value1='100%';
+            this.state.data_seguimiento_solicitud.progress_value1='finalizado';
             this.state.data_seguimiento_solicitud.progress_color='success';
         }else{
             this.state.data_seguimiento_solicitud.progress1='0';

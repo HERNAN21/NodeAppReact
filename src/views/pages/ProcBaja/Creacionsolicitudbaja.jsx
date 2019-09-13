@@ -10,6 +10,8 @@ import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
 import ReactBSAlert from "react-bootstrap-sweetalert";
 
+var  format = require("date-format");
+
 class Creacionsolicitudbaja extends React.Component {
 
     constructor(props) {

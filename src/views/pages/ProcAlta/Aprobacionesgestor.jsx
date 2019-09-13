@@ -108,21 +108,27 @@ class Aprobacionesgestor extends React.Component {
                         if (data.result[i].estado==2) {
                             data.result[i].estado_des=estado_proceso_de_altas[1].value;
                             data.result[i].estado=false;
+                            data.result[i].estado_des1=false;
                         }else if (data.result[i].estado==3) {
                             data.result[i].estado_des=estado_proceso_de_altas[2].value;
                             data.result[i].estado=true;
+                            data.result[i].estado_des1=true;
                         }else if(data.result[i].estado==4){
                             data.result[i].estado_des=estado_proceso_de_altas[3].value;
                             data.result[i].estado=false;
+                            data.result[i].estado_des1=false;
                         }else if (data.result[i].estado==5) {
                             data.result[i].estado_des=estado_proceso_de_altas[4].value;
                             data.result[i].estado=true;
+                            data.result[i].estado_des1=true;
                         }else if (data.result[i].estado==6) {
                             data.result[i].estado_des=estado_proceso_de_altas[5].value;
                             data.result[i].estado=true;
+                            data.result[i].estado_des1=false;
                         }else if (data.result[i].estado==7) {
                             data.result[i].estado_des=estado_proceso_de_altas[6].value;
                             data.result[i].estado=true;
+                            data.result[i].estado_des1=true;
                         }
 
 
@@ -382,7 +388,7 @@ class Aprobacionesgestor extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input type="checkbox" value={listado.id} name="rechazar" onChange={e=>this.updateEstado(e,listado.id)} checked={listado.estado_des1==3 && listado.estado_des1==5 && listado.estado_des1==7}/>
+                                                                <input type="checkbox" value={listado.id} name="rechazar" onChange={e=>this.updateEstado(e,listado.id)} checked={listado.estado_des1}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
                                                             </label>
                                                         </td>

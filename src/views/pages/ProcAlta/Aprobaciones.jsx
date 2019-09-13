@@ -39,24 +39,30 @@ class Aprobaciones extends React.Component {
             if (data.respuesta=='success') {
                 for (let i = 0; i < data.result.length; i++) {
                     console.log(estado_proceso_de_altas);
+                    data.result[i].estado_des1=false;
                     if (data.result[i].estado==1) {
                         data.result[i].estado_des=estado_proceso_de_altas[0].value;
                         data.result[i].estado=false;    
                     }else if(data.result[i].estado==2){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[1].value;
+                    }else if(data.result[i].estado==3){
+                        data.result[i].estado=false;
+                        data.result[i].estado_des=estado_proceso_de_altas[2].value;
+                        data.result[i].estado_des1=true;
                     }else if(data.result[i].estado==4){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[3].value;
                     }else if(data.result[i].estado==5){
-                        data.result[i].estado=true;
+                        data.result[i].estado=false;
                         data.result[i].estado_des=estado_proceso_de_altas[4].value;
                     }else if(data.result[i].estado==6){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[5].value;
                     }else if(data.result[i].estado==7){
-                        data.result[i].estado=true;
+                        data.result[i].estado=false;
                         data.result[i].estado_des=estado_proceso_de_altas[6].value;
+                        data.result[i].estado_des1=true;
                     } else if(data.result[i].estado==11){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[10].value;
@@ -96,11 +102,11 @@ class Aprobaciones extends React.Component {
         }
 
         if (rechazado=='rechazado') {
+            estado=1;    
             if (e.target.checked==true) {
-                estado=7;
-            }else{
-                estado=1;    
+                estado=3;
             }
+            console.log(estado);
         }
 
         
@@ -194,7 +200,7 @@ class Aprobaciones extends React.Component {
                                         <th style={{width:'10%', textAlign:"center"}} >Descripcion de Puesto</th>
                                         <th style={{width:'5%', textAlign:"center"}} >Remuneración</th>
                                         <th style={{width:'2%', textAlign:"center"}} >¿Aprobar?</th>
-                                        {/* <th style={{width:'2%', textAlign:"center"}} >Rechazar</th> */}
+                                        <th style={{width:'2%', textAlign:"center"}} >Rechazar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -232,13 +238,15 @@ class Aprobaciones extends React.Component {
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                         </td>
-                                                        {/* <td>
+
+                                                        <td>
                                                             <label className="custom-toggle">
                                                                 <input type="checkbox" name="rechazado" onChange={ e =>this.updateEstado(e, listado.id)} 
-                                                                checked={checked ? '' : 'checked'}/>
+                                                                checked={listado.estado_des1}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
-                                                        </td> */}
+                                                        </td>
+
                                                     </tr>
                                                 </>
                                             );
