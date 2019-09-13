@@ -425,6 +425,31 @@ api.put(api_name+'/updateremuneracionnegociable',(req,res)=>{
 
 
 
+//save solicitud baja
+api.post(api_name + '/solicitudes_baja', (req, res) => {
+    db.sequelize.query("select * from post_solicitud_baja(:id_trabajador, :id_jefe, :tipo_baja, :tipo_cese_formal, :tipo_cese_real, :fecha_cese, :fecha_hora_notificacion, :fecha_carta, :observaciones)",
+        {
+            replacements: {
+                id_trabajador: req.body.id_trabajador, id_jefe: req.body.id_jefe, tipo_baja: req.body.tipo_baja,
+                tipo_cese_formal: req.body.tipo_cese_formal, tipo_cese_real: req.body.tipo_cese_real, fecha_cese: req.body.fecha_cese,
+                fecha_hora_notificacion: req.body.fecha_hora_notificacion, fecha_carta: req.body.fecha_carta, observaciones: req.body.observaciones
+            },
+            type: db.sequelize.QueryTypes.SELECT
+        }).then((result) => res.json(result))
+})
+
+api.get(api_name + '/solicitud_baja/:id', (req, res) => {
+    db.sequelize.query("select * from get_solicitud_baja(" + req.params.id + ");",
+        { type: db.sequelize.QueryTypes.SELECT }).then((result) => res.json(result))
+})
+
+api.get(api_name + '/solicitud_baja', (req, res) => {
+    db.sequelize.query("select * from get_solicitud_baja();",
+        { type: db.sequelize.QueryTypes.SELECT }).then((result) => res.json(result))
+})
+
+
+
 
 
 
