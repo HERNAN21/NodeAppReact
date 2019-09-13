@@ -8,7 +8,7 @@ import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
 import { server, api_name, estado_proceso_de_altas } from "variables/general.jsx";
 
-
+var  format = require("date-format");
 
 class Aprobaciones extends React.Component {
     constructor (props){
@@ -25,6 +25,7 @@ class Aprobaciones extends React.Component {
         }
         this.cargarData=this.cargarData.bind(this);
         // this.cargarData=this.cargarData(this);
+
     }
 
     cargarData=(e)=>{
@@ -47,7 +48,16 @@ class Aprobaciones extends React.Component {
                     }else if(data.result[i].estado==4){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[3].value;
-                    }else if(data.result[i].estado==11){
+                    }else if(data.result[i].estado==5){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[4].value;
+                    }else if(data.result[i].estado==6){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[5].value;
+                    }else if(data.result[i].estado==7){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[6].value;
+                    } else if(data.result[i].estado==11){
                         data.result[i].estado=true;
                         data.result[i].estado_des=estado_proceso_de_altas[10].value;
                     }
@@ -75,14 +85,30 @@ class Aprobaciones extends React.Component {
 
     updateEstado=(e, id)=>{
 
+        var rechazado=e.target.name;
+        var estado_name=e.target.name;
         var estado=2;
-        if (e.target.checked==false) {
-            estado=1;
+        
+        if (estado_name=='estado') {
+            if (e.target.checked==false) {
+                estado=1;
+            }
         }
+
+        if (rechazado=='rechazado') {
+            if (e.target.checked==true) {
+                estado=7;
+            }else{
+                estado=1;    
+            }
+        }
+
+        
         const data_update={
             id_solicitud: id,
             estado: estado
         }
+        
         fetch(this.state.server + api_name+'/updatestatus',{
             method: 'PUT',
             body: JSON.stringify(data_update),
@@ -96,6 +122,9 @@ class Aprobaciones extends React.Component {
                 console.log(data.respuesta);
             }
         })
+        setTimeout(() => {
+            this.cargarData();
+        }, 500);
         
     }
 
@@ -165,11 +194,13 @@ class Aprobaciones extends React.Component {
                                         <th style={{width:'10%', textAlign:"center"}} >Descripcion de Puesto</th>
                                         <th style={{width:'5%', textAlign:"center"}} >Remuneración</th>
                                         <th style={{width:'2%', textAlign:"center"}} >¿Aprobar?</th>
+                                        {/* <th style={{width:'2%', textAlign:"center"}} >Rechazar</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         data_listar.map((listado,key)=>{
+                                            var checked = listado.estado;
                                             return (
                                                 <>
                                                     <tr>
@@ -180,7 +211,7 @@ class Aprobaciones extends React.Component {
                                                             <b>{listado.estado_des}</b>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}}>
-                                                            <b>{listado.fecha_registro}</b>
+                                                            <b>{format.asString('dd/MM/yyyy', new Date(listado.fecha_registro))}</b>
                                                         </td>
                                                         <td className="table-user">
                                                             <b>{listado.nombres}</b>
@@ -196,10 +227,18 @@ class Aprobaciones extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input type="checkbox" onChange={ e =>this.updateEstado(e, listado.id)} checked={listado.estado}  />
+                                                                <input type="checkbox" name="estado" onChange={ e =>this.updateEstado(e, listado.id)} 
+                                                                checked={checked}  />
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                         </td>
+                                                        {/* <td>
+                                                            <label className="custom-toggle">
+                                                                <input type="checkbox" name="rechazado" onChange={ e =>this.updateEstado(e, listado.id)} 
+                                                                checked={checked ? '' : 'checked'}/>
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
+                                                            </label>
+                                                        </td> */}
                                                     </tr>
                                                 </>
                                             );

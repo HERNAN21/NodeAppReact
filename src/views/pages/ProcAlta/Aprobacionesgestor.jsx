@@ -11,6 +11,8 @@ import { runInThisContext } from "vm";
 import { setTimeout } from "timers";
 import { Link } from "react-router-dom";
 
+var format = require('date-format');
+
 class Aprobacionesgestor extends React.Component {
 
 
@@ -42,7 +44,6 @@ class Aprobacionesgestor extends React.Component {
                 estado:'0'
             },
 
-            aprobacionvicecheck: true,
             modal: false,
 
         };
@@ -93,16 +94,42 @@ class Aprobacionesgestor extends React.Component {
             if (data.respuesta=='success') {
                 var data_p=[];
                 for (let i = 0; i < data.result.length; i++) {
-                    if (data.result[i].estado==2) {
-                        data.result[i].estado=false;
+                    // if (data.result[i].estado==2) {
+                    if (data.result[i].estado>=2) {    
+                        // condicion vicepresidencia
+                        if (data.result[i].estado_vicepresidencia==4) {
+                            data.result[i].estado_vicepresidencia=true;
+                        }else{
+                            data.result[i].estado_vicepresidencia=false;
+                        }
+
+                        // condicion estado
+                        
+                        if (data.result[i].estado==2) {
+                            data.result[i].estado_des=estado_proceso_de_altas[1].value;
+                            data.result[i].estado=false;
+                        }else if (data.result[i].estado==3) {
+                            data.result[i].estado_des=estado_proceso_de_altas[2].value;
+                            data.result[i].estado=true;
+                        }else if(data.result[i].estado==4){
+                            data.result[i].estado_des=estado_proceso_de_altas[3].value;
+                            data.result[i].estado=false;
+                        }else if (data.result[i].estado==5) {
+                            data.result[i].estado_des=estado_proceso_de_altas[4].value;
+                            data.result[i].estado=true;
+                        }else if (data.result[i].estado==6) {
+                            data.result[i].estado_des=estado_proceso_de_altas[5].value;
+                            data.result[i].estado=true;
+                        }else if (data.result[i].estado==7) {
+                            data.result[i].estado_des=estado_proceso_de_altas[6].value;
+                            data.result[i].estado=true;
+                        }
+
+
+
+                        // data.result[i].estado=false;
                         data_p.push(data.result[i]);
                     }
-                    if (data.result[i].estado_vicepresidencia==4) {
-                        data.result[i].estado_vicepresidencia=true;
-                    }else{
-                        data.result[i].estado_vicepresidencia=false;
-                    }
-
                 }
                 this.setState({listado_solicitud:data_p});
             } else {
@@ -197,46 +224,53 @@ class Aprobacionesgestor extends React.Component {
                 console.log(data.respuesta);
             }
         })
-
-        this.cargarData();
+        setTimeout(() => {
+            this.cargarData();
+        }, 100);
 
         // this.setState({aprobacionvicecheck: e.target.checked});
 
     }
 
     // Update estado
-    updateEstado=(e)=>{
+    updateEstado=(e, id)=>{
         var estado=4;
+
         if (e.target.name=='aprobar') {
             if (e.target.checked==true) {
-                estado=5;
+                estado=6;
+            }
+        }
+        if (e.target.name=='rechazar') {
+            if (e.target.checked==true) {
+                estado=7;
             }
         }
 
-        if (e.target.name=='rechazado') {
-            estado=5;
-        }
-
-        console.log(estado)
+        console.log(id);
 
         const data_update={
-            id_solicitud: e.target.value,
+            id_solicitud: id,
             estado: estado
         }
 
-        // fetch(this.state.server + api_name+'/updatestatus',{
-        //     method: 'PUT',
-        //     body: JSON.stringify(data_update),
-        //     headers:{'Content-Type':'application/json'}
-        // })
-        // .then(res=>res.json())
-        // .then(function (data) {
-        //     if (data.respuesta=='success') {
-        //         console.log(data.respuesta);
-        //     } else {
-        //         console.log(data.respuesta);
-        //     }
-        // })
+        fetch(this.state.server + api_name+'/updatestatus',{
+            method: 'PUT',
+            body: JSON.stringify(data_update),
+            headers:{'Content-Type':'application/json'}
+        })
+        .then(res=>res.json())
+        .then(function (data) {
+            if (data.respuesta=='success') {
+                console.log(data.respuesta);
+            } else {
+                console.log(data.respuesta);
+            }
+        })
+
+        setTimeout(() => {
+            this.cargarData();
+        }, 100);
     }
     
 
@@ -270,9 +304,18 @@ class Aprobacionesgestor extends React.Component {
                                     <Col md="2">
                                         <FormGroup>
                                         <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.buscarEstado} >
-                                            <option value="" >[Todos]</option>
-                                            <option value="" >State 2</option>
-                                            <option value="" >State 3</option>
+                                            <option value="">[Todos]</option>
+                                            {
+                                                estado_proceso_de_altas.map((select,key)=>{
+                                                    return (
+                                                        <>
+                                                            <option value={select.id}>{select.value}</option>
+                                                            
+                                                        </>
+                                                    );
+
+                                                })
+                                            }
                                         </Input>
                                         </FormGroup>
                                     </Col>
@@ -306,10 +349,10 @@ class Aprobacionesgestor extends React.Component {
                                                             <Link  className="font-weight-bold" to={{pathname:'/admin/Requerimiento',state:{data:listado}}} >{listado.id}</Link>
                                                         </td>
                                                         <td className="table-user">
-                                                            <b>{listado.estado}</b>
+                                                            <b>{listado.estado_des}</b>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}} >
-                                                            <b>{listado.fecha_registro}</b>
+                                                            <b>{format.asString('dd/MM/yyyy', new Date(listado.fecha_registro))}</b>
                                                         </td>
                                                         <td className="table-user">
                                                             <b>{listado.codigo_user +' - '+ listado.nombres +', '+listado.apellido_paterno+' '+ listado.apellido_materno}</b>
@@ -333,13 +376,13 @@ class Aprobacionesgestor extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input type="checkbox" value={listado.id} name='aprobar' onChange={this.updateEstado} checked={listado.estado}/>
+                                                                <input type="checkbox" name='aprobar' onChange={e=>this.updateEstado(e,listado.id)} checked={listado.estado}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
                                                             </label>
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input type="checkbox" value={listado.id} name="rechazar" onChange={this.updateEstado} checked={listado.estado}/>
+                                                                <input type="checkbox" value={listado.id} name="rechazar" onChange={e=>this.updateEstado(e,listado.id)} checked={listado.estado_des1==3 && listado.estado_des1==5 && listado.estado_des1==7}/>
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes" />
                                                             </label>
                                                         </td>

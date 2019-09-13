@@ -110,7 +110,7 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
-            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado as estado_des,sol.estado_vicepresidencia, "+
+            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado as estado_des,sol.estado as estado_des1,sol.estado_vicepresidencia, "+
             " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
             " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
 
