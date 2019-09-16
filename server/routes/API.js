@@ -322,7 +322,8 @@ api.get(api_name+'/listado/candidatos',(req,res)=>{
                 " WHEN estado=0 THEN 'Activo' "+
 		        " WHEN estado=1 THEN 'Inactivo' "+
 	            " END as estado_des, "+
-	            " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad,codigo_posicion "+
+                " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad,codigo_posicion, "+
+                " rtrim(codigo_trabajo) as codigo_trabajo, genero,rtrim(talla_1) as talla_1,rtrim(talla_2) as talla_2,rtrim(talla_3) as talla_3 "+
                 " from candidato_solicitud ";
     db.sequelize.query(query,{type:db.sequelize.QueryTypes.SELECT})
     .then((result)=>{
@@ -374,6 +375,27 @@ api.put(api_name+'/updatecandidatoposicion',(req,res)=>{
     }
 });
 
+
+// Update candidato datos
+
+api.put(api_name+'/updatecandidatodatos',(req,res)=>{
+    var query= " update candidato_solicitud set codigo_trabajo=:codigo_trabajo, genero=:genero, talla_1=:talla_1, talla_2=:talla_2, talla_3=:talla_3 where id=:id ";
+    var values={
+        codigo_trabajo:req.body.codigo_trabajo,
+
+    }
+    db.sequelize.query(query,{type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e})
+    })
+});
+
+
+
+
 // exist
 api.get(api_name+'/validarremuneracion',(req,res)=>{
     var query = " select * from remuneracion where solicitud_id="+req.body.solicitud_id;
@@ -386,7 +408,7 @@ api.get(api_name+'/validarremuneracion',(req,res)=>{
     })
 })
 
-// list all
+// list all remuneracion
 api.get(api_name+'/list/remuneracion',(req,res)=>{
     var query = " select * from remuneracion";
     db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})

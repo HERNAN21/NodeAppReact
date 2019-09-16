@@ -254,23 +254,37 @@ class Registrodatosalta extends React.Component {
                                                             <Input  type="text" className="form-control-sm"/>
                                                         </td>
                                                         <td className="table-user">
-                                                            <Input className="form-control-sm" type="select">
-                                                                <option>Option 1</option>
+                                                            <Input className="form-control-sm" type="select" value={listado_detalle.genero}>
+                                                                <option value="">[Seleccione]</option>
+                                                                <option value="1">Hombre</option>
+                                                                <option value="2">Mujer</option>
                                                             </Input>
                                                         </td>
                                                         <td>
-                                                            <Input className="form-control-sm" type="select">
-                                                                <option>Option 1</option>
+                                                            <Input className="form-control-sm" type="select" value={listado_detalle.talla_1}>
+                                                                <option value="">[Seleccione]</option>
+                                                                <option value="1">Talla 1</option>
+                                                                <option value="2">Talla 2</option>
+                                                                <option value="3">Talla 3</option>
+                                                                <option value="4">Talla 4</option>
                                                             </Input>
                                                         </td>
                                                         <td>
-                                                            <Input className="form-control-sm" type="select">
-                                                                <option>Option 1</option>
+                                                        <Input className="form-control-sm" type="select" value={listado_detalle.talla_2}>
+                                                                <option value="">[Seleccione]</option>
+                                                                <option value="1">Talla 1</option>
+                                                                <option value="2">Talla 2</option>
+                                                                <option value="3">Talla 3</option>
+                                                                <option value="4">Talla 4</option>
                                                             </Input>
                                                         </td>
                                                         <td style={{textAlign:"right"}}>
-                                                            <Input className="form-control-sm" type="select">
-                                                                <option>Option 1</option>
+                                                        <Input className="form-control-sm" type="select" value={listado_detalle.talla_3}>
+                                                                <option value="">[Seleccione]</option>
+                                                                <option value="1">Talla 1</option>
+                                                                <option value="2">Talla 2</option>
+                                                                <option value="3">Talla 3</option>
+                                                                <option value="4">Talla 4</option>
                                                             </Input>
                                                         </td>
                                                     </tr>
