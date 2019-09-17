@@ -1,11 +1,11 @@
 - Paso uno
-  ->instalar postgress
-  ->restaurar la db
+  - instalar postgress
+  - restaurar la db
   
 - Paso 2
-  -> npm install
+  - npm install
   
--Paso 3 
-Ejetar el Proyecto
- ->  Backend: node server
- ->  Frontend: npm start
+- Paso 3 
+- Ejecutar el Proyecto
+ - Backend: node server
+ - Frontend: npm start
