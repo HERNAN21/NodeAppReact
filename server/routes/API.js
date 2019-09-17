@@ -479,6 +479,10 @@ api.get(api_name + '/solicitud_baja', (req, res) => {
 
 
 
+
+
+
+
 api.get(api_name + '/hello', (req,res)=>{
     db.sequelize
         .query("select * from centro",{type:db.sequelize.QueryTypes.SELECT})

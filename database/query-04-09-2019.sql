@@ -400,4 +400,30 @@ select * from candidato_solicitud where numero_documento='70586952';
 
 select * from remuneracion where solicitud_id=47; 
 
+select * from candidato_solicitud where id_solicitud=46;
+
+
+ALTER TABLE candidato_solicitud 
+ADD COLUMN codigo_trabajo char(50) null,
+ADD COLUMN genero int null,
+ADD COLUMN talla_1 char(50) null,
+ADD COLUMN talla_2 char(50) null,
+ADD COLUMN talla_3 char(50) null;
+
+
+
+update candidato_solicitud set codigo_trabajo='T010506', genero=1, talla_1=1, talla_2=2, talla_3=1 where id=14;
+
+select * from candidato_solicitud where id=14;
+
+
+select * from solicitud;
+
+
+
+
+
+
+
+
 
