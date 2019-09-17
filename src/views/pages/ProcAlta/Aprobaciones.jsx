@@ -6,9 +6,9 @@ import {Badge,Button,Card,CardHeader,CardBody,CardFooter,Table,Container,Row,Col
 // core components
 import SimpleHeader from "components/Headers/SimpleHeader.jsx";
 
-import { server, api_name, listEstrellas, listDisponible, today, listUnidadTiempo } from "variables/general.jsx";
+import { server, api_name, estado_proceso_de_altas } from "variables/general.jsx";
 
-
+var  format = require("date-format");
 
 class Aprobaciones extends React.Component {
     constructor (props){
@@ -20,10 +20,12 @@ class Aprobaciones extends React.Component {
             data_buscar:{
                 num_solicitud:'',
                 estado:''
-            }
+            },
+            estado: false,
         }
         this.cargarData=this.cargarData.bind(this);
         // this.cargarData=this.cargarData(this);
+
     }
 
     cargarData=(e)=>{
@@ -35,6 +37,37 @@ class Aprobaciones extends React.Component {
         .then(res=>res.json())
         .then(function(data) {
             if (data.respuesta=='success') {
+                for (let i = 0; i < data.result.length; i++) {
+                    console.log(estado_proceso_de_altas);
+                    data.result[i].estado_des1=false;
+                    if (data.result[i].estado==1) {
+                        data.result[i].estado_des=estado_proceso_de_altas[0].value;
+                        data.result[i].estado=false;    
+                    }else if(data.result[i].estado==2){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[1].value;
+                    }else if(data.result[i].estado==3){
+                        data.result[i].estado=false;
+                        data.result[i].estado_des=estado_proceso_de_altas[2].value;
+                        data.result[i].estado_des1=true;
+                    }else if(data.result[i].estado==4){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[3].value;
+                    }else if(data.result[i].estado==5){
+                        data.result[i].estado=false;
+                        data.result[i].estado_des=estado_proceso_de_altas[4].value;
+                    }else if(data.result[i].estado==6){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[5].value;
+                    }else if(data.result[i].estado==7){
+                        data.result[i].estado=false;
+                        data.result[i].estado_des=estado_proceso_de_altas[6].value;
+                        data.result[i].estado_des1=true;
+                    } else if(data.result[i].estado==11){
+                        data.result[i].estado=true;
+                        data.result[i].estado_des=estado_proceso_de_altas[10].value;
+                    }
+                }
                 this.setState({solicitud_aprobaciones:data.result})
             } else {
                 console.log(data.respuesta);
@@ -56,15 +89,32 @@ class Aprobaciones extends React.Component {
         this.forceUpdate();
     }
 
-    updateEstado=(e)=>{
-        var estado=0;
-        if (e.target.checked==false) {
-            estado=1;
+    updateEstado=(e, id)=>{
+
+        var rechazado=e.target.name;
+        var estado_name=e.target.name;
+        var estado=2;
+        
+        if (estado_name=='estado') {
+            if (e.target.checked==false) {
+                estado=1;
+            }
         }
+
+        if (rechazado=='rechazado') {
+            estado=1;    
+            if (e.target.checked==true) {
+                estado=3;
+            }
+            console.log(estado);
+        }
+
+        
         const data_update={
-            id_solicitud: e.target.value,
+            id_solicitud: id,
             estado: estado
         }
+        
         fetch(this.state.server + api_name+'/updatestatus',{
             method: 'PUT',
             body: JSON.stringify(data_update),
@@ -78,6 +128,10 @@ class Aprobaciones extends React.Component {
                 console.log(data.respuesta);
             }
         })
+        setTimeout(() => {
+            this.cargarData();
+        }, 500);
+        
     }
 
     cargarEstado(value){
@@ -117,9 +171,18 @@ class Aprobaciones extends React.Component {
                                     <Col md="2">
                                         <FormGroup>
                                         <Input type="select" name="select" id="exampleSelect" className="form-control-sm" onChange={this.bucarEstado} >
-                                            <option value="">[seleccione]</option>
-                                            <option value="0">activo</option>
-                                            <option value="1">Incativo</option>
+                                            <option value="">[Todos]</option>
+                                            {
+                                                estado_proceso_de_altas.map((select,key)=>{
+                                                    return (
+                                                        <>
+                                                            <option value={select.id}>{select.value}</option>
+                                                            
+                                                        </>
+                                                    );
+
+                                                })
+                                            }
                                         </Input>
                                         </FormGroup>
                                     </Col>
@@ -135,13 +198,15 @@ class Aprobaciones extends React.Component {
                                         <th style={{width:'5%', textAlign:"center"}} >Creador de Solicitud</th>
                                         <th style={{width:'2%', textAlign:"center"}} >Cantidad <br/> de Recursos</th>
                                         <th style={{width:'10%', textAlign:"center"}} >Descripcion de Puesto</th>
-                                        <th style={{width:'5%', textAlign:"center"}} >Remoneración</th>
+                                        <th style={{width:'5%', textAlign:"center"}} >Remuneración</th>
                                         <th style={{width:'2%', textAlign:"center"}} >¿Aprobar?</th>
+                                        <th style={{width:'2%', textAlign:"center"}} >Rechazar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         data_listar.map((listado,key)=>{
+                                            var checked = listado.estado;
                                             return (
                                                 <>
                                                     <tr>
@@ -149,10 +214,10 @@ class Aprobaciones extends React.Component {
                                                             <a className="font-weight-bold" href="#pablo" onClick={e => e.preventDefault()}>{listado.id}</a>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}}>
-                                                            <b>{listado.estado}</b>
+                                                            <b>{listado.estado_des}</b>
                                                         </td>
                                                         <td className="table-user" style={{textAlign:"center"}}>
-                                                            <b>{listado.fecha_registro}</b>
+                                                            <b>{format.asString('dd/MM/yyyy', new Date(listado.fecha_registro))}</b>
                                                         </td>
                                                         <td className="table-user">
                                                             <b>{listado.nombres}</b>
@@ -168,10 +233,20 @@ class Aprobaciones extends React.Component {
                                                         </td>
                                                         <td>
                                                             <label className="custom-toggle">
-                                                                <input defaultChecked type="checkbox" value={listado.id} checked={this.cargarEstado(listado.estado)} onChange={this.updateEstado}/>
+                                                                <input type="checkbox" name="estado" onChange={ e =>this.updateEstado(e, listado.id)} 
+                                                                checked={checked}  />
                                                                 <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
                                                             </label>
                                                         </td>
+
+                                                        <td>
+                                                            <label className="custom-toggle">
+                                                                <input type="checkbox" name="rechazado" onChange={ e =>this.updateEstado(e, listado.id)} 
+                                                                checked={listado.estado_des1}/>
+                                                                <span className="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Yes"/>
+                                                            </label>
+                                                        </td>
+
                                                     </tr>
                                                 </>
                                             );

@@ -33,8 +33,10 @@ create table solicitud(
 CREATE SEQUENCE id_solicitud;
 ALTER TABLE solicitud ALTER id SET DEFAULT NEXTVAL('id_solicitud');
 
-
+select * from solicitud;
 ALTER TABLE solicitud ALTER COLUMN id_jefe_directo TYPE integer USING id_jefe_directo::integer;
+ALTER TABLE solicitud ALTER COLUMN fecha_registro type TIMESTAMP USING fecha_registro::TIMESTAMP;
+ALTER TABLE solicitud ALTER COLUMN fecha_modificacion type TIMESTAMP USING fecha_modificacion::TIMESTAMP;
 
 
 
@@ -208,7 +210,7 @@ select
 		sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente,
 		sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo,
 		sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro,
-		sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia,
+		sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia,
 		-- data users 		
 		us.id as id_apro,ltrim(us.codigo),us.sociedad,us.codigo_division,us.nombre_division_personal,us.codigo_sub_division,
 		us.nombres_sub_division,us.dni,us.nombres, us.apellido_paterno,us.apellido_materno,us.email_corp,
@@ -268,13 +270,32 @@ create table remoneracion(
 CREATE SEQUENCE id_remoneracion;
 ALTER TABLE remoneracion ALTER id SET DEFAULT NEXTVAL('id_remoneracion');
 
-select * from remoneracion;
+ALTER TABLE remuneracion 
+ADD COLUMN tipo_moneda_neg int null,
+ADD COLUMN remoneracion_basico_neg float null,
+ADD COLUMN vales_neg varchar(100) null,
+ADD COLUMN fecha_inicio timestamp null,
+ADD COLUMN fecha_inicio_neg timestamp null;
 
-insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)
+
+
+
+select * from remuneracion;
+
+-- truncate remuneracion;
+
+insert into remuneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)
 values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)
 
-insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)  
+insert into remuneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado)  
 values(42,1,'2500.00','valest test','asig Movilidad Test','Asig Otros',now(),HROJAS,0)
+
+update remuneracion set 
+tipo_moneda_neg=1,
+remoneracion_basico_neg='6000.00',
+vales_neg='400',
+fecha_inicio_neg=now() where id=2 and solicitud_id=42;
+
 
 
 
@@ -332,4 +353,77 @@ insert into candidato_solicitud
 (id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,
 numero_documento,disponibilidad,email,file_cv,observaciones,fecha_registro,usuario_registro,estado)
 values(1,'Hernan','rojas','Utani','1','50458569','1','hernanrojasutani@gmail.com','file/50458569/50458569.pdf','nada',now(),'HROJAS',0);
+
+
+select 
+	id,id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,numero_documento,disponibilidad,
+	email,file_cv,observaciones,fecha_registro,usuario_registro,fecha_modificacion,usuario_modificacion,estado, 
+	CASE 
+		WHEN estado=0 THEN 'Activo' 
+		WHEN estado=1 THEN 'Inactivo'
+	END as estado_des,
+	id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad,codigo_posicion
+from candidato_solicitud ;
+
+
+
+ALTER TABLE candidato_solicitud 
+ADD COLUMN codigo_posicion char(50) null,
+ADD COLUMN id_sede_entrevista int null,
+ADD COLUMN contacto_sede char(50) null,
+ADD COLUMN fecha_entrevista TIMESTAMP null,
+ADD COLUMN prioridad char(10) null;
+
+select * from candidato_solicitud where id=3;
+
+
+update  candidato_solicitud set id_sede_entrevista=0, contacto_sede='', fecha_entrevista=now(), estado=0 ,prioridad='' where id='1';
+
+
+select * from solicitud where id=45;
+
+
+
+
+select * from solicitud_baja;
+
+
+INSERT INTO public.grupo (grupo,descripcion,detalle,fecha_registro,usuario_registro,fecha_nodificacion,usuario_modificacion,estado) VALUES 
+('TIPO_CESE_FORMAL','Tipo cese formal 2','Tipo cese formal 2','2019-09-11','WPEREYRAC',NULL,NULL,0)
+,('TIPO_CESE_REAL','Tipo cese real 1',NULL,'2019-09-11','WPEREYRAC',NULL,NULL,0)
+,('TIPO_CESE_REAL','Tipo cese real 2',NULL,'2019-09-11','WPEREYRAC',NULL,NULL,0)
+
+
+
+
+select * from candidato_solicitud where numero_documento='70586952';
+
+select * from remuneracion where solicitud_id=47; 
+
+select * from candidato_solicitud where id_solicitud=46;
+
+
+ALTER TABLE candidato_solicitud 
+ADD COLUMN codigo_trabajo char(50) null,
+ADD COLUMN genero int null,
+ADD COLUMN talla_1 char(50) null,
+ADD COLUMN talla_2 char(50) null,
+ADD COLUMN talla_3 char(50) null;
+
+
+
+update candidato_solicitud set codigo_trabajo='T010506', genero=1, talla_1=1, talla_2=2, talla_3=1 where id=14;
+
+select * from candidato_solicitud where id=14;
+
+
+select * from solicitud;
+
+
+
+
+
+
+
+
 

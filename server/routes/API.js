@@ -110,7 +110,7 @@ api.post(api_name+'/aprobacionespendientes',(req,res)=>{
             " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
-            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado as estado_des,sol.estado as estado_des1,sol.estado_vicepresidencia, "+
             " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
             " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
 
@@ -173,10 +173,9 @@ api.put(api_name+'/updatestatus',(req,res)=>{
 
 // Inssert Remoneracion
 
-api.post(api_name+'/remoneracion',(req,res)=>{
-    var query =" insert into remoneracion(solicitud_id,tipo_moneda,remoneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
-    // var values =" values(42, 1, '300.00','Vales test','Asig. Movilidad','Asig. Otros', now(),'HROJAS',0)";
-    var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remoneracion_basico+"','"+req.body.vales+"','"+
+api.post(api_name+'/remuneracion',(req,res)=>{
+    var query =" insert into remuneracion(solicitud_id,tipo_moneda,remuneracion_basico,vales,asig_movilidad,asignacion_otros,fecha_registro,usuario_registro,estado) ";
+    var values = " values("+req.body.solicitud_id+","+req.body.tipo_moneda+",'"+req.body.remuneracion_basico+"','"+req.body.vales+"','"+
                     req.body.asig_movilidad+"','"+req.body.asignacion_otros+"',now(),'"+req.body.usuario_registro+"',"+req.body.estado+")";
     db.sequelize.query(query + values,{type: db.sequelize.QueryTypes.INSERT})
     .then((result)=>{
@@ -242,7 +241,7 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             " sol.id_modalidad_tipo,sol.fecha_estimada_inicio,sol.id_plazo,sol.id_plazo_tipo,sol.nombre_cliente, "+
             " sol.descripcion_servicio,sol.volumen_motivo,sol.inicio_estimado_tiempo,sol.estimacion_duracion_tiempo, "+
             " sol.observaciones,sol.descripcion,sol.remoneracion,sol.fecha_registro,sol.usuario_registro, "+
-            " sol.fecha_nodificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
+            " sol.fecha_modificacion,sol.usuario_modificacion,sol.estado,sol.estado_vicepresidencia, "+
             " sol.glosa,sol.sociedad,sol.lider_uo,sol.codigo_uo,sol.descripcion_uo,sol.cod_divicion,sol.cod_sub_div, "+
             " sol.sctr,sol.id_area_personal,sol.id_relacion_personal,sol.file_dp,sol.direccion, "+
             // data users
@@ -267,7 +266,9 @@ api.post(api_name+'/listadosolicitudcandidatos',(req,res)=>{
             " inner join grupo as puesto on sol.id_puesto=puesto.id and sol.id_puesto_tipo=puesto.grupo "+
             " inner join grupo as modalidad on sol.id_modalidad=modalidad.id and sol.id_modalidad_tipo= modalidad.grupo "+
             " inner join grupo as plazo on sol.id_plazo=plazo.id and sol.id_plazo_tipo=plazo.grupo "+
-            " where 0=0  and sol.estado=0 ";
+            " where 0=0 ";
+            // Por verser
+            //  and sol.estado=0 ;
             
             var condicion1="";
             if (req.body.num_solicitud != "") {
@@ -310,6 +311,165 @@ api.post(api_name+'/candidatos',(req,res)=>{
     })
     // console.log(req.body);
 });
+
+
+// listado candidatos
+
+api.get(api_name+'/listado/candidatos',(req,res)=>{
+    var query = " select id,id_solicitud,nombres,apellido_paterno,apellido_materno,tipo_documento,numero_documento,disponibilidad, " +
+	            " email,file_cv,observaciones,fecha_registro,usuario_registro,fecha_modificacion,usuario_modificacion,estado, " +
+	            " CASE " +
+                " WHEN estado=0 THEN 'Activo' "+
+		        " WHEN estado=1 THEN 'Inactivo' "+
+	            " END as estado_des, "+
+                " id_sede_entrevista,contacto_sede,fecha_entrevista,prioridad,codigo_posicion, "+
+                " rtrim(codigo_trabajo) as codigo_trabajo, genero,rtrim(talla_1) as talla_1,rtrim(talla_2) as talla_2,rtrim(talla_3) as talla_3 "+
+                " from candidato_solicitud ";
+    db.sequelize.query(query,{type:db.sequelize.QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e});
+    })
+});
+
+
+// Api Update candidato
+api.put(api_name+'/updatecandidato',(req,res)=>{
+    
+    for (let i = 0; i < req.body.length; i++) {
+        const element = req.body[i];
+        var fecha_entrevista= 'now()';
+        if (element.fecha_entrevista!='') {
+            fecha_entrevista="'"+element.fecha_entrevista+"'";
+        }
+
+        var query =" update  candidato_solicitud set id_sede_entrevista='"+element.id_sede_entrevista+"', contacto_sede='"+element.contacto_sede+
+                "', fecha_entrevista="+fecha_entrevista+", estado='"+element.estado+"' ,prioridad='"+element.prioridad+"' where id='"+element.candidato_id+"' ";
+    
+        db.sequelize.query(query, {type:db.sequelize.QueryTypes.UPDATE})
+        .then((result)=>{
+            res.json({'respuesta':'success','result':result});
+        })
+        .catch((e)=>{
+            res.json({'respuesta':'error', 'result':e});
+        })
+        
+    }
+
+});
+
+// Update codigo_posicion candidato
+api.put(api_name+'/updatecandidatoposicion',(req,res)=>{
+    for (let i = 0; i < req.body.length; i++) {
+        const element = req.body[i];
+        var query =" update  candidato_solicitud set codigo_posicion='"+element.codigo_posicion+"' where id='"+element.candidato_id+"' ";
+        db.sequelize.query(query, {type:db.sequelize.QueryTypes.UPDATE})
+        .then((result)=>{
+            res.json({'respuesta':'success','result':result});
+        })
+        .catch((e)=>{
+            res.json({'respuesta':'error', 'result':e});
+        })
+    }
+});
+
+
+// Update candidato datos
+
+api.put(api_name+'/updatecandidatodatos',(req,res)=>{
+    var query= " update candidato_solicitud set codigo_trabajo=:codigo_trabajo, genero=:genero, talla_1=:talla_1, talla_2=:talla_2, talla_3=:talla_3 where id=:id ";
+    var values={
+        codigo_trabajo:req.body.codigo_trabajo,
+
+    }
+    db.sequelize.query(query,{type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result})
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error','result':e})
+    })
+});
+
+
+
+
+// exist
+api.get(api_name+'/validarremuneracion',(req,res)=>{
+    var query = " select * from remuneracion where solicitud_id="+req.body.solicitud_id;
+    db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+})
+
+// list all remuneracion
+api.get(api_name+'/list/remuneracion',(req,res)=>{
+    var query = " select * from remuneracion";
+    db.sequelize.query(query, {type: db.sequelize.QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+})
+
+// Update remuneracion negociado
+api.put(api_name+'/updateremuneracionnegociable',(req,res)=>{
+    var fecha_neg='now()';
+    if (req.body.fecha_inicio_neg!='') {
+        fecha_neg=req.body.fecha_inicio_neg;
+    }
+    var query = " update remuneracion set  tipo_moneda_neg=:tipo_moneda_neg,remuneracion_basico_neg=:remuneracion_basico_neg, "+
+                " vales_neg=:vales_neg,fecha_inicio_neg=:fecha_inicio_neg where id=:id and solicitud_id=:solicitud_id ";
+    var data={
+        tipo_moneda_neg:req.body.tipo_moneda_neg,
+        remuneracion_basico_neg:req.body.remuneracion_basico_neg,
+        vales_neg:req.body.vales_neg,
+        fecha_inicio_neg:fecha_neg,
+        id:req.body.id,
+        solicitud_id:req.body.solicitud_id
+    }
+    db.sequelize.query(query,{replacements:data,type:db.sequelize.QueryTypes.UPDATE})
+    .then((result)=>{
+        res.json({'respuesta':'success','result':result});
+    })
+    .catch((e)=>{
+        res.json({'respuesta':'error', 'result':e});
+    })
+});
+
+
+
+//save solicitud baja
+api.post(api_name + '/solicitudes_baja', (req, res) => {
+    db.sequelize.query("select * from post_solicitud_baja(:id_trabajador, :id_jefe, :tipo_baja, :tipo_cese_formal, :tipo_cese_real, :fecha_cese, :fecha_hora_notificacion, :fecha_carta, :observaciones)",
+        {
+            replacements: {
+                id_trabajador: req.body.id_trabajador, id_jefe: req.body.id_jefe, tipo_baja: req.body.tipo_baja,
+                tipo_cese_formal: req.body.tipo_cese_formal, tipo_cese_real: req.body.tipo_cese_real, fecha_cese: req.body.fecha_cese,
+                fecha_hora_notificacion: req.body.fecha_hora_notificacion, fecha_carta: req.body.fecha_carta, observaciones: req.body.observaciones
+            },
+            type: db.sequelize.QueryTypes.SELECT
+        }).then((result) => res.json(result))
+})
+
+api.get(api_name + '/solicitud_baja/:id', (req, res) => {
+    db.sequelize.query("select * from get_solicitud_baja(" + req.params.id + ");",
+        { type: db.sequelize.QueryTypes.SELECT }).then((result) => res.json(result))
+})
+
+api.get(api_name + '/solicitud_baja', (req, res) => {
+    db.sequelize.query("select * from get_solicitud_baja();",
+        { type: db.sequelize.QueryTypes.SELECT }).then((result) => res.json(result))
+})
+
 
 
 
