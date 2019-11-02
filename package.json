@@ -59,7 +59,7 @@
     "react-tagsinput": "3.19.0",
     "react-to-print": "^2.1.2",
     "reactstrap": "8.0.0",
-    "sequelize": "^4.38.0",
+    "sequelize": "^5.15.1",
     "soap": "^0.27.1",
     "xlsx": "^0.14.3",
     "xml-to-json-stream": "^1.1.0",
